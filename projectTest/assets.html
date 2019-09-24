@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Project Test 3</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="javascript/sorttable.js"></script>
+</head>
+<body>
+	<div class="border">
+		<div id="bg">
+			background
+		</div>
+		<div class="page">
+			<div class="sidebar">
+				<a href="index.html" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
+				<ul>
+					<li>
+						<a href="index.html">Home</a>
+					</li>
+					<li class="selected">
+						<a href="assets.html">Manage Assets</a>
+					</li>
+					<li>
+						<a href="reports.html">Reports</a>
+					</li>
+					<li>
+						<a href="settings.html">Settings</a>
+					</li>
+				</ul>
+			</div>
+			<div class="body">
+				<div>
+					<h2>Manage Assets</h2>
+					<div>
+						<h3><span>Add Equipment</span></h3>
+
+						<select name="category">
+							<option hidden>Category</option>
+							<option>Desktop</option>
+							<option>Tablet</option>
+						</select>
+
+						<select name="brand">
+							<option hidden>Brand</option>
+							<option>Dell</option>
+							<option>Apple</option>
+						</select>
+							
+						<select name="model">
+							<option hidden>Model</option>
+							<option>123</option>
+							<option>456</option>
+						</select>
+						<button>Add</button>
+
+
+					</div>
+					<br>
+					<br>
+					<div>
+						<h3><span>Manage Devices</span></h3>
+						<form>
+							<select id="searchFilter">
+								<option>All</option>
+								<option>Serial</option>
+								<option>Location</option>
+								<option>Category</option>
+							</select>
+						    <input type="text" placeholder="Search.." name="search">
+							<button type="submit"><i class="fa fa-search"></i></button>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

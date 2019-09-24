@@ -6,6 +6,7 @@
 	<title>Project Test 3</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="javascript/sorttable.js"></script>
 </head>
 <body>
 	<div class="border">
@@ -20,19 +21,13 @@
 						<a href="index.html">Home</a>
 					</li>
 					<li>
-						<a href="about.html">Manage Assets</a>
+						<a href="assets.html">Manage Assets</a>
 					</li>
 					<li>
-						<a href="services.html">Reports</a>
+						<a href="reports.html">Reports</a>
 					</li>
 					<li>
-						<a href="portfolio.html">Settings</a>
-					</li>
-					<li>
-						<a href="contact.html">Contact</a>
-					</li>
-					<li>
-						<a href="blog.html">Blog</a>
+						<a href="settings.html">Settings</a>
 					</li>
 				</ul>
 			</div>
@@ -42,7 +37,7 @@
 					<div>
 						<h3><span>Devices to be Checked</span></h3>
 
-						<table class="scrolling_table">
+						<table class="scrolling_table sortable">
 							<thead>
 								<tr>
 									<th>Serial #</th>
@@ -76,7 +71,7 @@
 									<td>Apple</td>
 									<td>32554I0</td>
 									<td>J. Smith</td>
-									<td>7</td>
+									<td>23</td>
 								</tr>
 								<tr>
 									<td>173509367</td>
@@ -84,7 +79,7 @@
 									<td>Dell</td>
 									<td>74544SR</td>
 									<td>SL 247</td>
-									<td>38</td>
+									<td>5</td>
 								</tr>
 								<tr>
 									<td>846421682</td>
@@ -92,7 +87,7 @@
 									<td>HP</td>
 									<td>23542LJ</td>
 									<td>IT 078</td>
-									<td>17</td>
+									<td>46</td>
 								</tr>
 								<tr>
 									<td>376523899</td>
@@ -100,21 +95,47 @@
 									<td>Apple</td>
 									<td>32554I0</td>
 									<td>J. Smith</td>
-									<td>7</td>
+									<td>11</td>
 								</tr>
 							</tbody>
 						</table>
-
-
+						<div id="minDaysField">
+							Minimum Days Since Checked:
+							<input type="number" name="minDays" value="60" min="0" max="999">
+						</div>
 					</div>
+					<br>
+					<br>
 					<div>
 						<h3><span>Search for Device</span></h3>
 						<form>
+							<select id="searchFilter">
+								<option>All</option>
+								<option>Serial</option>
+								<option>Location</option>
+								<option>Category</option>
+							</select>
 						    <input type="text" placeholder="Search.." name="search">
 							<button type="submit"><i class="fa fa-search"></i></button>
 						</form>
+					</div>
+					<br>
+					<br>
+					<div>
+						<h3><span>Quick Summary</span></h3>
+						<div class="summary">
+							Desktops: 100
+							Laptops: 100
+							Tablets: 100
+						</div>
+						<div class="summary">
+							Cameras: 100
+							Printers: 100
+							Video Conferencing: 100
+						</div>
 						
 					</div>
+
 				</div>
 			</div>
 		</div>
