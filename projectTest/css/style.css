@@ -616,3 +616,16 @@ input[type=number] {
 	font-size: 16px;
 	padding: 5px 0 5px 0;
 }
+
+
+@media screen and (max-width: 1000px)
+{
+	.sidebar, #bg{
+		display: none;
+	}
+
+	.body{
+		width: calc(100vw - 25px);
+	}
+
+}
