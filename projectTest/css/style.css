@@ -579,7 +579,7 @@ form input[type=text] {
   width: calc(100% - 150px);
 }
 
-form button[type=submit]{
+form button {
   padding: 6px 10px;
   margin-right: 16px;
   background: #ddd;
@@ -628,4 +628,14 @@ input[type=number] {
 		width: calc(100vw - 25px);
 	}
 
+}
+
+.centered {
+  text-align: center;
+  margin: 0 0 auto;
+}
+
+.reports_filter_container {
+  margin: 0 0 auto;
+  text-align: center;
 }
