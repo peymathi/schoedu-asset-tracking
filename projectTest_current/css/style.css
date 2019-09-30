@@ -109,7 +109,7 @@ a img {
 /*------------------------- Body ------------------------*/
 .body {
 	float:left;
-	width:calc(100vw - 221px);
+	width:calc(100vw - 250px);
 	position: relative;
 	background:url(../images/bg-body.png) repeat-y #e3e3e3;
 	height: auto;
