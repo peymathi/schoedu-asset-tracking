@@ -28,7 +28,7 @@ a img {
 }
 .page {
 	margin:0 auto;
-	overflow:scroll;
+	overflow-y:scroll;
 	height: calc(100vh - 50px)
 
 }
