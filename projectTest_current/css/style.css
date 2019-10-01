@@ -439,7 +439,7 @@ a img {
 .scrolling_table tbody{
   display:block;
   width: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
   height: 150px;
 }
 
