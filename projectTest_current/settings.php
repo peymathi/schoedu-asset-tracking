@@ -37,12 +37,9 @@
 			<div class="body">
 				<div>
 					<h2>Settings</h2>
-
 					<div>
-						
+
 					</div>
-					
-						
 				</div>
 			</div>
 		</div>

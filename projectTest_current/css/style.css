@@ -119,7 +119,7 @@ a img {
 	border-width: 1px;
 }
 .body div {
-	margin:23px 0 0 21px;
+	margin:23px 0 0 15px;
 	background:#fff;
 	-moz-box-shadow: 0 0 5px 3px #d3d3d3;
 	-webkit-box-shadow: 0 0 5px 3px#d3d3d3;
@@ -588,6 +588,42 @@ form button[type=submit]{
   cursor: pointer;
 }
 
+.reportFilters select {
+  padding: 3px 10px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.reportFilters button {
+  padding: 6px 10px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.reportFilters label {
+  font-size: 18px;
+}
+
+.reportFilters input[type=checkbox] {
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
+
+}
+
+.reportFilters {
+  margin: 0 0 auto;
+  text-align: center;
+}
+
 input[type=date] {
   width: 9.7em;
 }
@@ -633,9 +669,4 @@ input[type=number] {
 .centered {
   text-align: center;
   margin: 0 0 auto;
-}
-
-.reports_filter_container {
-  margin: 0 0 auto;
-  text-align: center;
 }

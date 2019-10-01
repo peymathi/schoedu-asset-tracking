@@ -6,8 +6,8 @@
 	<title>Project Test 3</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="javascript/sorttable.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <?php
 
@@ -114,7 +114,7 @@ if (isset($_GET['manufacturer']))
 					<h2>Reports</h2>
 					<br />
 					<div>
-						<h3 id="filterTitle" class="centered"><?php print $filterTitle; ?></h3>
+						<h3><span><?php print $filterTitle; ?></span></h3>
 					</div>
 					<br />
 					<div id="reportTable">
@@ -205,8 +205,8 @@ if (isset($_GET['manufacturer']))
 						<br />
 					</div>
 					<form action="reports.php" method="get">
-						<div class="reports_filter_container">
-							<h3>Filter Options</h3>
+						<div class="reportFilters">
+							<h3><span>Filter Options</span></h3>
 
 							<!-- Select by category -->
 							<label for="category">Category -</label>
@@ -218,7 +218,6 @@ if (isset($_GET['manufacturer']))
 								<option>Laptop</option>
 								<option>Tablet</option>
 							</select>
-							<br />
 
 							<!-- Select by Manufacturer -->
 							<label for="manufacturer">Manufacturer -</label>
@@ -231,7 +230,6 @@ if (isset($_GET['manufacturer']))
 								<option>Tandberg</option>
 								<option>Logitech</option>
 							</select>
-							<br />
 
 							<!-- Select by Model -->
 							<label for="model">Model -</label>
@@ -248,7 +246,6 @@ if (isset($_GET['manufacturer']))
 									<option>MacPro</option>
 									<option>MacBook</option>
 							</select>
-							<br />
 
 							<!-- Select by location -->
 							<label for="location">Location -</label>
@@ -258,7 +255,6 @@ if (isset($_GET['manufacturer']))
 								<option>SL 251</option>
 								<option>IT 078</option>
 							</select>
-							<br />
 
 							<!-- Select by user -->
 							<label for="user">User -</label>
@@ -268,31 +264,33 @@ if (isset($_GET['manufacturer']))
 								<option>Lori Yanef</option>
 								<option>Allison Jessup</option>
 							</select>
-							<br />
+							<br /> <br />
 
 							<!-- Check box to include surplus items in query -->
-							<label for="surplus">Include Surplus -</label>
-							<input id="surplus" type="checkbox" name="surplus" value="checked">
-							<br />
-
+							<label for="surplus">Include Surplus - </label>
+							<input type="checkbox" name="surplus" value="checked">
 
 							<!-- Check box to filter by expired warranty -->
-							<label for="expiredWarranty">Expired Warranty -</label>
-							<input id="expiredWarranty" type="checkbox" name="expiredWarranty" value="checked">
-							<br />
+							<label for="expiredWarranty">Expired Warranty - </label>
+							<input type="checkbox" name="expiredWarranty" value="checked">
+							<br /> <br />
 
 							<!-- Button to submit form -->
 							<button id="filter" type="submit" name="submit">Filter</button>
 
+							<!-- Reset filters button -->
+							<button type="button" name="reset">Reset Filters</button>
+
 							<!-- Button to export to csv file -->
 							<button type="button" name="export">Export</button>
-
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="javascript/reports.js"></script>
+	<script src="javascript/reports.js">
+		var testData = <?php print $manufacturer; ?>
+	</script>
 </body>
 </html>

@@ -15,7 +15,7 @@
 		</div>
 		<div class="page">
 			<div class="sidebar">
-				<a href="index.html" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
+				<a href="index.php" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
 				<ul>
 					<li>
 						<a href="index.php">Home</a>
@@ -51,7 +51,7 @@
 							<option>Dell</option>
 							<option>Apple</option>
 						</select>
-							
+
 						<select name="model">
 							<option hidden>Model</option>
 							<option>123</option>
@@ -101,7 +101,7 @@
 						    <input type="text" placeholder="Search.." name="search">
 							<button type="submit"><i class="fa fa-search"></i></button>
 						</form>
-						
+
 					</div>
 				</div>
 			</div>
