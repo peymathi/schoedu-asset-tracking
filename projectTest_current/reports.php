@@ -10,7 +10,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <?php
-
 // Set up variable data
 $manufacturer = "";
 $category = "";
@@ -20,68 +19,56 @@ $user = "";
 $surplus = "";
 $expired = "";
 $filterTitle = "All Assets (No Surplus)";
-
 // Check if we need to process form data
 if (isset($_GET['manufacturer']))
 {
 	$filterTitle = "Current Filters - ";
-
 	// Get the form data
 	$manufacturer = $_GET['manufacturer'];
 	$category = $_GET['category'];
 	$model = $_GET['model'];
 	$location = $_GET['location'];
 	$user = $_GET['user'];
-
 	// Filter the data and add to filter title string
 	if ($manufacturer != "- -")
 	{
 		$filterTitle .= "Manufacturer: " . $manufacturer . ", ";
 	}
-
 	if ($category != "- -")
 	{
 		$filterTitle .= "Category: " . $category . ", ";
 	}
-
 	if ($model != "- -")
 	{
 		$filterTitle .= "Model: " . $model . ", ";
 	}
-
 	if ($location != "- -")
 	{
 		$filterTitle .= "Location: " . $location . ", ";
 	}
-
 	if($user != "- -")
 	{
 		$filterTitle .= "User: " . $user . ", ";
 	}
-
 	if(isset($_GET['surplus']))
 	{
 		$filterTitle .= "(Includes Surplus), ";
 	}
-
 	if(isset($_GET['expiredWarranty']))
 	{
 		$filterTitle .= "(Expired Warranty), ";
 	}
-
 	// Remove the last comma if there is one
 	if ($filterTitle != "")
 	{
 		$filterTitle = substr($filterTitle, 0, -2);
 	}
-
 	// Check to see if anything was selected at all
 	else
 	{
 		$filterTitle = "All Assets (Excludes Surplus)";
 	}
 }
-
 ?>
 <body>
 	<div class="border">

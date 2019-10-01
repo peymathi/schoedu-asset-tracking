@@ -36,7 +36,7 @@
 			</div>
 			<div class="body">
 				<div>
-					<h2>Rental Form</h2>
+					<h2>Rental Form<img id="menu_icon" title="Show Menu" alt="show menu icon" src="images/hamburgerIcon.svg"></h2>
 
 					<div>
 						

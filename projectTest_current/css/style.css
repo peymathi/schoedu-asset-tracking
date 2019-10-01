@@ -119,7 +119,7 @@ a img {
 	border-width: 1px;
 }
 .body div {
-	margin:23px 0 0 15px;
+	margin:23px 0 0 21px;
 	background:#fff;
 	-moz-box-shadow: 0 0 5px 3px #d3d3d3;
 	-webkit-box-shadow: 0 0 5px 3px#d3d3d3;
@@ -137,6 +137,7 @@ a img {
 	color: #7d7d7d;
 	padding:36px 0 0 22px;
 	margin:0;
+	letter-spacing: .04em;
 }
 .body div p {
 	font-family: 'Conv_Muli-Italic';
@@ -476,47 +477,10 @@ form input[type=text] {
 
 form button[type=submit]{
   padding: 6px 10px;
-  margin-right: 16px;
   background: #ddd;
   font-size: 17px;
   border: none;
   cursor: pointer;
-}
-
-.reportFilters select {
-  padding: 3px 10px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-}
-
-.reportFilters button {
-  padding: 6px 10px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-}
-
-.reportFilters label {
-  font-size: 18px;
-}
-
-.reportFilters input[type=checkbox] {
-  -ms-transform: scale(1.6); /* IE */
-  -moz-transform: scale(1.6); /* FF */
-  -webkit-transform: scale(1.6); /* Safari and Chrome */
-  -o-transform: scale(1.6); /* Opera */
-  transform: scale(1.6);
-
-}
-
-.reportFilters {
-  margin: 0 0 auto;
-  text-align: center;
 }
 
 input[type=date] {
@@ -548,7 +512,54 @@ input[type=number] {
 	padding: 5px 0 5px 0;
 }
 
+.centered {
+  text-align: center;
+  margin: 0 0 auto;
+}
 
+.reportFilters select {
+  padding: 3px 10px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.reportFilters button {
+  padding: 6px 10px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.reportFilters label {
+  font-size: 18px;
+}
+
+.reportFilters input[type=checkbox] {
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
+}
+
+.reportFilters {
+  margin: 0 0 auto;
+  text-align: center;
+}
+
+#menu_icon{
+	float: right;
+	width: 30px;
+	display: none;
+	margin: 0 15px;
+}
+
+/*------------------------- Mobile ------------------------*/
 @media screen and (max-width: 1000px)
 {
 	.sidebar, #bg{
@@ -559,9 +570,11 @@ input[type=number] {
 		width: calc(100vw - 25px);
 	}
 
+	#menu_icon{
+		display: inline-block;
+	}
+
 }
 
-.centered {
-  text-align: center;
-  margin: 0 0 auto;
-}
+
+

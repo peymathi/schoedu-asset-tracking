@@ -36,7 +36,7 @@
 			</div>
 			<div class="body">
 				<div>
-					<h2>IUPUI Asset Management System</h2>
+					<h2>IUPUI Asset Management System<img id="menu_icon" title="Show Menu" alt="show menu icon" src="images/hamburgerIcon.svg"></h2>
 					<div>
 						<h3><span>Devices to be Checked</span></h3>
 
@@ -135,16 +135,16 @@
 					<div>
 						<h3><span>Quick Summary</span></h3>
 						<div class="summary">
-							Desktops: 100
-							Laptops: 100
+							Desktops: 100 &nbsp&nbsp
+							Laptops: 100 &nbsp&nbsp
 							Tablets: 100
 						</div>
 						<div class="summary">
-							Cameras: 100
-							Printers: 100
+							Cameras: 100 &nbsp&nbsp
+							Printers: 100 &nbsp&nbsp
 							Video Conferencing: 100
 						</div>
-						<!-- Test -->
+						
 					</div>
 
 				</div>

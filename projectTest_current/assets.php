@@ -15,7 +15,7 @@
 		</div>
 		<div class="page">
 			<div class="sidebar">
-				<a href="index.php" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
+				<a href="index.html" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
 				<ul>
 					<li>
 						<a href="index.php">Home</a>
@@ -36,7 +36,7 @@
 			</div>
 			<div class="body">
 				<div>
-					<h2>Manage Assets</h2>
+					<h2>Manage Assets<img id="menu_icon" title="Show Menu" alt="show menu icon" src="images/hamburgerIcon.svg"></h2>
 					<div>
 						<h3><span>Add Equipment</span></h3>
 
@@ -51,7 +51,7 @@
 							<option>Dell</option>
 							<option>Apple</option>
 						</select>
-
+							
 						<select name="model">
 							<option hidden>Model</option>
 							<option>123</option>
@@ -70,10 +70,16 @@
 							<option>Sl 251</option>
 						</select>
 
+						<br>
+						<br>
+
 						Purchased:<input type="date" name="purchaseDate">
 
-						Warrenty:<input type="number" name="warrenty" min="0">years
+						&nbsp&nbsp Warrenty:<input type="number" name="warrenty" min="0">&nbspyears
 
+						&nbsp&nbsp Qty: <input type="number" name="qty" min='1' max='99'>
+
+						<br>
 						<br>
 
 						Network ID:<input type="text" name="networkID">
@@ -101,7 +107,7 @@
 						    <input type="text" placeholder="Search.." name="search">
 							<button type="submit"><i class="fa fa-search"></i></button>
 						</form>
-
+						
 					</div>
 				</div>
 			</div>

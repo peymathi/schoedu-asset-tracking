@@ -4,5 +4,5 @@ $('.message a').click(function(){
 
 
 $('#loginBtn').click(function(){
-   window.location = "../index.php";
+   window.location.href = "./index.php";
 });
