@@ -327,7 +327,7 @@ form {
 	padding: 0 0 10px;
 }
 
-form input[type=text] {
+form input[name=search] {
   padding: 6px;
   font-size: 17px;
   border: none;
@@ -381,7 +381,7 @@ form button[type=submit]{
 }
 
 input[type=date] {
-  width: 9.7em;
+  width: 10.8em;
 }
 
 input[type=number] {
