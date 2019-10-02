@@ -409,19 +409,6 @@ input[type=number] {
 	padding: 5px 0 5px 0;
 }
 
-
-@media screen and (max-width: 1000px)
-{
-	.sidebar, #bg{
-		display: none;
-	}
-
-	.body{
-		width: calc(100vw - 25px);
-	}
-
-}
-
 .centered {
   text-align: center;
   margin: 0 0 auto;
@@ -432,4 +419,58 @@ input[type=number] {
   font-size: 18px;
   text-align: center;
   margin: 0 0 auto;
+}
+
+
+/*------------------------- Media ------------------------*/
+@media screen and (max-width: 1000px)
+{
+	.sidebar, #bg{
+		display: none;
+	}
+
+	.body{
+		width: calc(100vw - 25px);
+	}
+
+	#menu_icon{
+		display: inline-block;
+	}
+
+}
+
+@media print{
+	.sidebar{
+		display: none;
+	}
+
+	.border{
+		margin: 0;
+	}
+
+	.body{
+		width: 100%;
+		padding: 0;
+	}
+
+	#rental_div{
+		width: 7.5in;
+		height: 11in;
+		position: relative:
+		top: 0;
+		right: 0;
+		z-index: 7;
+	}
+
+	#rentalTerms{
+		display: block;
+	}
+
+	#rental_submit{
+		display: none;
+	}
+
+	.body div{
+		margin: 0;
+	}
 }
