@@ -10,7 +10,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <?php
-// Set up variable data
+
+// Variables to store user form data
 $manufacturer = "";
 $category = "";
 $model = "";
@@ -18,57 +19,205 @@ $location = "";
 $user = "";
 $surplus = "";
 $expired = "";
-$filterTitle = "All Assets (No Surplus)";
+
+// Arrays that store all possible select element values. Hard coded data for now, must
+// later get this from the data base depending on the settings set in settings.php
+$manOptions = array('- -',
+									'Apple',
+									'Dell',
+									'HP',
+									'Canon',
+									'Tandberg',
+									'Logitech');
+
+$categoryOptions = array('- -',
+									'Printer',
+									'Desktop',
+									'Video Conferencing',
+									'Laptop',
+									'Tablet', );
+
+$modelOptions = array('- -',
+									'Optiplex 5040',
+									'Optiplex 5050',
+									'Optiplex 7020',
+									'XPS 13',
+									'Latitude 7450',
+									'Latidude 7250',
+									'iMac',
+									'MacAir',
+									'MacPro',
+									'MacBook', );
+
+$locationOptions = array('- -',
+									'SL 247',
+									'SL 251',
+									'IT 078', );
+
+$userOptions = array('- -',
+									'Dan Mullins',
+									'Lori Yanef',
+									'Allison Jessup', );
+
+$filterTitle = "Current Filters - ";
+
+// Variables for each of the output select elements
+$categoryOutput = '';
+$manufacturerOutput = '';
+$modelOutput = '';
+$locationOutput = '';
+$userOutput = '';
+
 // Check if we need to process form data
 if (isset($_GET['manufacturer']))
 {
-	$filterTitle = "Current Filters - ";
+
 	// Get the form data
 	$manufacturer = $_GET['manufacturer'];
 	$category = $_GET['category'];
 	$model = $_GET['model'];
 	$location = $_GET['location'];
 	$user = $_GET['user'];
+
 	// Filter the data and add to filter title string
 	if ($manufacturer != "- -")
 	{
 		$filterTitle .= "Manufacturer: " . $manufacturer . ", ";
 	}
+
 	if ($category != "- -")
 	{
 		$filterTitle .= "Category: " . $category . ", ";
 	}
+
 	if ($model != "- -")
 	{
 		$filterTitle .= "Model: " . $model . ", ";
 	}
+
 	if ($location != "- -")
 	{
 		$filterTitle .= "Location: " . $location . ", ";
 	}
+
 	if($user != "- -")
 	{
 		$filterTitle .= "User: " . $user . ", ";
 	}
+
 	if(isset($_GET['surplus']))
 	{
+		$surplus = $_GET['surplus'];
 		$filterTitle .= "(Includes Surplus), ";
 	}
+
 	if(isset($_GET['expiredWarranty']))
 	{
+		$expired = $_GET['expiredWarranty'];
 		$filterTitle .= "(Expired Warranty), ";
 	}
+
 	// Remove the last comma if there is one
-	if ($filterTitle != "")
+	if ($filterTitle != "Current Filters - ")
 	{
 		$filterTitle = substr($filterTitle, 0, -2);
 	}
-	// Check to see if anything was selected at all
+
+	// Add the no filters statement if there are no filters
 	else
 	{
-		$filterTitle = "All Assets (Excludes Surplus)";
+		$filterTitle .= 'None';
 	}
+
 }
+
+// Formats select element options based on previous form data
+
+// Manufacturer
+for ($i = 0; $i < count($manOptions); $i++)
+{
+
+	// Check if the current value is the selected value
+	if ($manOptions[$i] == $manufacturer)
+	{
+		$manufacturerOutput .= '<option name="manufacturer" selected>' . $manOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$manufacturerOutput .= '<option name="manufacturer">' . $manOptions[$i] . '</option>';
+	}
+
+}
+
+// Model
+for ($i = 0; $i < count($modelOptions); $i++)
+{
+
+	// Check if the current value is the selected value
+	if ($modelOptions[$i] == $model)
+	{
+		$modelOutput .= '<option name="model" selected>' . $modelOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$modelOutput .= '<option name="model">' . $modelOptions[$i] . '</option>';
+	}
+
+}
+
+// Category
+for ($i = 0; $i < count($categoryOptions); $i++)
+{
+
+	// Check if the current value is the selected value
+	if ($categoryOptions[$i] == $category)
+	{
+		$categoryOutput .= '<option name="category" selected>' . $categoryOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$categoryOutput .= '<option name="category">' . $categoryOptions[$i] . '</option>';
+	}
+
+}
+
+// Location
+for ($i = 0; $i < count($locationOptions); $i++)
+{
+
+	// Check if the current value is the selected value
+	if ($locationOptions[$i] == $location)
+	{
+		$locationOutput .= '<option name="location" selected>' . $locationOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$locationOutput .= '<option name="location">' . $locationOptions[$i] . '</option>';
+	}
+
+}
+
+// User
+for ($i = 0; $i < count($userOptions); $i++)
+{
+
+	// Check if the current value is the selected value
+	if ($userOptions[$i] == $user)
+	{
+		$userOutput .= '<option name="user" selected>' . $userOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$userOutput .= '<option name="user">' . $userOptions[$i] . '</option>';
+	}
+
+}
+
 ?>
 <body>
 	<div class="border">
@@ -100,8 +249,8 @@ if (isset($_GET['manufacturer']))
 				<div>
 					<h2>Reports</h2>
 					<br />
-					<div>
-						<h3><span><?php print $filterTitle; ?></span></h3>
+					<div class="centered">
+						<p id="filterList"><span><?php echo $filterTitle; ?></span></p>
 					</div>
 					<br />
 					<div id="reportTable">
@@ -191,93 +340,66 @@ if (isset($_GET['manufacturer']))
 						<br />
 						<br />
 					</div>
-					<form action="reports.php" method="get">
+					<form id="filterForm" name="filterForm" action="reports.php" method="get">
 						<div class="reportFilters">
-							<h3><span>Filter Options</span></h3>
+							<h3><span>Select Filters</span></h3>
 
 							<!-- Select by category -->
 							<label for="category">Category -</label>
 							<select id="category" name="category">
-								<option>- -</option>
-								<option>Printer</option>
-								<option>Desktop</option>
-								<option>Video Conferencing</option>
-								<option>Laptop</option>
-								<option>Tablet</option>
+								<?php echo $categoryOutput; ?>
 							</select>
 
 							<!-- Select by Manufacturer -->
 							<label for="manufacturer">Manufacturer -</label>
 							<select id="manufacturer" name="manufacturer">
-								<option>- -</option>
-								<option>Apple</option>
-								<option>Dell</option>
-								<option>HP</option>
-								<option>Canon</option>
-								<option>Tandberg</option>
-								<option>Logitech</option>
+								<?php echo $manufacturerOutput; ?>
 							</select>
 
 							<!-- Select by Model -->
 							<label for="model">Model -</label>
 							<select id="model" name="model">
-									<option>- -</option>
-									<option>Optiplex 5040</option>
-									<option>Optiplex 5050</option>
-									<option>Optiplex 7020</option>
-									<option>XPS 13</option>
-									<option>Latitude 7450</option>
-									<option>Latidude 7250</option>
-									<option>iMac</option>
-									<option>MacAir</option>
-									<option>MacPro</option>
-									<option>MacBook</option>
+								<?php echo $modelOutput; ?>
 							</select>
 
 							<!-- Select by location -->
 							<label for="location">Location -</label>
 							<select id="location" name="location">
-								<option>- -</option>
-								<option>SL 247</option>
-								<option>SL 251</option>
-								<option>IT 078</option>
+								<?php echo $locationOutput; ?>
 							</select>
 
 							<!-- Select by user -->
 							<label for="user">User -</label>
 							<select name="user">
-								<option>- -</option>
-								<option>Dan Mullins</option>
-								<option>Lori Yanef</option>
-								<option>Allison Jessup</option>
+								<?php echo $userOutput; ?>
 							</select>
 							<br /> <br />
 
 							<!-- Check box to include surplus items in query -->
 							<label for="surplus">Include Surplus - </label>
-							<input type="checkbox" name="surplus" value="checked">
+							<input type="checkbox" name="surplus" value="checked" <?php echo $surplus; ?>>
 
 							<!-- Check box to filter by expired warranty -->
 							<label for="expiredWarranty">Expired Warranty - </label>
-							<input type="checkbox" name="expiredWarranty" value="checked">
+							<input type="checkbox" name="expiredWarranty" value="checked" <?php echo $expired; ?>>
 							<br /> <br />
 
 							<!-- Button to submit form -->
-							<button id="filter" type="submit" name="submit">Filter</button>
+							<button id="filter" type="submit" name="submitBtn">Filter</button>
 
 							<!-- Reset filters button -->
-							<button type="button" name="reset">Reset Filters</button>
+							<button type="button" name="resetBtn">Reset Filters</button>
 
 							<!-- Button to export to csv file -->
 							<button type="button" name="export">Export</button>
+
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="javascript/reports.js">
-		var testData = <?php print $manufacturer; ?>
-	</script>
+	<!-- Local JS -->
+	<script src="javascript/reports.js"></script>
 </body>
 </html>

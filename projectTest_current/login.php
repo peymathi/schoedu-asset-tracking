@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Flat HTML5/CSS3 Login Form</title>
   <link rel="stylesheet" href="css/logInStyle.css">
-  
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -26,7 +25,8 @@
   </div>
 </div>
 <!-- partial -->
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-  <script  src="javascript/logInScript.js"></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script  src="javascript/logInScript.js"></script>
+
 </body>
 </html>
