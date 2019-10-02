@@ -421,6 +421,25 @@ input[type=number] {
   margin: 0 0 auto;
 }
 
+#menu_icon{
+	float: right;
+	width: 30px;
+	display: none;
+	margin: 0 15px;
+}
+
+.rental_form label{
+	display:inline-block;
+}
+
+.rental_form input[type=text]{
+	width: 15em;
+}
+
+#rentalTerms{
+	display: none;
+}
+
 
 /*------------------------- Media ------------------------*/
 @media screen and (max-width: 1000px)
