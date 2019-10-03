@@ -340,7 +340,7 @@ form button[type=submit]{
   margin-right: 16px;
   background: #ddd;
   font-size: 17px;
-  border: none;
+  border: solid;
   cursor: pointer;
 }
 
@@ -358,7 +358,7 @@ form button[type=submit]{
   margin-right: 16px;
   background: #ddd;
   font-size: 17px;
-  border: none;
+  border: solid;
   cursor: pointer;
 }
 
@@ -367,17 +367,81 @@ form button[type=submit]{
 }
 
 .reportFilters input[type=checkbox] {
+  margin-right: 15px;
   -ms-transform: scale(1.6); /* IE */
   -moz-transform: scale(1.6); /* FF */
   -webkit-transform: scale(1.6); /* Safari and Chrome */
   -o-transform: scale(1.6); /* Opera */
   transform: scale(1.6);
+}
 
+.reportFilters input[type=radio] {
+  margin: 2 2 2;
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
 }
 
 .reportFilters {
   margin: 0 0 auto;
   text-align: center;
+}
+
+.settingsForms select {
+  padding: 3px 10px;
+  margin-right: 20px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.settingsForms input[type="text"] {
+  margin-right: 20px;
+  width: 140px;
+  height: 30px;
+  font-size: 17px;
+}
+
+.settingsForms input[type="number"] {
+  margin-right: 20px;
+  width: 50px;
+  height: 30px;
+  font-size: 17px;
+}
+
+
+.settingsForms button {
+  padding: 6px 10px;
+  margin-right: 20px;
+  background: #ddd;
+  font-size: 17px;
+  border: solid;
+  cursor: pointer;
+}
+
+.settingsForms label {
+  font-size: 18px;
+}
+
+.settingsForms input[type=checkbox] {
+   margin: 2 2 2;
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
+}
+
+.settingsForms input[type=radio] {
+  margin-right: 15px;
+  -ms-transform: scale(1.6); /* IE */
+  -moz-transform: scale(1.6); /* FF */
+  -webkit-transform: scale(1.6); /* Safari and Chrome */
+  -o-transform: scale(1.6); /* Opera */
+  transform: scale(1.6);
 }
 
 input[type=date] {

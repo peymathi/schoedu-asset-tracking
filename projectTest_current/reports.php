@@ -117,18 +117,18 @@ if (isset($_GET['manufacturer']))
 		$filterTitle .= "(Expired Warranty), ";
 	}
 
-	// Remove the last comma if there is one
-	if ($filterTitle != "Current Filters - ")
-	{
-		$filterTitle = substr($filterTitle, 0, -2);
-	}
+}
 
-	// Add the no filters statement if there are no filters
-	else
-	{
-		$filterTitle .= 'None';
-	}
+// Remove the last comma if there is one
+if ($filterTitle != "Current Filters - ")
+{
+	$filterTitle = substr($filterTitle, 0, -2);
+}
 
+// Add the no filters statement if there are no filters
+else
+{
+	$filterTitle .= 'None';
 }
 
 // Formats select element options based on previous form data
