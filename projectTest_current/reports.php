@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Project Test 3</title>
+	<title>Asset Reports</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="javascript/sorttable.js"></script>
@@ -117,18 +117,18 @@ if (isset($_GET['manufacturer']))
 		$filterTitle .= "(Expired Warranty), ";
 	}
 
-}
+	// Remove the last comma if there is one
+	if ($filterTitle != "Current Filters - ")
+	{
+		$filterTitle = substr($filterTitle, 0, -2);
+	}
 
-// Remove the last comma if there is one
-if ($filterTitle != "Current Filters - ")
-{
-	$filterTitle = substr($filterTitle, 0, -2);
-}
+	// Add the no filters statement if there are no filters
+	else
+	{
+		$filterTitle .= 'None';
+	}
 
-// Add the no filters statement if there are no filters
-else
-{
-	$filterTitle .= 'None';
 }
 
 // Formats select element options based on previous form data
@@ -264,8 +264,8 @@ for ($i = 0; $i < count($userOptions); $i++)
 									<th>Location</th>
 									<th>Days Since Checked</th>
 									<th>User</th>
-									<th>Surplus?</th>
-									<th>Expired Warranty?</th>
+									<th>Surplus</th>
+									<th>Expired Warranty</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -361,7 +361,8 @@ for ($i = 0; $i < count($userOptions); $i++)
 							<select id="model" name="model">
 								<?php echo $modelOutput; ?>
 							</select>
-
+							<br>
+							<br>
 							<!-- Select by location -->
 							<label for="location">Location -</label>
 							<select id="location" name="location">

@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Project Test 3</title>
+	<title>Settings</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="javascript/sorttable.js"></script>

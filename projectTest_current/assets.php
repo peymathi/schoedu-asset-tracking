@@ -75,7 +75,7 @@
 
 						Purchased:<input type="date" name="purchaseDate">
 
-						&nbsp&nbsp Warrenty:<input type="number" name="warrenty" min="0">&nbspyears
+						&nbsp&nbsp Warranty:<input type="number" name="warranty" min="0">&nbspyears
 
 						&nbsp&nbsp Qty: <input type="number" name="qty" min='1' max='99'>
 
@@ -107,6 +107,80 @@
 						    <input type="text" placeholder="Search.." name="search">
 							<button type="submit"><i class="fa fa-search"></i></button>
 						</form>
+
+
+						<table class="scrolling_table sortable">
+							<thead>
+								<tr>
+									<th style="width: 5em">Edit</th>
+									<th>Serial #</th>
+									<th>Category</th>
+									<th>Manufacturer</th>
+									<th>Model #</th>
+									<th>Location</th>
+									<th>User</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>173509367</td>
+									<td>Desktop</td>
+									<td>Dell</td>
+									<td>74544SR</td>
+									<td>SL 247</td>
+									<td>John Doe</td>
+								</tr>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>846421682</td>
+									<td>Printer</td>
+									<td>HP</td>
+									<td>23542LJ</td>
+									<td>IT 078</td>
+									<td>John Doe</td>
+								</tr>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>376523899</td>
+									<td>Tablet</td>
+									<td>Apple</td>
+									<td>32554I0</td>
+									<td>J. Smith</td>
+									<td>John Doe</td>
+								</tr>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>173509367</td>
+									<td>Desktop</td>
+									<td>Dell</td>
+									<td>74544SR</td>
+									<td>SL 247</td>
+									<td>John Doe</td>
+								</tr>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>846421682</td>
+									<td>Printer</td>
+									<td>HP</td>
+									<td>23542LJ</td>
+									<td>IT 078</td>
+									<td>John Doe</td>
+								</tr>
+								<tr>
+									<td style="width: 5em"><button>Edit</button></td>
+									<td>376523899</td>
+									<td>Tablet</td>
+									<td>Apple</td>
+									<td>32554I0</td>
+									<td>J. Smith</td>
+									<td>John Doe</td>
+								</tr>
+							</tbody>
+						</table>
+
+
+
 						
 					</div>
 				</div>

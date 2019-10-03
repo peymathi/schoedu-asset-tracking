@@ -46,11 +46,11 @@
 							<input type="text" id="name">
 							<br>
 
-							<label for="email">Email Address:</label>
+							<label style="padding: 6px 0" for="email">Email:</label>
 							<input type="text" id="email">
 							<br>
 
-							<label for="purpose">Purpose</label>
+							<label for="purpose">Purpose:</label>
 							<select name="purpose">
 								<option>Faculty Use for Class</option>
 								<option>Faculty Use for Meeting</option>
@@ -95,10 +95,10 @@
 							<br>
 							<br>
 
-							<label>Loan Date:</label>
+							<label>Rental Date:</label>
 							<input type="date" name="loanDate">
 							<br>
-							<label>Return Date:</label>
+							<label style="padding-top: 6px">Return Date:</label>
 							<input type="date" name="returnDate">
 
 							<p id='rentalTerms'>
@@ -133,6 +133,8 @@
 							<br>
 
 							<button id="rental_submit" onclick="printFunction()" type="submit">Print</button>
+
+							<button id="rental_scan" style="margin-left: 6px" type="submit">Scan</button>
 
 
 

@@ -49,7 +49,7 @@
 									<th>Manufacturer</th>
 									<th>Model #</th>
 									<th>Location</th>
-									<th>Days Since Checked</th>
+									<th>Days Since<br>Checked</th>
 								</tr>
 							</thead>
 							<tbody>
