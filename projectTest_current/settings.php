@@ -37,7 +37,17 @@
 			</div>
 			<div class="body">
 				<div>
-					<h2>Settings</h2>
+					<h2>
+						Settings
+						<div class="menu_toggle_container" onclick="menuToggle(this)">
+							<div class="bar1"></div>
+							<div class="bar2"></div>
+							<div class="bar3"></div>
+						</div>
+						<script>
+							function menuToggle(x) {x.classList.toggle("change");}
+						</script>
+					</h2>
 					<br />
 					<div>
 						<h3><span>Select a Setting</span></h3>

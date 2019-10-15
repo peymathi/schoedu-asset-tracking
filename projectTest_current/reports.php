@@ -247,7 +247,17 @@ for ($i = 0; $i < count($userOptions); $i++)
 			</div>
 			<div class="body">
 				<div>
-					<h2>Reports</h2>
+					<h2>
+						Reports
+						<div class="menu_toggle_container" onclick="menuToggle(this)">
+							<div class="bar1"></div>
+							<div class="bar2"></div>
+							<div class="bar3"></div>
+						</div>
+						<script>
+							function menuToggle(x) {x.classList.toggle("change");}
+						</script>
+					</h2>
 					<br />
 					<div class="centered">
 						<p id="filterList"><span><?php echo $filterTitle; ?></span></p>

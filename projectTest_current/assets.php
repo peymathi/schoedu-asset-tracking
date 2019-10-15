@@ -36,7 +36,17 @@
 			</div>
 			<div class="body">
 				<div>
-					<h2>Manage Assets<img id="menu_icon" title="Show Menu" alt="show menu icon" src="images/hamburgerIcon.svg"></h2>
+					<h2>
+						Manage Assets
+						<div class="menu_toggle_container" onclick="menuToggle(this)">
+							<div class="bar1"></div>
+							<div class="bar2"></div>
+							<div class="bar3"></div>
+						</div>
+						<script>
+							function menuToggle(x) {x.classList.toggle("change");}
+						</script>
+					</h2>
 					<div>
 						<h3><span>Add Equipment</span></h3>
 
