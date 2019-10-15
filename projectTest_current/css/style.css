@@ -7,6 +7,7 @@
 body {
 	background:url(../images/bg-body.jpg);
 	margin:0;
+	overflow: hidden;
 }
 a {
 	outline:none;
