@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+	<script type="text/javascript" src="javascript/modal.js"></script>
 </head>
 <body>
 	<div class="border">
@@ -47,6 +48,18 @@
 				<script>
 					function menuToggle(x) {x.classList.toggle("change");document.getElementById("sidebar").classList.toggle("show_menu");document.getElementById("body").classList.toggle("show_menu");}
 				</script>
+			</div>
+
+
+			<!-- The Modal -->
+			<div class="modal">
+
+			  <!-- Modal content -->
+			  <div class="modal-content">
+			    <span class="close">&times;</span>
+			    <p>Some text in the Modal..</p>
+			  </div>
+
 			</div>
 
 
@@ -133,7 +146,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td class="" style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>173509367</td>
 									<td>Desktop</td>
 									<td>Dell</td>
@@ -142,7 +155,7 @@
 									<td>John Doe</td>
 								</tr>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>846421682</td>
 									<td>Printer</td>
 									<td>HP</td>
@@ -151,7 +164,7 @@
 									<td>John Doe</td>
 								</tr>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>376523899</td>
 									<td>Tablet</td>
 									<td>Apple</td>
@@ -160,7 +173,7 @@
 									<td>John Doe</td>
 								</tr>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>173509367</td>
 									<td>Desktop</td>
 									<td>Dell</td>
@@ -169,7 +182,7 @@
 									<td>John Doe</td>
 								</tr>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>846421682</td>
 									<td>Printer</td>
 									<td>HP</td>
@@ -178,7 +191,7 @@
 									<td>John Doe</td>
 								</tr>
 								<tr>
-									<td style="width: 5em"><button><i class="fa fa-edit"></i></button></td>
+									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
 									<td>376523899</td>
 									<td>Tablet</td>
 									<td>Apple</td>
