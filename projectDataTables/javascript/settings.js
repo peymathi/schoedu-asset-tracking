@@ -49,6 +49,8 @@ function toggleRecordSelection(event, select) {
     $("#toggleModels").hide();
     $("#toggleLocations").show();
     $("#toggleUsers").hide();
+
+    fillRecordToggle("toggleLocations", "phpinc/getLocationHideList.php", select);
   } else if(selection === "User") {
     $("#toggleModels").hide();
     $("#toggleLocations").hide();
@@ -70,7 +72,8 @@ function toggleSelectedRecord() {
     selectedVal = $("#toggleModels").val();
     callRecordToggle("model", selectedVal, "#toggleModels");
   } else if(selection === "Location") {
-
+    selectedVal = $("#toggleLocations").val();
+    callRecordToggle("location", selectedVal, "#toggleLocations");
   } else if(selection === "User") {
     selectedVal = $("#toggleUsers").val();
     callRecordToggle("user", selectedVal, "#toggleUsers");
