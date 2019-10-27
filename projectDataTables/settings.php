@@ -90,19 +90,17 @@
 
 										<!-- Select menu for models -->
 										<select name="toggleModels" id="toggleModels" hidden>
-
+											<option>- -</option>
 										</select>
 
 										<!-- Select menu for users -->
 										<select name="toggleUsers" id="toggleUsers" hidden>
-
+											<option>- -</option>
 										</select>
 
 										<!-- Select menu for locations -->
 										<select name="toggleLocations" id="toggleLocations" hidden>
-											<option>SL 247 (shown)</option>
-											<option>SL 251 (shown)</option>
-											<option>IT 059 (shown)</option>
+											<option>- -</option>
 										</select>
 
 										<button type="button" id="toggleSubmit" name="toggleSubmit">Toggle Record</button>
@@ -130,31 +128,25 @@
 
 									<!-- Add Manufacturer Form -->
 									<div id="newManufacturerForm">
-										<form name="newManufacturerForm" action="settings.php" method="post">
+										<form name="newManufacturerForm">
 											<label for="newManufacturer">New Manufacturer:</label>
-											<input type="text" name="newManufacturer">
-											<button type="button" name="newManufacturerSubmit">Add Manufacturer</button>
+											<input type="text" id="newManufacturer" name="newManufacturer">
+											<button type="button" id="newManufacturerSubmit" name="newManufacturerSubmit">Add Manufacturer</button>
 										</form>
 									</div>
 
 									<!-- Add Model Form -->
 									<div id="newModelForm" hidden>
-										<form name="newModelForm" action="settings.php" method="post">
+										<form name="newModelForm" action="phpinc/processSettings.php" method="post">
 											<label for="newModel">New Model:</label>
-											<input type="text" name="newModel">
+											<input type="text" id="newModel" name="newModel">
 
 											<label for="manufacturerSelect">Manufacturer</label>
-											<select name="manufacturerSelect">
+											<select id="manufacturerSelect" name="manufacturerSelect">
 												<option>- -</option>
-												<option>Apple</option>
-												<option>Dell</option>
-												<option>HP</option>
-												<option>Canon</option>
-												<option>Tandberg</option>
-												<option>Logitech</option>
 											</select>
 
-											<button type="button" name="newModelSubmit">Add Model</button>
+											<button type="button" id="newModelSubmit" name="newModelSubmit">Add Model</button>
 										</form>
 									</div>
 
@@ -162,17 +154,17 @@
 									<div id="newLocationForm" hidden>
 										<form name="newLocationForm" action="settings.php" method="post">
 											<label for="newLocation">New Location:</label>
-											<input type="text" name="newLocation">
-											<button type="button" name="newLocationSubmit">Add Location</button>
+											<input type="text" id="newLocation" name="newLocation">
+											<button type="button" id="newLocationSubmit" name="newLocationSubmit">Add Location</button>
 										</form>
 									</div>
 
 									<!-- Add User Form -->
 									<div id="newUserForm" hidden>
-										<form name="newUserForm" action="settings.php" method="post">
+										<form name="newUserForm">
 											<label for="newUser">New User:</label>
-											<input type="text" name="newUser">
-											<button type="button" name="newUserSubmit">Add User</button>
+											<input type="text" id="newUser" name="newUser">
+											<button type="button" id="newUserSubmit" name="newUserSubmit">Add User</button>
 										</form>
 									</div>
 								</div>
@@ -182,11 +174,11 @@
 									<form name="changeDaysCheckedForm">
 
 										<!-- Display current days checked filter -->
-										<h4>Current Days Checked Filter: 30 Days</h4>
+										<h4>Current Days Checked Filter: <span id="currentDaysChecked">??</span> Days</h4>
 										<label for="newDaysChecked">New Days Checked Filter:</label>
-										<input type="number" name="newDaysChecked">
+										<input type="number" id="newDaysChecked" name="newDaysChecked">
 
-										<button type="button" name="newDaysCheckedSubmit">Change Days Checked</button>
+										<button type="button" id="newDaysCheckedSubmit" name="newDaysCheckedSubmit">Change Days Checked</button>
 									</form>
 								</div>
 							</div>

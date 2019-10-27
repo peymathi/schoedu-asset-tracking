@@ -103,6 +103,8 @@ function addModel() {
   $("#newCategoryForm").hide();
   $("#newLocationForm").hide();
   $("#newUserForm").hide();
+
+  fillRecordToggle("manufacturerSelect", "phpinc/getActiveManufacturersList.php");
 }
 
 function addCategory() {
@@ -134,6 +136,19 @@ function changeDaysChecked() {
   $("#changeDaysCheckedForm").show();
   $("#addRecordForm").hide();
   $("#toggleRecordForm").hide();
+  getDaysChecked();
+}
+
+function getDaysChecked() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      $("#currentDaysChecked").text(xmlhttp.responseText);
+      $("#newDaysChecked").val(xmlhttp.responseText);
+    }
+  }
+  xmlhttp.open("GET", "phpinc/getCheckDays.php", true);
+  xmlhttp.send();
 }
 
 // document.ready wrapper
@@ -158,5 +173,84 @@ $(document).ready(function() {
   // Days Checked Form
   $("#daysCheckedRadio").on("click", changeDaysChecked);
 
+  $('#newManufacturerSubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"manufacturer",
+        "name":$("#newManufacturer").val()
+      },
+      type: "POST",
+      success: function(r) {
+        $('#newManufacturer').val('');
+        alert("created manufacturer");
+      }
+    });
+  });
 
+  $('#newModelSubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"model",
+        "name":$("#newModel").val(),
+        "manufacturer":$('#manufacturerSelect').val()
+      },
+      type: "POST",
+      success: function(r) {
+        $('#newModel').val('');
+        alert("created model");
+      }
+    });
+  });
+
+  $('#newLocationSubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"location",
+        "name":$("#newLocation").val(),
+      },
+      type: "POST",
+      success: function(r) {
+        $('#newLocation').val('');
+        alert("created location");
+      }
+    });
+  });
+
+  $('#newUserSubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"user",
+        "name":$("#newUser").val(),
+      },
+      type: "POST",
+      success: function(r) {
+        $('#newUser').val('');
+        alert("created user");
+      }
+    });
+  });
+
+  $('#newDaysCheckedSubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"daysChecked",
+        "days":$("#newDaysChecked").val(),
+      },
+      type: "POST",
+      success: function(r) {
+        getDaysChecked();
+        alert("updated days checked");
+      }
+    });
+  });
 });
