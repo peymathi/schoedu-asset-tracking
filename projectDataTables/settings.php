@@ -90,23 +90,12 @@
 
 										<!-- Select menu for models -->
 										<select name="toggleModels" id="toggleModels" hidden>
-											<option>Optiplex 5040 (shown)</option>
-											<option>Optiplex 5050 (shown)</option>
-											<option>Optiplex 7020 (shown)</option>
-											<option>XPS 13 (shown)</option>
-											<option>Latitude 7450 (shown)</option>
-											<option>Latidude 7250 (shown)</option>
-											<option>iMac (shown)</option>
-											<option>MacAir (shown)</option>
-											<option>MacPro (shown)</option>
-											<option>MacBook (shown)</option>
+
 										</select>
 
 										<!-- Select menu for users -->
 										<select name="toggleUsers" id="toggleUsers" hidden>
-											<option>Dan Mullins (shown)</option>
-											<option>Lori Yanef (shown)</option>
-											<option>Allison Jessup (shown)</option>
+
 										</select>
 
 										<!-- Select menu for locations -->
