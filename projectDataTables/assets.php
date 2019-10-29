@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
+
+?>
+
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
@@ -8,6 +15,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript" src="javascript/modal.js"></script>
+	<script type="text/javascript" src="javascript/assets.js"></script>
 
 	<!-- Datatables -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -87,7 +95,7 @@
 							<option>Dell</option>
 							<option>Apple</option>
 						</select>
-							
+
 						<select name="model">
 							<option hidden>Model</option>
 							<option>123</option>
@@ -205,17 +213,6 @@
 								</tr>
 							</tbody>
 						</table>
-
-
-						<!-- DataTable controll -->
-						<script type="text/javascript">
-							$(document).ready(function(){
-						    	$('.dataTable').DataTable({responsive:true});} );
-						</script>
-
-
-
-						
 					</div>
 				</div>
 			</div>
