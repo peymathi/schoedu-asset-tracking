@@ -15,6 +15,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript" src="javascript/modal.js"></script>
+	<script type="text/javascript" src="javascript/assets.js"></script>
 
 	<!-- Datatables -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -212,29 +213,6 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 								</tr>
 							</tbody>
 						</table>
-
-
-						<!-- DataTable control -->
-						<script type="text/javascript">
-							$(document).ready(function(){
-								$('.dataTable').DataTable({
-									responsive: true,
-									serverSide: true,
-    								ajax: 'phpinc/getAssetDataJson.php',
-									rowCallback: function( row, data ) {
-										console.log(data[0]);
-										//$("td:eq(0)", row).css("width: 5em");
-										$("td:eq(0)", row).html('<button class="editBtn"><i class="fa fa-edit"></i></button>');
-									},
-									columnDefs: [ { orderable: false, targets: [0] } ],
-									order: [[ 1, 'asc' ]]
-								});
-							});
-						</script>
-
-
-
-
 					</div>
 				</div>
 			</div>
