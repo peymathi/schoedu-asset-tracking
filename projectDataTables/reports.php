@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
@@ -27,8 +27,8 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 $queryData = "";
 $tableData = "";
 
-require_once "phpUtil/db_connect.php";
-require_once "phpUtil/reportsUtil.php";
+require_once "phpinc/db_connect.php";
+require_once "phpinc/reportsUtil.php";
 
 // Variables to store user form data
 $manufacturer = "";
@@ -475,8 +475,14 @@ for ($i = 0; $i < count($userOptions); $i++)
 							<!-- Button to export to CSV file -->
 							<button type="button" name="exportCSV">Export CSV</button>
 
+							<!-- Hidden anchor to allow download -->
+							<a href="report.csv" id="csvDownload" download hidden></a>
+
 							<!-- Button to export to PDF file -->
 							<button type="button" name="exportPDF">Export PDF </button>
+
+							<!-- Hidden anchor to allow download -->
+							<a href="reportsQuery.pdf" id="pdfDownload" download hidden></a>
 
 						</div>
 					</form>

@@ -43,4 +43,14 @@ $(document).ready(function () {
   // Attach event listener to the "Reset Filters" button
   $("button[name='resetBtn']").on('click', resetForm);
 
+  // Attach event listener to the export csv button
+  $("button[name='exportCSV']").on('click', function() {
+    $("#csvDownload").click();
+  });
+
+  // Attach event listener to the export pdf button
+  $("button[name='exportPDF']").on('click', function() {
+    $("#pdfDownload").click();
+  });
+
 });
