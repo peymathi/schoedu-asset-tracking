@@ -27,7 +27,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 $queryData = "";
 $tableData = "";
 
-require_once "phpinc/db_connect.php";
+require_once "phpinc/dbconnect.php";
 require_once "phpinc/reportsUtil.php";
 
 // Variables to store user form data
