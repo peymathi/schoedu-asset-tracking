@@ -87,7 +87,7 @@
 							<option>Dell</option>
 							<option>Apple</option>
 						</select>
-							
+
 						<select name="model">
 							<option hidden>Model</option>
 							<option>123</option>
@@ -210,12 +210,17 @@
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    	$('.dataTable').DataTable({responsive:true});} );
+								$('.dataTable').DataTable({
+									responsive: true,
+									serverSide: true,
+    							ajax: 'phpinc/getAssetDataJson.php'
+								});
+							});
 						</script>
 
 
 
-						
+
 					</div>
 				</div>
 			</div>
