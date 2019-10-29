@@ -45,12 +45,12 @@ $(document).ready(function () {
 
   // Attach event listener to the export csv button
   $("button[name='exportCSV']").on('click', function() {
-    $("#csvDownload").click();
+    window.location.href="report.csv";
   });
 
   // Attach event listener to the export pdf button
   $("button[name='exportPDF']").on('click', function() {
-    $("#pdfDownload").click();
+    window.location.href="report.pdf";
   });
 
 });

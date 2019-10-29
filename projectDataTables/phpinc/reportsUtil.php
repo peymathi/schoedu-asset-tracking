@@ -1,7 +1,7 @@
 <?php
 
 /* Utility functions and classes for reports.php */
-require_once "phpinc/db_connect.php";
+require_once "dbconnect.php";
 
 /* Class to handle form data in reports.php */
 class ReportsForm
@@ -198,14 +198,15 @@ function printCSV($data, $location)
   // Loop through the data query and format each record to be added to the format string
   foreach($data as $record)
   {
+
     // Loop until the user name comes up
     for($i = 0; $i < 6; $i++)
     {
       $formatString .= $record[$i] . ',';
     }
 
-    $formatString .= '"' . $record[7] . '"';
-    $formatString .= $record[8] . PHP_EOL;
+    $formatString .= '"' . $record[6] . '"' . ',';
+    $formatString .= $record[7] . ',' . $record[8] . PHP_EOL;
   }
 
   // Write the data to the file

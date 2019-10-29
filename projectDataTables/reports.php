@@ -27,7 +27,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 $queryData = "";
 $tableData = "";
 
-require_once "phpinc/db_connect.php";
+require_once "phpinc/dbconnect.php";
 require_once "phpinc/reportsUtil.php";
 
 // Variables to store user form data
@@ -189,6 +189,7 @@ if (isset($_GET['manufacturer']))
 
 	//Get raw and table data from reports form
 		$queryData = $reportsForm->getRaw();
+		printCSV($queryData, "report.csv");
 		$tableData = $reportsForm->getTableData();
 
 	// Filter the data and add to filter title string
@@ -252,6 +253,7 @@ else
 	$filterTitle .= 'None';
 
 	$queryData = $reportsForm->getRaw();
+	printCSV($queryData, "report.csv");
 	$tableData = $reportsForm->getTableData();
 }
 
@@ -475,14 +477,8 @@ for ($i = 0; $i < count($userOptions); $i++)
 							<!-- Button to export to CSV file -->
 							<button type="button" name="exportCSV">Export CSV</button>
 
-							<!-- Hidden anchor to allow download -->
-							<a href="report.csv" id="csvDownload" download hidden></a>
-
 							<!-- Button to export to PDF file -->
 							<button type="button" name="exportPDF">Export PDF </button>
-
-							<!-- Hidden anchor to allow download -->
-							<a href="reportsQuery.pdf" id="pdfDownload" download hidden></a>
 
 						</div>
 					</form>
