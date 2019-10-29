@@ -136,12 +136,12 @@ $vccount = $row->c;
 							</thead>
 							<tbody>
 								<?php
-								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked < ?");
+								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked < ? group by SerialNumber");
 								$stmt->execute(array($datemax));
 								while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									print "<tr>";
 									
-									print "<td><button><i></i></button></td>";
+									print "<td><button onclick='verifyFunction(this)'><i class='fa fa-check'></i></button></td>";
 									print "<td>".$row["SerialNumber"]."</td><td>".$row["CategoryName"]."</td><td>".$row["ManufacturerName"]."</td><td>".$row["ModelName"]."</td><td>".$row["LocationName"]."</td><td>".$row["DateLastChecked"]."</td>";
 									print "</tr>"; 
 								}
@@ -152,7 +152,13 @@ $vccount = $row->c;
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    		$('.dataTable').DataTable({responsive:true});} );
+						    		$('.dataTable').DataTable({responsive:true});
+						    });
+
+						    function verifyFunction(x)
+						    {
+						    	alert($(x).parent().next().text());
+						    }
 						</script>
 
 
