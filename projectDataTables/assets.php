@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
+
+?>
+
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>

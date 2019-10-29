@@ -1,5 +1,6 @@
 <?php
-
+session_start();
+if (!isset($_SESSION['userid'])) Header ("Location:login.php") ; 
 	require_once "phpinc/dbconnect.php";
 
 ?>

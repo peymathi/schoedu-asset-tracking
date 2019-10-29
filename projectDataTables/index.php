@@ -1,3 +1,59 @@
+<?php
+
+session_start();
+
+require_once "phpinc/dbconnect.php";
+
+if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
+
+$deskcount = "";
+$lapcount = "";
+$tabletcount = "";
+$cameracount = "";
+$printercount = "";
+$vccount = "";
+
+$row = "";
+
+$stmt = $con->prepare("select checkdays from P_ADMINS where adminid = ?");
+$stmt->execute(array($_SESSION['userid']));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$checkdays = $row->checkdays;
+$curdate = date("Y-m-d");
+$datemax = $curdate - $checkdays;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ?");
+$stmt->execute(array(1));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$lapcount = $row->c;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
+$stmt->execute(array(2));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$deskcount = $row->c;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
+$stmt->execute(array(7));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$tabletcount = $row->c;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
+$stmt->execute(array(3));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$cameracount = $row->c;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
+$stmt->execute(array(6));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$printercount = $row->c;
+
+$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
+$stmt->execute(array(8));
+$row = $stmt->fetch(PDO::FETCH_OBJ);
+$vccount = $row->c;
+
+?>
+
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
@@ -74,71 +130,28 @@
 									<th>Manufacturer</th>
 									<th>Model #</th>
 									<th>Location</th>
-									<th>Days Since<br>Checked</th>
+									<th>Date Last<br>Checked</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>38</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>17</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>23</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>5</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>46</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button><i class="fa fa-check"></i></button></td>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>11</td>
-								</tr>
+								<?php
+								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked < ?");
+								$stmt->execute(array($curdate));
+								while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									print "<tr>";
+									
+									print "<td><button><i></i></button></td>";
+									print "<td>".$row["SerialNumber"]."</td><td>".$row["CategoryName"]."</td><td>".$row["ManufacturerName"]."</td><td>".$row["ModelName"]."</td><td>".$row["LocationName"]."</td><td>".$row["DateLastChecked"]."</td>";
+									print "</tr>"; 
+								}
+								?>
 							</tbody>
 						</table>
 
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    	$('.dataTable').DataTable({responsive:true});} );
+						    		$('.dataTable').DataTable({responsive:true});} );
 						</script>
 
 
@@ -148,14 +161,14 @@
 					<div>
 						<h3><span>Quick Summary</span></h3>
 						<div class="summary">
-							Desktops: 100 &nbsp&nbsp
-							Laptops: 100 &nbsp&nbsp
-							Tablets: 100
+							Desktops: <?php print $deskcount; ?> &nbsp&nbsp
+							Laptops: <?php print $lapcount; ?> &nbsp&nbsp
+							Tablets: <?php print $tabletcount; ?>
 						</div>
 						<div class="summary">
-							Cameras: 100 &nbsp&nbsp
-							Printers: 100 &nbsp&nbsp
-							Video Conferencing: 100
+							Cameras: <?php print $cameracount; ?> &nbsp&nbsp
+							Printers: <?php print $printercount ?> &nbsp&nbsp
+							Video Conferencing: <?php print $vccount ?>
 						</div>
 						
 					</div>
