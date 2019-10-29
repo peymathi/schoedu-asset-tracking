@@ -1,3 +1,10 @@
+<?php
+
+	require_once "dbconnect.php";
+
+?>
+
+
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
@@ -6,7 +13,8 @@
 	<title>Rental Page</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="javascript/sorttable.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="javascript/rental.js"></script>
 </head>
 <body>
 	<div class="border">
@@ -57,7 +65,7 @@
 					<div id="rental_div">
 						<br>
 						<br>
-						<form action="" class="rental_form">
+						<form onsubmit="return false" class="rental_form" method="get">
 							<label for="name">Name:</label>
 							<input type="text" id="name">
 							<br>
@@ -81,31 +89,28 @@
 							<label>Equipment:</label>
 							<br>
 
-							<select name="category">
+							<select onchange="checkState(1);showOptions('brand');" name="category1">
 								<option hidden>Category</option>
-								<option>Desktop</option>
-								<option>Tablet</option>
+								<?php print GetCategory(); ?>
 							</select>
 
-							<select name="brand">
+							<select onclick="showOptions('model')" onchange="showOptions('model')" disabled name="brand1">
 								<option hidden>Brand</option>
-								<option>Dell</option>
-								<option>Apple</option>
 							</select>
 								
-							<select name="model">
+							<select onclick="showOptions('');" disabled name="model1">
 								<option hidden>Model</option>
-								<option>123</option>
-								<option>456</option>
 							</select>
 
 							<label>&nbsp&nbspSerial:</label>
-							<input type="text" name="serial">
+							<input list="serial" onkeyup="showOptions(this.value)" disabled type="text" name="serial1">
+
+							<datalist id="serial"></datalist>
 
 							<br>
 							<br>
 
-							<button>Add Device</button>
+							<button onclick="addDeviceBtn()" id='addDevice'>Add Device</button>
 
 							<br>
 							<br>
@@ -172,3 +177,24 @@
 	</div>
 </body>
 </html>
+
+<?php
+
+function GetCategory()
+{
+	$res = "";
+	global $con;
+	$sql = $con->prepare("select Name from P_CATEGORIES order by Name");
+	$sql->execute();
+	$result = $sql->fetchAll();
+
+	foreach ($result as $row)
+	{ 
+		$res = $res.'<option value = "'.$row['Name'].'">'.$row['Name'].'</option>';
+
+	}
+
+	return $res;
+}
+
+?>
