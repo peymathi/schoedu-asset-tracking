@@ -1,7 +1,7 @@
 <?php
 
 /* Utility functions and classes for reports.php */
-require_once "phpinc/db_connect.php";
+require_once "phpinc/dbconnect.php";
 
 /* Class to handle form data in reports.php */
 class ReportsForm
