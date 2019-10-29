@@ -1,7 +1,7 @@
 <?php
 
 /* Utility functions and classes for reports.php */
-require_once "phpUtil/db_connect.php";
+require_once "phpinc/db_connect.php";
 
 /* Class to handle form data in reports.php */
 class ReportsForm
@@ -177,5 +177,56 @@ class ReportsForm
   }
 
 }
+
+// Function for writing a CSV based on a data query string
+function printCSV($data, $location)
+{
+
+  // Delete a file at that location if there already is one
+  if (file_exists($location))
+  {
+    unlink($location);
+  }
+
+  // Open a new file at the location in write mode
+  $file = fopen($location, "w");
+
+  // Print a line with the list of column names
+  $formatString = "SerialNumber, Category, Manufacturer, Model, Location, DateLastChecked, User, IsSurplus, WarrantyEnd";
+  $formatString .= PHP_EOL;
+
+  // Loop through the data query and format each record to be added to the format string
+  foreach($data as $record)
+  {
+    // Loop until the user name comes up
+    for($i = 0; $i < 6; $i++)
+    {
+      $formatString .= $record[$i] . ',';
+    }
+
+    $formatString .= '"' . $record[7] . '"';
+    $formatString .= $record[8] . PHP_EOL;
+  }
+
+  // Write the data to the file
+  fwrite($file, $formatString);
+
+  // Close the file
+  fclose($file);
+}
+
+// Function for writing a PDF based on a data query string.
+function printPDF($data, $location)
+{
+  // Delete a file at that location if there already is one
+  if (file_exist($location))
+  {
+    unlink($location);
+  }
+
+  // Open a new file at the location in write mode
+  $file = fopen($location, "w");
+}
+
 
 ?>
