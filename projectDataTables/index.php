@@ -19,8 +19,9 @@ $stmt = $con->prepare("select checkdays from P_ADMINS where adminid = ?");
 $stmt->execute(array($_SESSION['userid']));
 $row = $stmt->fetch(PDO::FETCH_OBJ);
 $checkdays = $row->checkdays;
-$curdate = date("Y-m-d");
-$datemax = $curdate - $checkdays;
+$curdate = date("Y-m-d") ." -" .$checkdays ." days";
+$time = strtotime($curdate);
+$datemax = date("Y-m-d", $time);
 
 $stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ?");
 $stmt->execute(array(1));
@@ -136,7 +137,7 @@ $vccount = $row->c;
 							<tbody>
 								<?php
 								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked < ?");
-								$stmt->execute(array($curdate));
+								$stmt->execute(array($datemax));
 								while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									print "<tr>";
 									
