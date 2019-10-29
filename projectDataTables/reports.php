@@ -14,7 +14,14 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
+
 <?php
+
+$queryData = "";
+$tableData = "";
+
+require_once "phpUtil/db_connect.php";
+require_once "phpUtil/reportsUtil.php";
 
 // Variables to store user form data
 $manufacturer = "";
@@ -25,44 +32,117 @@ $user = "";
 $surplus = "";
 $expired = "";
 
-// Arrays that store all possible select element values. Hard coded data for now, must
-// later get this from the data base depending on the settings set in settings.php
-$manOptions = array('- -',
-									'Apple',
-									'Dell',
-									'HP',
-									'Canon',
-									'Tandberg',
-									'Logitech');
+// Query the DB for each non hidden filter type and add them as an array to each variable
+// Sql statement to be prepared
+$sql = "
 
-$categoryOptions = array('- -',
-									'Printer',
-									'Desktop',
-									'Video Conferencing',
-									'Laptop',
-									'Tablet', );
+	SELECT Name
+	FROM P_MANUFACTURERS
+	WHERE ManufacturerID NOT IN(
+		SELECT ManufacturerID
+		FROM P_HIDE_MANUFACTURER_RULES
+		)
 
-$modelOptions = array('- -',
-									'Optiplex 5040',
-									'Optiplex 5050',
-									'Optiplex 7020',
-									'XPS 13',
-									'Latitude 7450',
-									'Latidude 7250',
-									'iMac',
-									'MacAir',
-									'MacPro',
-									'MacBook', );
+";
 
-$locationOptions = array('- -',
-									'SL 247',
-									'SL 251',
-									'IT 078', );
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$manOptions = array('- -');
 
-$userOptions = array('- -',
-									'Dan Mullins',
-									'Lori Yanef',
-									'Allison Jessup', );
+// Loop through the queried array and set up the options array
+foreach ($tempArr as $i)
+{
+	array_push($manOptions, $i[0]);
+}
+
+$sql = "
+
+	SELECT Name
+	FROM P_CATEGORIES
+	WHERE CategoryID NOT IN(
+		SELECT CategoryID
+		FROM P_HIDE_CATEGORY_RULES
+		)
+
+";
+
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$categoryOptions = array("- -");
+
+// Loop through the queried array and set up the options array
+foreach ($tempArr as $i)
+{
+	array_push($categoryOptions, $i[0]);
+}
+
+$sql = "
+
+	SELECT Name
+	FROM P_MODELS
+	WHERE ModelID NOT IN(
+		SELECT ModelID
+		FROM P_HIDE_MODEL_RULES
+		)
+
+";
+
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$modelOptions = array("- -");
+
+// Loop through the queried array and set up the options array
+foreach ($tempArr as $i)
+{
+	array_push($modelOptions, $i[0]);
+}
+
+$sql = "
+
+	SELECT Name
+	FROM P_LOCATIONS
+	WHERE LocationID NOT IN(
+		SELECT LocationID
+		FROM P_HIDE_LOCATION_RULES
+		)
+
+";
+
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$locationOptions = array("- -");
+
+// Loop through the queried array and set up the options array
+foreach ($tempArr as $i)
+{
+	array_push($locationOptions, $i[0]);
+}
+
+$sql = "
+
+	SELECT Name
+	FROM P_USERS
+	WHERE UserID NOT IN(
+		SELECT UserID
+		FROM P_HIDE_USER_RULES
+		)
+
+";
+
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$userOptions = array("- -");
+
+// Loop through the queried array and set up the options array
+foreach ($tempArr as $i)
+{
+	array_push($userOptions, $i[0]);
+}
 
 $filterTitle = "Current Filters - ";
 
@@ -73,7 +153,7 @@ $modelOutput = '';
 $locationOutput = '';
 $userOutput = '';
 
-// Check if we need to process form data
+// Check if we need to process form data. (ie. filters have been requested)
 if (isset($_GET['manufacturer']))
 {
 
@@ -83,6 +163,26 @@ if (isset($_GET['manufacturer']))
 	$model = $_GET['model'];
 	$location = $_GET['location'];
 	$user = $_GET['user'];
+	$surplus = False;
+	$expired = False;
+
+	if (isset($_GET['surplus']))
+	{
+		$surplus = True;
+	}
+
+	if (isset($_GET['expiredWarranty']))
+	{
+		$expired = True;
+	}
+
+	// Create ReportsForm object
+		$reportsForm = new ReportsForm($con, $manufacturer, $category, $model, $location, $user, $surplus, $expired);
+		$reportsForm->queryDB();
+
+	//Get raw and table data from reports form
+		$queryData = $reportsForm->getRaw();
+		$tableData = $reportsForm->getTableData();
 
 	// Filter the data and add to filter title string
 	if ($manufacturer != "- -")
@@ -136,8 +236,19 @@ if (isset($_GET['manufacturer']))
 
 }
 
-// Formats select element options based on previous form data
+// This runs if this is the page's first time running
+else
+{
 
+	$reportsForm = new ReportsForm($con);
+	$reportsForm->queryDB();
+	$filterTitle .= 'None';
+
+	$queryData = $reportsForm->getRaw();
+	$tableData = $reportsForm->getTableData();
+}
+
+// Formats select element options based on previous form data
 // Manufacturer
 for ($i = 0; $i < count($manOptions); $i++)
 {
@@ -192,7 +303,6 @@ for ($i = 0; $i < count($categoryOptions); $i++)
 // Location
 for ($i = 0; $i < count($locationOptions); $i++)
 {
-
 	// Check if the current value is the selected value
 	if ($locationOptions[$i] == $location)
 	{
@@ -263,7 +373,7 @@ for ($i = 0; $i < count($userOptions); $i++)
 				</script>
 			</div>
 
-			
+
 			<div class="body" id="body">
 				<div>
 					<h2>
@@ -290,72 +400,7 @@ for ($i = 0; $i < count($userOptions); $i++)
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>38</td>
-									<td>Dan Mullins</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
-								<tr>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>17</td>
-									<td>Dan Mullins</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
-								<tr>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>23</td>
-									<td>Lori Yanef</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
-								<tr>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>5</td>
-									<td>Allison Jessup</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
-								<tr>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>46</td>
-									<td>Dan Mullins</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
-								<tr>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>11</td>
-									<td>Allison Jessup</td>
-									<td>N</td>
-									<td>N</td>
-								</tr>
+								<?php echo $tableData; ?>
 							</tbody>
 						</table>
 
@@ -420,8 +465,11 @@ for ($i = 0; $i < count($userOptions); $i++)
 							<!-- Reset filters button -->
 							<button type="button" name="resetBtn">Reset Filters</button>
 
-							<!-- Button to export to csv file -->
-							<button type="button" name="export">Export</button>
+							<!-- Button to export to CSV file -->
+							<button type="button" name="exportCSV">Export CSV</button>
+
+							<!-- Button to export to PDF file -->
+							<button type="button" name="exportPDF">Export PDF </button>
 
 						</div>
 					</form>
@@ -430,6 +478,11 @@ for ($i = 0; $i < count($userOptions); $i++)
 		</div>
 	</div>
 	<!-- Local JS -->
-	<script src="javascript/reports.js"></script>
+	<script src="javascript/reports.js">
+
+		// Passes the current query data from php to JS
+		var queryData = <?php echo $queryData; ?>;
+
+	</script>
 </body>
 </html>
