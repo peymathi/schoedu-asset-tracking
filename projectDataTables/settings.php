@@ -68,7 +68,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						<div class="settingsForms">
 
 							<!-- Radio buttons to select the currently active form -->
-							<label for="toggleRadio">Toggle a Record From All Searches - </label>
+							<label for="toggleRadio">Edit Records - </label>
 							<input type="radio" name="formGroup" value="toggle" id="toggleRadio" checked>
 
 							<label for="addRadio">Add a Record to Database - </label>
@@ -81,7 +81,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<br />
 							<hr />
 							<br />
-							<h3><span id="currentSetting">Toggle a Record</span></h3>
+							<h3><span id="currentSetting">Edit a Record</span></h3>
 							<div>
 								<!-- Toggle Model, User, or Location Form -->
 								<div id="toggleRecordForm">
@@ -90,9 +90,19 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 										<!-- Select whether it is a model, user, or location -->
 										<select name="toggleRecordSelection" id="toggleRecordSelection">
 											<option selected>- -</option>
+											<option>Category</option>
+											<option>Manufacturer</option>
 											<option>Model</option>
 											<option>User</option>
 											<option>Location</option>
+										</select>
+
+										<select name="toggleCategories" id="toggleCategories" hidden>
+											<option>- -</option>
+										</select>
+
+										<select name="toggleManufacturers" id="toggleManufacturers" hidden>
+											<option>- -</option>
 										</select>
 
 										<!-- Select menu for models -->
@@ -110,7 +120,30 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 											<option>- -</option>
 										</select>
 
-										<button type="button" id="toggleSubmit" name="toggleSubmit">Toggle Record</button>
+										<br><br>
+
+										<button type="button" id="toggleSubmit" name="toggleSubmit">Toggle Record Visibility</button>
+
+										<br><br>
+
+										<input type="text" name="" value="" id="editNameBox">
+
+										<button type="button" id="editSubmit" name="editSubmit">Edit Record Name</button>
+
+										<br><br>
+
+										<div id="editModel" style="margin: 0px" hidden>
+											<select name="modelCategorySelect" id="modelCategorySelect">
+												<option>- -</option>
+											</select>
+
+											<select name="modelManufacturerSelect" id="modelManufacturerSelect">
+												<option>- -</option>
+											</select>
+
+											<button type="button" id="editModelSubmit" name="editModelSubmit">Edit Model Information</button>
+										</div>
+
 
 									</form>
 								</div>

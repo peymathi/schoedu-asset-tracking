@@ -8,7 +8,37 @@
     $type = $_GET['type'];
 
     // you cant prepare a statement with variable tables so this is a little repetitive
-    if($type == 'model') {
+    if($type == 'category') {
+      $countStmt = $con->prepare('SELECT COUNT(*) AS c FROM P_HIDE_CATEGORY_RULES WHERE CategoryID = :key AND AdminID = :admin');
+      $countStmt->execute(array('admin' => $admin, 'key' => $key));
+      $count = $countStmt->fetch()['c'];
+      $shown = $count == 0;
+
+      if($shown) {
+        echo 'inserting...';
+        $insertStmt = $con->prepare('INSERT INTO P_HIDE_CATEGORY_RULES (AdminID, CategoryID, UpdatedAt) VALUES (:admin, :key, NOW())');
+        $insertStmt->execute(array('admin' => $admin, 'key' => $key));
+      } else {
+        echo 'deleting...';
+        $deleteStmt = $con->prepare('DELETE FROM P_HIDE_CATEGORY_RULES WHERE AdminID = :admin AND CategoryID = :key');
+        $deleteStmt->execute(array('admin' => $admin, 'key' => $key));
+      }
+    } else if($type == 'manufacturer') {
+      $countStmt = $con->prepare('SELECT COUNT(*) AS c FROM P_HIDE_MANUFACTURER_RULES WHERE ManufacturerID = :key AND AdminID = :admin');
+      $countStmt->execute(array('admin' => $admin, 'key' => $key));
+      $count = $countStmt->fetch()['c'];
+      $shown = $count == 0;
+
+      if($shown) {
+        echo 'inserting...';
+        $insertStmt = $con->prepare('INSERT INTO P_HIDE_MANUFACTURER_RULES (AdminID, ManufacturerID, UpdatedAt) VALUES (:admin, :key, NOW())');
+        $insertStmt->execute(array('admin' => $admin, 'key' => $key));
+      } else {
+        echo 'deleting...';
+        $deleteStmt = $con->prepare('DELETE FROM P_HIDE_MANUFACTURER_RULES WHERE AdminID = :admin AND ManufacturerID = :key');
+        $deleteStmt->execute(array('admin' => $admin, 'key' => $key));
+      }
+    } else if($type == 'model') {
       $countStmt = $con->prepare('SELECT COUNT(*) AS c FROM P_HIDE_MODEL_RULES WHERE ModelID = :key AND AdminID = :admin');
       $countStmt->execute(array('admin' => $admin, 'key' => $key));
       $count = $countStmt->fetch()['c'];

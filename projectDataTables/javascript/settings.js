@@ -18,6 +18,9 @@ function fillRecordToggle(element, endpoint, select) {
       if(select !== undefined) {
         el.value = select;
       }
+      if(element == "toggleModels") {
+        updateCategoryManufacturer();
+      }
     }
   }
   xmlhttp.open("GET", endpoint, true);
@@ -35,32 +38,102 @@ function callRecordToggle(type, query, box) {
   xmlhttp.send();
 }
 
+function callRecordEditName(type, key, name, box) {
+  $.ajax({
+    url: "phpinc/editRecordName.php",
+    type: "GET",
+    data: {
+      type: type,
+      key: key,
+      name: name
+    },
+    success: function(d) {
+      toggleRecordSelection(null, key);
+    }
+  });
+}
+
+function updateCategoryManufacturer() {
+  var modelId = $('#toggleModels').val();
+
+  $.ajax({
+    url: 'phpinc/getCategoryManufacturerFromModel.php',
+    type: 'GET',
+    data: {
+      model: modelId
+    },
+    success: function(data) {
+      var response = JSON.parse(data);
+      $('#modelCategorySelect').val(response.category);
+      $('#modelManufacturerSelect').val(response.manufacturer);
+    }
+  });
+}
+
 function toggleRecordSelection(event, select) {
   // Get the value of the selected option and show/hide the respective select elements
   var selection = $("#toggleRecordSelection").val();
 
-  if(selection === "Model") {
+  if(selection === "Category") {
+    $("#toggleCategories").show();
+    $("#toggleManufacturers").hide();
+    $("#toggleModels").hide();
+    $("#toggleLocations").hide();
+    $("#toggleUsers").hide();
+
+    $("#editModel").hide();
+
+    fillRecordToggle("toggleCategories", "phpinc/getCategoryHideList.php", select);
+  } else if(selection === "Manufacturer") {
+    $("#toggleCategories").hide();
+    $("#toggleManufacturers").show();
+    $("#toggleModels").hide();
+    $("#toggleLocations").hide();
+    $("#toggleUsers").hide();
+
+    $("#editModel").hide();
+
+    fillRecordToggle("toggleManufacturers", "phpinc/getManufacturerHideList.php", select);
+  } else if(selection === "Model") {
+    $("#toggleCategories").hide();
+    $("#toggleManufacturers").hide();
     $("#toggleModels").show();
     $("#toggleLocations").hide();
     $("#toggleUsers").hide();
 
+    $("#editModel").show();
+
     fillRecordToggle("toggleModels", "phpinc/getModelHideList.php", select);
+    fillRecordToggle("modelCategorySelect", "phpinc/getCategoryList.php");
+    fillRecordToggle("modelManufacturerSelect", "phpinc/getManufacturerList.php");
   } else if(selection === "Location") {
+    $("#toggleCategories").hide();
+    $("#toggleManufacturers").hide();
     $("#toggleModels").hide();
     $("#toggleLocations").show();
     $("#toggleUsers").hide();
 
+    $("#editModel").hide();
+
     fillRecordToggle("toggleLocations", "phpinc/getLocationHideList.php", select);
   } else if(selection === "User") {
+    $("#toggleCategories").hide();
+    $("#toggleManufacturers").hide();
     $("#toggleModels").hide();
     $("#toggleLocations").hide();
     $("#toggleUsers").show();
 
+    $("#editModel").hide();
+
     fillRecordToggle("toggleUsers", "phpinc/getUserHideList.php", select);
   } else {
+    $("#toggleCategories").hide();
+    $("#toggleManufacturers").hide();
     $("#toggleModels").hide();
     $("#toggleLocations").hide();
     $("#toggleUsers").hide();
+
+    $("#editModel").hide();
   }
 
 }
@@ -68,7 +141,13 @@ function toggleRecordSelection(event, select) {
 function toggleSelectedRecord() {
   var selection = $("#toggleRecordSelection").val();
 
-  if(selection === "Model") {
+  if(selection === "Category") {
+    selectedVal = $("#toggleCategories").val();
+    callRecordToggle("category", selectedVal, "#toggleCategories");
+  } else if(selection === "Manufacturer") {
+    selectedVal = $("#toggleManufacturers").val();
+    callRecordToggle("manufacturer", selectedVal, "#toggleManufacturers");
+  } else if(selection === "Model") {
     selectedVal = $("#toggleModels").val();
     callRecordToggle("model", selectedVal, "#toggleModels");
   } else if(selection === "Location") {
@@ -78,8 +157,6 @@ function toggleSelectedRecord() {
     selectedVal = $("#toggleUsers").val();
     callRecordToggle("user", selectedVal, "#toggleUsers");
   }
-
-
 }
 
 function addRecord() {
@@ -140,6 +217,48 @@ function changeDaysChecked() {
   getDaysChecked();
 }
 
+function editRecordName() {
+  var selection = $("#toggleRecordSelection").val();
+
+  var name = $('#editNameBox').val();
+
+  if(selection === "Category") {
+    selectedVal = $("#toggleCategories").val();
+    callRecordEditName("category", selectedVal, name, "#toggleCategories");
+  } else if(selection === "Manufacturer") {
+    selectedVal = $("#toggleManufacturers").val();
+    callRecordEditName("manufacturer", selectedVal, name, "#toggleManufacturers");
+  } else if(selection === "Model") {
+    selectedVal = $("#toggleModels").val();
+    callRecordEditName("model", selectedVal, name, "#toggleModels");
+  } else if(selection === "Location") {
+    selectedVal = $("#toggleLocations").val();
+    callRecordEditName("location", selectedVal, name, "#toggleLocations");
+  } else if(selection === "User") {
+    selectedVal = $("#toggleUsers").val();
+    callRecordEditName("user", selectedVal, name, "#toggleUsers");
+  }
+}
+
+function editModelInfo() {
+  var model = $('#toggleModels').val();
+  var category = $('#modelCategorySelect').val();
+  var manufacturer = $('#modelManufacturerSelect').val();
+  $.ajax({
+    url: "phpinc/editModelInfo.php",
+    type: "GET",
+    data: {
+      model: model,
+      category: category,
+      manufacturer: manufacturer
+    },
+    success: function(d) {
+      toggleRecordSelection(null, model);
+      alert("edited model");
+    }
+  })
+}
+
 function getDaysChecked() {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
@@ -158,10 +277,13 @@ $(document).ready(function() {
   // Attach event listeners
   // Toggle form
   $("#toggleRadio").on("click", toggleRecord);
-  $("#toggleRecordSelection").on("click", toggleRecordSelection);
+  //$("#toggleRecordSelection").on("click", toggleRecordSelection);
   $("#toggleRecordSelection").change(toggleRecordSelection);
 
   $('#toggleSubmit').on("click", toggleSelectedRecord);
+  $('#editSubmit').on("click", editRecordName);
+  $('#toggleModels').change(updateCategoryManufacturer);
+  $('#editModelSubmit').on("click", editModelInfo);
 
   // Add Record Form
   $("#addRadio").on("click", addRecord);
