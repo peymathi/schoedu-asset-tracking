@@ -60,4 +60,76 @@ $(document).ready(function(){
     $('.purchaseDate.newAsset').val(new Date().toISOString().split('T')[0]); //this is sometimes a day off
 
     $('#addButton').click(newAsset);
+
+    $('.modelSelect').change(function() {
+      modelId = $(this).val();
+      manufacturerDrop = $(this).prev();
+      categoryDrop = manufacturerDrop.prev();
+      $.ajax({
+        url: 'phpinc/getCategoryManufacturerFromModel.php',
+        type: 'GET',
+        data: {
+          model: modelId
+        },
+        success: function(data) {
+          var response = JSON.parse(data);
+          categoryDrop.val(response.category);
+          manufacturerDrop.val(response.manufacturer);
+        }
+      });
+    });
+
+    $('.categorySelect').change(function() {
+      categoryId = $(this).val();
+      manufacturerId = $(this).next().val();
+      modelDrop = $(this).next().next();
+      $.ajax({
+        url: 'phpinc/getModelFromCategoryManufacturer.php',
+        type: 'GET',
+        data: {
+          category: categoryId,
+          manufacturer: manufacturerId
+        },
+        success: function(data) {
+          var response = JSON.parse(data);
+          $("option", modelDrop).each(function(index) {
+            var modelId = $(this).val();
+
+            if(modelId != -1 && !response.models.includes(modelId)) {
+              $(this).hide();
+            } else {
+              $(this).show();
+            }
+          });
+          modelDrop.val("-1");
+        }
+      });
+    });
+
+    $('.manufacturerSelect').change(function() {
+      categoryId = $(this).prev().val();
+      manufacturerId = $(this).val();
+      modelDrop = $(this).next();
+      $.ajax({
+        url: 'phpinc/getModelFromCategoryManufacturer.php',
+        type: 'GET',
+        data: {
+          category: categoryId,
+          manufacturer: manufacturerId
+        },
+        success: function(data) {
+          var response = JSON.parse(data);
+          $("option", modelDrop).each(function(index) {
+            var modelId = $(this).val();
+
+            if(modelId != -1 && !response.models.includes(modelId)) {
+              $(this).hide();
+            } else {
+              $(this).show();
+            }
+          });
+          modelDrop.val("-1");
+        }
+      });
+    });
 });

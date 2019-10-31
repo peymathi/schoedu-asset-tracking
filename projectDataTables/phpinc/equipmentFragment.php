@@ -3,7 +3,7 @@
 ?>
 
 <select class="categorySelect <?php echo $extraClass ?>" name="category">
-  <option value="-1" hidden>Category</option>
+  <option value="-1">Category</option>
   <?php
     $categoryStmt = $con->prepare("SELECT CategoryID, Name FROM P_CATEGORIES ORDER BY Name");
     $categoryStmt->execute();
@@ -15,7 +15,7 @@
 </select>
 
 <select class="manufacturerSelect <?php echo $extraClass ?>" name="select">
-  <option value="-1" hidden>Manufacturer</option>
+  <option value="-1">Manufacturer</option>
   <?php
     $manufacturerStmt = $con->prepare("SELECT ManufacturerID, Name FROM P_MANUFACTURERS ORDER BY Name");
     $manufacturerStmt->execute();
@@ -27,7 +27,7 @@
 </select>
 
 <select class="modelSelect <?php echo $extraClass ?>" name="model">
-  <option value="-1" hidden>Model</option>
+  <option value="-1">Model</option>
   <?php
     $modelStmt = $con->prepare("SELECT ModelID, Name FROM P_MODELS ORDER BY Name");
     $modelStmt->execute();
