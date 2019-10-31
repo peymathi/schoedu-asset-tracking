@@ -69,7 +69,15 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 			  <!-- Modal content -->
 			  <div class="modal-content">
 			    <span class="close">&times;</span>
-			    <p>Some text in the Modal..</p>
+					<h3><span>Edit Equipment</span></h3>
+
+					<?php
+						$doQty = false;
+						$extraClass = "editAsset";
+						include("phpinc/equipmentFragment.php");
+					?>
+
+					<button>Edit</button>
 			  </div>
 
 			</div>
@@ -84,57 +92,13 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 					<div>
 						<h3><span>Add Equipment</span></h3>
 
-						<select name="category">
-							<option hidden>Category</option>
-							<option>Desktop</option>
-							<option>Tablet</option>
-						</select>
+						<?php
+							$doQty = false; //just for now
+							$extraClass = "newAsset";
+							include("phpinc/equipmentFragment.php");
+						?>
 
-						<select name="brand">
-							<option hidden>Brand</option>
-							<option>Dell</option>
-							<option>Apple</option>
-						</select>
-
-						<select name="model">
-							<option hidden>Model</option>
-							<option>123</option>
-							<option>456</option>
-						</select>
-
-						<select name="user">
-							<option hidden>User</option>
-							<option>Dr. A</option>
-							<option>Prof. B</option>
-						</select>
-
-						<select name="location">
-							<option hidden>Location</option>
-							<option>SL 247</option>
-							<option>Sl 251</option>
-						</select>
-
-						<br>
-						<br>
-
-						Purchased:<input type="date" name="purchaseDate">
-
-						&nbsp&nbsp Warranty:<input type="number" name="warranty" min="0">&nbspyears
-
-						&nbsp&nbsp Qty: <input type="number" name="qty" min='1' max='99'>
-
-						<br>
-						<br>
-
-						Network ID:<input type="text" name="networkID">
-
-						Serial#:<input type="text" name="serial">
-
-						Notes:<input type="text" name="notes">
-
-						<br>
-
-						<button>Add</button>
+						<button id="addButton">Add</button>
 
 					</div>
 					<br>
@@ -157,60 +121,6 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td class="" style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>John Doe</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>John Doe</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>John Doe</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>173509367</td>
-									<td>Desktop</td>
-									<td>Dell</td>
-									<td>74544SR</td>
-									<td>SL 247</td>
-									<td>John Doe</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>846421682</td>
-									<td>Printer</td>
-									<td>HP</td>
-									<td>23542LJ</td>
-									<td>IT 078</td>
-									<td>John Doe</td>
-								</tr>
-								<tr>
-									<td style="width: 5em"><button class="editBtn"><i class="fa fa-edit"></i></button></td>
-									<td>376523899</td>
-									<td>Tablet</td>
-									<td>Apple</td>
-									<td>32554I0</td>
-									<td>J. Smith</td>
-									<td>John Doe</td>
-								</tr>
 							</tbody>
 						</table>
 					</div>
