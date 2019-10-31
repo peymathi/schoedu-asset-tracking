@@ -1,18 +1,14 @@
-function updateDropdowns(extraClass) {
-  var category = $('.categorySelect.'+extraClass);
-  var manufacturer = $('.manufacturerSelect.'+extraClass);
-  var model = $('.modelSelect.'+extraClass);
-}
+var table;
 
 function newAsset() {
   var modelId = $('.modelSelect.newAsset').val();
   var userId = $('.userSelect.newAsset').val();
   var locationId = $('.locationSelect.newAsset').val();
   var purchaseDate = $('.purchaseDate.newAsset').val();
-  var warranty = $('.warranty.newAsset');
-  var networkId = $('networkID.newAsset');
-  var serial = $('.serial.newAsset');
-  var notes = $('.notes.newAsset');
+  var warranty = $('.warranty.newAsset').val();
+  var networkId = $('.networkID.newAsset').val();
+  var serial = $('.serial.newAsset').val();
+  var notes = $('.notes.newAsset').val();
 
   // do some validation (needs more)
   if(modelId == -1 || userId == -1 || locationId == -1) {
@@ -34,23 +30,99 @@ function newAsset() {
   $.ajax({
     url: "phpinc/newAsset.php",
     type: "POST",
-    data: request
+    data: request,
+    success: function(d) {
+      table.ajax.reload();
+      alert('created asset');
+    }
+  });
+}
+
+function updateModels(categoryId, manufacturerId, modelDrop) {
+  $.ajax({
+    url: 'phpinc/getModelFromCategoryManufacturer.php',
+    type: 'GET',
+    data: {
+      category: categoryId,
+      manufacturer: manufacturerId
+    },
+    success: function(data) {
+      var response = JSON.parse(data);
+      $("option", modelDrop).each(function(index) {
+        var modelId = $(this).val();
+
+        if(modelId != -1 && !response.models.includes(modelId)) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
+      });
+      modelDrop.val("-1");
+    }
+  });
+}
+
+function updateCategoryManufacturer(modelId, categoryDrop, manufacturerDrop, callback) {
+  $.ajax({
+    url: 'phpinc/getCategoryManufacturerFromModel.php',
+    type: 'GET',
+    data: {
+      model: modelId
+    },
+    success: function(data) {
+      var response = JSON.parse(data);
+      categoryDrop.val(response.category);
+      manufacturerDrop.val(response.manufacturer);
+      if(callback != undefined) {
+        callback();
+      }
+    }
+  });
+}
+
+function populateEditModal(asset) {
+  var categoryId = $('.categorySelect.editAsset');
+  var manufacturerId = $('.manufacturerSelect.editAsset');
+  var modelId = $('.modelSelect.editAsset');
+  var userId = $('.userSelect.editAsset');
+  var locationId = $('.locationSelect.editAsset');
+  var purchaseDate = $('.purchaseDate.editAsset');
+  var warranty = $('.warranty.editAsset');
+  var networkId = $('.networkID.editAsset');
+  var serial = $('.serial.editAsset');
+  var notes = $('.notes.editAsset');
+
+  $.ajax({
+    url: 'phpinc/getAsset.php',
+    type: 'GET',
+    data: { asset: asset },
+    success: function(data) {
+      response = JSON.parse(data);
+      modelId.val(response.asset.ModelID);
+      userId.val(response.asset.UserID);
+      locationId.val(response.asset.LocationID);
+      purchaseDate.val(response.asset.PurchaseDate);
+      warranty.val(response.asset.Warranty);
+      networkId.val(response.asset.NetworkName);
+      serial.val(response.asset.SerialNumber);
+      notes.val(response.asset.Notes);
+      updateCategoryManufacturer(response.asset.ModelID, categoryId, manufacturerId, function() {
+        $('.modal:eq(0)').css('display', 'block')
+      });
+    }
   });
 }
 
 $(document).ready(function(){
-    $('.dataTable').DataTable({
+    table = $('.dataTable').DataTable({
         responsive: true,
         serverSide: true,
         ajax: 'phpinc/getAssetDataJson.php',
         rowCallback: function( row, data ) {
-            //console.log(data[0]);
             var assetId = data[0];
             $("td:eq(0)", row).html('<button class="editBtn"><i class="fa fa-edit"></i></button>');
             $("td:eq(0) .editBtn", row).on("click", function(evt) {
-              var modal = $('.modal:eq(0)');
-              modal.css('display', 'block');
-              console.log(row);
+              populateEditModal(assetId);
             });
         },
         columnDefs: [ { orderable: false, targets: [0] } ],
@@ -83,53 +155,13 @@ $(document).ready(function(){
       categoryId = $(this).val();
       manufacturerId = $(this).next().val();
       modelDrop = $(this).next().next();
-      $.ajax({
-        url: 'phpinc/getModelFromCategoryManufacturer.php',
-        type: 'GET',
-        data: {
-          category: categoryId,
-          manufacturer: manufacturerId
-        },
-        success: function(data) {
-          var response = JSON.parse(data);
-          $("option", modelDrop).each(function(index) {
-            var modelId = $(this).val();
-
-            if(modelId != -1 && !response.models.includes(modelId)) {
-              $(this).hide();
-            } else {
-              $(this).show();
-            }
-          });
-          modelDrop.val("-1");
-        }
-      });
+      updateModels(categoryId, manufacturerId, modelDrop);
     });
 
     $('.manufacturerSelect').change(function() {
       categoryId = $(this).prev().val();
       manufacturerId = $(this).val();
       modelDrop = $(this).next();
-      $.ajax({
-        url: 'phpinc/getModelFromCategoryManufacturer.php',
-        type: 'GET',
-        data: {
-          category: categoryId,
-          manufacturer: manufacturerId
-        },
-        success: function(data) {
-          var response = JSON.parse(data);
-          $("option", modelDrop).each(function(index) {
-            var modelId = $(this).val();
-
-            if(modelId != -1 && !response.models.includes(modelId)) {
-              $(this).hide();
-            } else {
-              $(this).show();
-            }
-          });
-          modelDrop.val("-1");
-        }
-      });
+      updateModels(categoryId, manufacturerId, modelDrop);
     });
 });
