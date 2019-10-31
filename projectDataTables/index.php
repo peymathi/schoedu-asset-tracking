@@ -65,6 +65,7 @@ $vccount = $row->c;
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="javascript/verify.js"></script>
 
 	<!-- Datatables -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -154,11 +155,6 @@ $vccount = $row->c;
 							$(document).ready(function(){
 						    		$('.dataTable').DataTable({responsive:true});
 						    });
-
-						    function verifyFunction(x)
-						    {
-						    	alert($(x).parent().next().text());
-						    }
 						</script>
 
 

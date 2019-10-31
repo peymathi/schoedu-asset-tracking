@@ -4,23 +4,20 @@ var i = 1;//device counter
 function addDeviceBtn(){
 	i++;
 	$("#addDevice").prev().prev().before('<br><br>'+
-		'<select onchange="checkState('+i+')" name="category'+i+'">\
+		'<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState('+i+');showOptions(\'brand\', this.name.substr(-1))" name="category'+i+'">\
 			<option hidden>Category</option>\
-			<?php print GetCategory(); ?>\
 		</select>'+
-		'<select onchange="checkState('+i+')" disabled name="brand'+i+'">\
+		'<select onclick="showOptions(\'model\', this.name.substr(-1))" disabled name="brand'+i+'">\
 			<option hidden>Brand</option>\
-			<option>Dell</option>\
-			<option>Apple</option>\
 		</select>'+
-		'<select onchange="checkState('+i+')" disabled name="model'+i+'">\
+		'<select onclick="showOptions(\'\', this.name.substr(-1))" disabled name="model'+i+'">\
 			<option hidden>Model</option>\
-			<option>123</option>\
-			<option>456</option>\
 		</select>\
 		<label>&nbsp&nbspSerial:</label>'+
-		'<input disabled type="text" name="serial'+i+'">\
+		'<input list="serial'+i+'" onkeyup="showOptions(this.value, this.name.substr(-1))" disabled type="text" name="serial'+i+'">\
 		')
+
+	$('#serial1').after('<datalist id="serial'+i+'"></datalist>');
 }
 
 //control disabled fields
@@ -37,11 +34,11 @@ function checkState(x){
 
 
 
-function showOptions(mode)
+function showOptions(mode, cur)
 {
-	var str = document.getElementsByName('category1')[0].value;
-	var brand = document.getElementsByName('brand1')[0].value;
-	var model = document.getElementsByName('model1')[0].value;
+	var str = document.getElementsByName('category'+cur)[0].value;
+	var brand = document.getElementsByName('brand'+cur)[0].value;
+	var model = document.getElementsByName('model'+cur)[0].value;
 	if (str=="")
     {
       obj.innerHTML="";
@@ -62,20 +59,71 @@ function showOptions(mode)
         {
         	if(mode == "brand")
         	{
-        		document.getElementsByName('brand1')[0].innerHTML=xmlhttp.responseText;
+        		document.getElementsByName('brand'+cur)[0].innerHTML=xmlhttp.responseText;
         	}
         	else if(mode == "model")
         	{
-        		document.getElementsByName('model1')[0].innerHTML=xmlhttp.responseText;
+        		document.getElementsByName('model'+cur)[0].innerHTML=xmlhttp.responseText;
         	}
         	else
         	{
-        		document.getElementById('serial').innerHTML=xmlhttp.responseText;
+        		document.getElementById('serial'+cur).innerHTML=xmlhttp.responseText;
         	}
           
         }
     }
 	xmlhttp.open("GET","phpinc/rentalUtilsPDO.php?c="+str+"&m="+mode+"&b="+brand+"&mod="+model,true);
+	xmlhttp.send();
+}
+
+
+function getCategory(val,x)
+{
+	if(val == 'Category')
+	{
+		if (window.XMLHttpRequest)
+	    {// code for IE7+, Firefox, Chrome, Opera, Safari
+	      xmlhttp=new XMLHttpRequest();
+	    }
+		else
+	    {// code for IE6, IE5
+	      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+
+	    xmlhttp.onreadystatechange=function()
+	    {
+	      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	       {
+	        	document.getElementsByName(x)[0].innerHTML=xmlhttp.responseText;
+	       }
+	    }
+		
+		xmlhttp.open("GET","phpinc/rentalUtil.php?",true);
+		xmlhttp.send();
+	}
+
+}
+
+function showNames(str)
+{
+	var xmlhttp;
+
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+	    document.getElementById("names").innerHTML=xmlhttp.responseText;
+	    }
+	  }
+	xmlhttp.open("GET","phpinc/rentalGetNames.php?q="+str,true);
 	xmlhttp.send();
 }
 

@@ -68,7 +68,8 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						<br>
 						<form onsubmit="return false" class="rental_form" method="get">
 							<label for="name">Name:</label>
-							<input type="text" id="name">
+							<input list="names" type="text" id="name" onkeyup="showNames(this.value)">
+							<datalist id="names"></datalist>
 							<br>
 
 							<label style="padding: 6px 0" for="email">Email:</label>
@@ -90,23 +91,23 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<label>Equipment:</label>
 							<br>
 
-							<select onchange="checkState(1);showOptions('brand');" name="category1">
+							<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState(1);showOptions('brand', this.name.substr(-1));" name="category1">
 								<option hidden>Category</option>
-								<?php print GetCategory(); ?>
+
 							</select>
 
-							<select onclick="showOptions('model')" onchange="showOptions('model')" disabled name="brand1">
+							<select onclick="showOptions('model', this.name.substr(-1))" onchange="showOptions('model')" disabled name="brand1">
 								<option hidden>Brand</option>
 							</select>
 								
-							<select onclick="showOptions('');" disabled name="model1">
+							<select onclick="showOptions('', this.name.substr(-1));" disabled name="model1">
 								<option hidden>Model</option>
 							</select>
 
 							<label>&nbsp&nbspSerial:</label>
-							<input list="serial" onkeyup="showOptions(this.value)" disabled type="text" name="serial1">
+							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" disabled type="text" name="serial1">
 
-							<datalist id="serial"></datalist>
+							<datalist id="serial1"></datalist>
 
 							<br>
 							<br>
@@ -123,32 +124,34 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<label style="padding-top: 6px">Return Date:</label>
 							<input type="date" name="returnDate">
 
-							<p id='rentalTerms'>
-								I understand that the following conditions will apply to all equipment:
-								<br>a. It will only be used by me for school related activity;
-								<br>b. I assume liability for damage or theft and will be responsible for the repair or replacement costs
-								of each item (I will consult my personal homeowners or auto insurance coverage policies);
-								<br>c. I will not store any confidential or sensitive information as defined by the IU Security Office
-								policy on the equipment, http://protect.iu.edu/cybersecurity/data ;
-								<br>d. I will report the loss or theft of the equipment immediately to Education Technology Services;
-								<br>e. I will exercise reasonable care in its transport and use;
-								<br>f. I will return the equipment on the agreed Return Date/Time indicated above OR immediately
-								prior to terminating employment with IU School of Education at IUPUI OR upon the request of
-								Education Technology Services.
-								<br>
-								<br>
-								<br>
-								Rentee Signature: ____________________________________________
+							<div id='termsDiv'>
+								<p id='rentalTerms'>
+									I understand that the following conditions will apply to all equipment:
+									<br>a. It will only be used by me for school related activity;
+									<br>b. I assume liability for damage or theft and will be responsible for the repair or replacement costs
+									of each item (I will consult my personal homeowners or auto insurance coverage policies);
+									<br>c. I will not store any confidential or sensitive information as defined by the IU Security Office
+									policy on the equipment, http://protect.iu.edu/cybersecurity/data ;
+									<br>d. I will report the loss or theft of the equipment immediately to Education Technology Services;
+									<br>e. I will exercise reasonable care in its transport and use;
+									<br>f. I will return the equipment on the agreed Return Date/Time indicated above OR immediately
+									prior to terminating employment with IU School of Education at IUPUI OR upon the request of
+									Education Technology Services.
+									<br>
+									<br>
+									<br>
+									Rentee Signature: ____________________________________________
 
-								Date: ____/____/____
+									Date: ____/____/____
 
 
-								<br>
-								<br>
-								APPROVAL: _________________________________________________
-								Date: ____/____/____
-							</p>
-
+									<br>
+									<br>
+									APPROVAL: _________________________________________________
+									
+									Date: ____/____/____
+								</p>
+							</div>
 
 							<br>
 							<br>
@@ -162,8 +165,10 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 							<script>
 							function printFunction() {
-							  window.print();
+							  setTimeout(function(){window.print();}, 500);
 							}
+
+
 							</script>
 						</form>
 
@@ -179,23 +184,4 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 </body>
 </html>
 
-<?php
 
-function GetCategory()
-{
-	$res = "";
-	global $con;
-	$sql = $con->prepare("select Name from P_CATEGORIES order by Name");
-	$sql->execute();
-	$result = $sql->fetchAll();
-
-	foreach ($result as $row)
-	{ 
-		$res = $res.'<option value = "'.$row['Name'].'">'.$row['Name'].'</option>';
-
-	}
-
-	return $res;
-}
-
-?>

@@ -254,10 +254,10 @@ input[type=number] {
 	width: 15em;
 }
 
-@media not print{
-#rentalTerms{
-	display: none;
-}}
+#termsDiv{
+	max-height: 0px;
+	overflow: hidden;
+}
 
 .settingsForms select {
   padding: 3px 10px;
@@ -435,6 +435,10 @@ input[type=search] {
 }
 
 @media print{
+	#rentalTerms{
+		display: block;
+	}
+
 	.sidebar{
 		display: none;
 	}
@@ -457,17 +461,18 @@ input[type=search] {
 		z-index: 7;
 	}
 
-	#rentalTerms{
-		display: block;
-	}
-
-	#rental_submit, #rental_scan{
+	#rental_submit, #rental_scan, #addDevice{
 		display: none;
 	}
 
 	.body div{
 		margin: 0;
 	}
+
+	#termsDiv{
+		max-height: 100vh;
+		overflow: default;
+}
 }
 
 
