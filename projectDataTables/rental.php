@@ -91,7 +91,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<label>Equipment:</label>
 							<br>
 
-							<select onmouseenter="getCategory(this.value,this.name);" onchange="checkState(1);showOptions('brand', this.name.substr(-1));" name="category1">
+							<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState(1);showOptions('brand', this.name.substr(-1));" name="category1">
 								<option hidden>Category</option>
 
 							</select>
