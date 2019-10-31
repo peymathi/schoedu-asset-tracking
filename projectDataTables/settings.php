@@ -193,15 +193,21 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 											<label for="newModel">New Model:</label>
 											<input type="text" id="newModel" name="newModel">
 
+                      <br><br>
+
 											<label for="categorySelect">Category</label>
 											<select id="categorySelect" name="categorySelect">
 												<option>- -</option>
 											</select>
 
+                      <br><br>
+
 											<label for="manufacturerSelect">Manufacturer</label>
 											<select id="manufacturerSelect" name="manufacturerSelect">
 												<option>- -</option>
 											</select>
+
+                      <br><br>
 
 											<button type="button" id="newModelSubmit" name="newModelSubmit">Add Model</button>
 										</form>
