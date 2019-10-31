@@ -1,15 +1,18 @@
 <?php
   require_once 'dbconnect.php';
 
-  //get the admin from somewhere -Taylor
-  $admin = 1;
+  session_start();
+  if(isset($_SESSION['userid'])) {
+    $admin = $_SESSION['userid'];
 
-  $stmt = $con->prepare('CALL SP_P_GET_ACTIVE_MANUFACTURERS (:admin)');
-  $stmt->execute(array('admin' => $admin));
+    $stmt = $con->prepare('CALL SP_P_GET_ACTIVE_MANUFACTURERS (:admin)');
+    $stmt->execute(array('admin' => $admin));
 
-  $result = $stmt->fetchAll();
+    $result = $stmt->fetchAll();
 
-  foreach($result as $row) {
-    echo '<option value="'.$row['ManufacturerID'].'">'.$row['Name'].'</option>';
+    foreach($result as $row) {
+      echo '<option value="'.$row['ManufacturerID'].'">'.$row['Name'].'</option>';
+    }
   }
+
 ?>
