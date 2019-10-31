@@ -77,7 +77,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						include("phpinc/equipmentFragment.php");
 					?>
 
-					<button>Edit</button>
+					<button id="editButton">Edit</button>
 			  </div>
 
 			</div>

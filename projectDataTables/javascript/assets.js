@@ -11,7 +11,7 @@ function newAsset() {
   var notes = $('.notes.newAsset').val();
 
   // do some validation (needs more)
-  if(modelId == -1 || userId == -1 || locationId == -1) {
+  if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
     alert('invalid');
     return;
   }
@@ -34,6 +34,47 @@ function newAsset() {
     success: function(d) {
       table.ajax.reload();
       alert('created asset');
+    }
+  });
+}
+
+function editAsset() {
+  console.log('edit');
+  var modelId = $('.modelSelect.editAsset').val();
+  var userId = $('.userSelect.editAsset').val();
+  var locationId = $('.locationSelect.editAsset').val();
+  var purchaseDate = $('.purchaseDate.editAsset').val();
+  var warranty = $('.warranty.editAsset').val();
+  var networkId = $('.networkID.editAsset').val();
+  var serial = $('.serial.editAsset').val();
+  var notes = $('.notes.editAsset').val();
+  var asset = $('#editButton').val();
+
+  // do some validation (needs more)
+  if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
+    alert('invalid');
+    return;
+  }
+
+  var request = {
+    model: modelId,
+    user: userId,
+    location: locationId,
+    purchase: purchaseDate,
+    warranty: warranty,
+    network: networkId,
+    serial: serial,
+    notes: notes,
+    asset: asset
+  };
+
+  $.ajax({
+    url: "phpinc/editAsset.php",
+    type: "POST",
+    data: request,
+    success: function(d) {
+      $('.modal:eq(0)').css('display', 'none')
+      table.ajax.reload(null, false);
     }
   });
 }
@@ -92,6 +133,8 @@ function populateEditModal(asset) {
   var serial = $('.serial.editAsset');
   var notes = $('.notes.editAsset');
 
+  $('#editButton').val(asset);
+
   $.ajax({
     url: 'phpinc/getAsset.php',
     type: 'GET',
@@ -132,6 +175,7 @@ $(document).ready(function(){
     $('.purchaseDate.newAsset').val(new Date().toISOString().split('T')[0]); //this is sometimes a day off
 
     $('#addButton').click(newAsset);
+    $('#editButton').click(editAsset);
 
     $('.modelSelect').change(function() {
       modelId = $(this).val();
