@@ -4,7 +4,7 @@ var i = 1;//device counter
 function addDeviceBtn(){
 	i++;
 	$("#addDevice").prev().prev().before('<br><br>'+
-		'<select onmouseenter="getCategory(this.value,this.name);" onchange="checkState('+i+');showOptions(\'brand\', this.name.substr(-1))" name="category'+i+'">\
+		'<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState('+i+');showOptions(\'brand\', this.name.substr(-1))" name="category'+i+'">\
 			<option hidden>Category</option>\
 		</select>'+
 		'<select onclick="showOptions(\'model\', this.name.substr(-1))" disabled name="brand'+i+'">\
