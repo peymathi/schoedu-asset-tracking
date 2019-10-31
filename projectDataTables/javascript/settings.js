@@ -105,6 +105,7 @@ function addModel() {
   $("#newUserForm").hide();
 
   fillRecordToggle("manufacturerSelect", "phpinc/getActiveManufacturersList.php");
+  fillRecordToggle("categorySelect", "phpinc/getActiveCategoriesList.php");
 }
 
 function addCategory() {
@@ -173,6 +174,22 @@ $(document).ready(function() {
   // Days Checked Form
   $("#daysCheckedRadio").on("click", changeDaysChecked);
 
+  $('#newCategorySubmit').on("click", function(e) {
+    //validation here
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      data: {
+        "type":"category",
+        "name":$("#newCategory").val()
+      },
+      type: "POST",
+      success: function(r) {
+        $('#newCategory').val('');
+        alert("created category");
+      }
+    });
+  });
+
   $('#newManufacturerSubmit').on("click", function(e) {
     //validation here
     $.ajax({
@@ -196,6 +213,7 @@ $(document).ready(function() {
       data: {
         "type":"model",
         "name":$("#newModel").val(),
+        "category":$('#categorySelect').val(),
         "manufacturer":$('#manufacturerSelect').val()
       },
       type: "POST",

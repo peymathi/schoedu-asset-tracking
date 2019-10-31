@@ -7,13 +7,15 @@
 
     $type = $_POST['type'];
 
-    if($type == 'manufacturer') {
+    if($type == 'category') {
+      $categoryStmt = $con->prepare('INSERT INTO P_CATEGORIES (Name, UpdatedAt) VALUES (:name, NOW())');
+      $categoryStmt->execute(array('name' => $_POST['name']));
+    } else if($type == 'manufacturer') {
       $manufacturerStmt = $con->prepare('INSERT INTO P_MANUFACTURERS (Name, UpdatedAt) VALUES (:name, NOW())');
       $manufacturerStmt->execute(array('name' => $_POST['name']));
     } else if($type == 'model') {
-      // ui has no way to select category, default to desktop
-      $modelStmt = $con->prepare('INSERT INTO P_MODELS (Name, ManufacturerID, CategoryID, UpdatedAt) VALUES (:name, :manufacturer, 2, NOW())');
-      $modelStmt->execute(array('name' => $_POST['name'], 'manufacturer' => $_POST['manufacturer']));
+      $modelStmt = $con->prepare('INSERT INTO P_MODELS (Name, ManufacturerID, CategoryID, UpdatedAt) VALUES (:name, :manufacturer, :category, NOW())');
+      $modelStmt->execute(array('name' => $_POST['name'], 'manufacturer' => $_POST['manufacturer'], 'category' => $_POST['category']));
     } else if($type == 'location') {
       $locationStmt = $con->prepare('INSERT INTO P_LOCATIONS (Name, UpdatedAt) VALUES (:name, NOW())');
       $locationStmt->execute(array('name' => $_POST['name']));

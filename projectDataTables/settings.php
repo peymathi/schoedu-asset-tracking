@@ -119,8 +119,11 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 								<div id="addRecordForm" hidden>
 
 									<!-- Radio buttons to select the currently active form -->
+									<label for="categoryRadio">Add a Category - </label>
+									<input type="radio" name="addFormsGroup" value="category" id="categoryRadio" checked>
+
 									<label for="manufacturerRadio">Add a Manufacturer - </label>
-									<input type="radio" name="addFormsGroup" value="manufacturer" id="manufacturerRadio" checked>
+									<input type="radio" name="addFormsGroup" value="manufacturer" id="manufacturerRadio">
 
 									<label for="modelRadio">Add a Model - </label>
 									<input type="radio" name="addFormsGroup" value="model" id="modelRadio">
@@ -134,7 +137,16 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 									<br /><br />
 
 									<!-- Add Manufacturer Form -->
-									<div id="newManufacturerForm">
+									<div id="newCategoryForm">
+										<form name="newCategoryForm">
+											<label for="newCategory">New Category:</label>
+											<input type="text" id="newCategory" name="newCategory">
+											<button type="button" id="newCategorySubmit" name="newCategorySubmit">Add Category</button>
+										</form>
+									</div>
+
+									<!-- Add Manufacturer Form -->
+									<div id="newManufacturerForm" hidden>
 										<form name="newManufacturerForm">
 											<label for="newManufacturer">New Manufacturer:</label>
 											<input type="text" id="newManufacturer" name="newManufacturer">
@@ -147,6 +159,11 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 										<form name="newModelForm" action="phpinc/processSettings.php" method="post">
 											<label for="newModel">New Model:</label>
 											<input type="text" id="newModel" name="newModel">
+
+											<label for="categorySelect">Category</label>
+											<select id="categorySelect" name="categorySelect">
+												<option>- -</option>
+											</select>
 
 											<label for="manufacturerSelect">Manufacturer</label>
 											<select id="manufacturerSelect" name="manufacturerSelect">
