@@ -71,16 +71,20 @@ Purchased:<input type="date" class="purchaseDate <?php echo $extraClass ?>" name
 
 <?php
   if($doQty) {
-    echo '&nbsp&nbsp Qty: <input type="number" class="qty '.$extraClass.'" name="qty" min="1" max="99">';
+    echo '&nbsp&nbsp Qty: <input type="number" class="qty '.$extraClass.'" name="qty" min="1" max="99" value="1">';
   }
 ?>
 
 <br><br>
 
-Network ID:<input type="text" class="networkID <?php echo $extraClass ?>" name="networkID">
+<div class="assetDetails <?php echo $extraClass ?>" style="margin-left: 0px">
+  <div class="assetDetail <?php echo $extraClass ?>" style="margin-left: 0px">
+    Network ID:<input type="text" class="networkID <?php echo $extraClass ?>" name="networkID">
 
-Serial#:<input type="text" class="serial <?php echo $extraClass ?>" name="serial">
+    Serial#:<input type="text" class="serial <?php echo $extraClass ?>" name="serial">
 
-Notes:<input type="text" class="notes <?php echo $extraClass ?>" name="notes">
+    Notes:<input type="text" class="notes <?php echo $extraClass ?>" name="notes">
+  </div>
+</div>
 
 <br><br>

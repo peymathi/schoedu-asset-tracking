@@ -94,7 +94,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						<h3><span>Add Equipment</span></h3>
 
 						<?php
-							$doQty = false; //just for now
+							$doQty = true; //just for now
 							$extraClass = "newAsset";
 							include("phpinc/equipmentFragment.php");
 						?>

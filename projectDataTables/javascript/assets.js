@@ -156,6 +156,35 @@ function populateEditModal(asset) {
   });
 }
 
+function getAssetDetailFragment() {
+  return `<br><div class="assetDetail newAsset" style="margin-left: 0px">
+    Network ID:<input type="text" class="networkID newAsset" name="networkID">
+
+    Serial#:<input type="text" class="serial newAsset" name="serial">
+
+    Notes:<input type="text" class="notes newAsset" name="notes">
+  </div>`;
+}
+
+function changeQtyTo(n) {
+  var detailDiv = $('.assetDetails.newAsset');
+  var detailCount = $('.assetDetail.newAsset').length;
+  var diff = n - detailCount;
+
+  if(diff > 0) {
+    var i;
+    for(i = 0; i < diff; i++) {
+      $(getAssetDetailFragment()).appendTo(detailDiv);
+    }
+  } else if(diff < 0) {
+    var i;
+    for(i = 0; i < -diff; i++) {
+      detailDiv.children().last().remove();
+      detailDiv.children().last().remove();
+    }
+  }
+}
+
 $(document).ready(function(){
     table = $('.dataTable').DataTable({
         responsive: true,
@@ -208,4 +237,11 @@ $(document).ready(function(){
       modelDrop = $(this).next();
       updateModels(categoryId, manufacturerId, modelDrop);
     });
+
+    $('.qty.newAsset').change(function(e) {
+      if($(this).val() < 1) {
+        $(this).val(1);
+      }
+      changeQtyTo($(this).val());
+    })
 });
