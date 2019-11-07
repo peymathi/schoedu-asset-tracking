@@ -48,6 +48,10 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 					<li>
 						<a href="settings.php">Settings</a>
 					</li>
+					<li>
+						<a href="logout.php">Logout</a>
+					</li>
+
 				</ul>
 			</div>
 

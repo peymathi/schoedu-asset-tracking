@@ -19,9 +19,12 @@ $stmt = $con->prepare("select checkdays from P_ADMINS where adminid = ?");
 $stmt->execute(array($_SESSION['userid']));
 $row = $stmt->fetch(PDO::FETCH_OBJ);
 $checkdays = $row->checkdays;
-$curdate = date("Y-m-d") ." -" .$checkdays ." days";
+$curdate = date("Y-m-d h:m:s") ." -" .$checkdays ." days";
 $time = strtotime($curdate);
-$datemax = date("Y-m-d", $time);
+$datemax = date("Y-m-d h:m:s", $time);
+
+$acurdate = date("Y-m-d h:m:s");
+$time1 = strtotime($acurdate);
 
 $stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ?");
 $stmt->execute(array(1));
@@ -99,6 +102,9 @@ $vccount = $row->c;
 					<li>
 						<a href="settings.php">Settings</a>
 					</li>
+					<li>
+						<a href="logout.php">Logout</a>
+					</li>
 				</ul>
 			</div>
 
@@ -132,18 +138,22 @@ $vccount = $row->c;
 									<th>Manufacturer</th>
 									<th>Model #</th>
 									<th>Location</th>
-									<th>Date Last<br>Checked</th>
+									<th>Days Since<br>Checked</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
-								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked < ? group by SerialNumber");
+								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked <= ? group by SerialNumber");
 								$stmt->execute(array($datemax));
 								while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									$datelast = $row["DateLastChecked"];
+									$lasttime = strtotime($datelast);
+									$timedif = $time1 - $lasttime;
+									$dayssince = round($timedif / 86400);
 									print "<tr>";
 									
 									print "<td><button onclick='verifyFunction(this)'><i class='fa fa-check'></i></button></td>";
-									print "<td>".$row["SerialNumber"]."</td><td>".$row["CategoryName"]."</td><td>".$row["ManufacturerName"]."</td><td>".$row["ModelName"]."</td><td>".$row["LocationName"]."</td><td>".$row["DateLastChecked"]."</td>";
+									print "<td>".$row["SerialNumber"]."</td><td>".$row["CategoryName"]."</td><td>".$row["ManufacturerName"]."</td><td>".$row["ModelName"]."</td><td>".$row["LocationName"]."</td><td>".$dayssince."</td>";
 									print "</tr>"; 
 								}
 								?>
