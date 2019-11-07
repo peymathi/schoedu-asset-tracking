@@ -1,0 +1,3 @@
+function rentFunction(){
+	alert();
+}
