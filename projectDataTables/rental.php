@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ; 
 	require_once "phpinc/dbconnect.php";
 
+
 ?>
 
 
@@ -75,7 +76,9 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<input list="names" type="text" id="name" onkeyup="showNames(this.value)">
 							<datalist id="names"></datalist>
 							<br>
-
+							<label style="padding: 6px 0" for="phone">Phone:</label>
+							<input type="text" id="phone">
+							<br>
 							<label style="padding: 6px 0" for="email">Email:</label>
 							<input type="text" id="email">
 							<br>
@@ -97,19 +100,22 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 							<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState(1);showOptions('brand', this.name.substr(-1));" name="category1">
 								<option hidden>Category</option>
+								<?php if(isset($_GET['c'])){print '<option selected>'.$_GET['c'].'</option>';} ?>
 
 							</select>
 
 							<select onclick="showOptions('model', this.name.substr(-1))" onchange="showOptions('model')" disabled name="brand1">
 								<option hidden>Brand</option>
+								<?php if(isset($_GET['ma'])){print '<option selected>'.$_GET['ma'].'</option>';} ?>
 							</select>
 								
 							<select onclick="showOptions('', this.name.substr(-1));" disabled name="model1">
 								<option hidden>Model</option>
+								<?php if(isset($_GET['mo'])){print '<option selected>'.$_GET['mo'].'</option>';} ?>
 							</select>
 
 							<label>&nbsp&nbspSerial:</label>
-							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" disabled type="text" name="serial1">
+							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" disabled type="text" name="serial1" value=<?php if(isset($_GET['s'])){print $_GET['s'];} ?>>
 
 							<datalist id="serial1"></datalist>
 
