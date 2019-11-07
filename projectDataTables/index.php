@@ -99,6 +99,9 @@ $vccount = $row->c;
 					<li>
 						<a href="settings.php">Settings</a>
 					</li>
+					<li>
+						<a href="logout.php">Logout</a>
+					</li>
 				</ul>
 			</div>
 
