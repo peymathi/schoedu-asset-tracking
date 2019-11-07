@@ -16,6 +16,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript" src="javascript/modal.js"></script>
 	<script type="text/javascript" src="javascript/assets.js"></script>
+	<script type="text/javascript" src="javascript/checkout.js"></script>
 
 	<!-- Datatables -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -111,7 +112,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						<table class="dataTable display" style="width: 100%">
 							<thead>
 								<tr>
-									<th style="width: 5em">Edit</th>
+									<th style="width: 5em">Options</th>
 									<th>Serial #</th>
 									<th>Category</th>
 									<th>Manufacturer</th>
