@@ -1,14 +1,34 @@
 var table;
 
-function newAsset() {
+function newAssets() {
   var modelId = $('.modelSelect.newAsset').val();
   var userId = $('.userSelect.newAsset').val();
   var locationId = $('.locationSelect.newAsset').val();
   var purchaseDate = $('.purchaseDate.newAsset').val();
   var warranty = $('.warranty.newAsset').val();
-  var networkId = $('.networkID.newAsset').val();
-  var serial = $('.serial.newAsset').val();
-  var notes = $('.notes.newAsset').val();
+  var networkId = $('.networkID.newAsset').map(function() {
+    return $(this).val();
+  }).get();
+  var serial = $('.serial.newAsset').map(function() {
+    return $(this).val();
+  }).get();
+  var notes = $('.notes.newAsset').map(function() {
+    return $(this).val();
+  }).get();
+
+  var i;
+  var details = [];
+  for(i = 0; i < networkId.length; i++) {
+    var detail = {
+      network: networkId[i],
+      serial: serial[i],
+      notes: notes[i]
+    };
+
+    details.push(detail);
+  }
+
+  console.log(details);
 
   // do some validation (needs more)
   if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
@@ -22,15 +42,16 @@ function newAsset() {
     location: locationId,
     purchase: purchaseDate,
     warranty: warranty,
-    network: networkId,
-    serial: serial,
-    notes: notes
+    details: details
   };
 
+  console.log(JSON.stringify(request));
+
   $.ajax({
-    url: "phpinc/newAsset.php",
+    url: "phpinc/newAssets.php",
     type: "POST",
-    data: request,
+    data: JSON.stringify(request),
+    dataType: "json",
     success: function(d) {
       table.ajax.reload();
       alert('created asset');
@@ -204,7 +225,7 @@ $(document).ready(function(){
 
     $('.purchaseDate.newAsset').val(new Date().toISOString().split('T')[0]); //this is sometimes a day off
 
-    $('#addButton').click(newAsset);
+    $('#addButton').click(newAssets);
     $('#editButton').click(editAsset);
 
     $('.modelSelect').change(function() {
