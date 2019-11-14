@@ -36,6 +36,7 @@ $category = "";
 $model = "";
 $location = "";
 $user = "";
+$network = "";
 $surplus = "";
 $expired = "";
 
@@ -151,6 +152,28 @@ foreach ($tempArr as $i)
 	array_push($userOptions, $i[0]);
 }
 
+$sql = "
+
+	SELECT NetworkName
+	FROM P_ASSETS
+
+";
+
+$query = $con->prepare($sql);
+$query->execute();
+$tempArr = $query->fetchAll();
+$networkOptions = array("- -");
+
+// Loop through the queried array and set up the options array
+foreach($tempArr as $i)
+{
+	array_push($networkOptions, $i[0]);
+}
+
+/*
+ * FILTER FORM HANDLING
+*/
+
 $filterTitle = "Current Filters - ";
 
 // Variables for each of the output select elements
@@ -159,6 +182,7 @@ $manufacturerOutput = '';
 $modelOutput = '';
 $locationOutput = '';
 $userOutput = '';
+$networkOutput = '';
 
 // Check if we need to process form data. (ie. filters have been requested)
 if (isset($_GET['manufacturer']))
@@ -170,6 +194,7 @@ if (isset($_GET['manufacturer']))
 	$model = $_GET['model'];
 	$location = $_GET['location'];
 	$user = $_GET['user'];
+	$network = $_GET['network'];
 	$surplus = False;
 	$expired = False;
 
@@ -184,7 +209,7 @@ if (isset($_GET['manufacturer']))
 	}
 
 	// Create ReportsForm object
-		$reportsForm = new ReportsForm($con, $manufacturer, $category, $model, $location, $user, $surplus, $expired);
+		$reportsForm = new ReportsForm($con, $manufacturer, $category, $model, $location, $user, $network, $surplus, $expired);
 		$reportsForm->queryDB();
 
 	//Get raw and table data from reports form
@@ -216,6 +241,11 @@ if (isset($_GET['manufacturer']))
 	if($user != "- -")
 	{
 		$filterTitle .= "User: " . $user . ", ";
+	}
+
+	if($network != "- -")
+	{
+		$filterTitle .= "Network: " . $network . ", ";
 	}
 
 	if(isset($_GET['surplus']))
@@ -256,6 +286,10 @@ else
 	printCSV($queryData, "report.csv");
 	$tableData = $reportsForm->getTableData();
 }
+
+/*
+ * SELECT ELEMENT OPTIONS FORMATTING
+*/
 
 // Formats select element options based on previous form data
 // Manufacturer
@@ -342,6 +376,85 @@ for ($i = 0; $i < count($userOptions); $i++)
 
 }
 
+// Network Name
+for($i = 0; $i < count($networkOptions); $i++)
+{
+	// Check if the current value is the selected value
+	if($networkOptions[$i] == $network)
+	{
+		$networkOutput .= '<option name="network" selected>' . $networkOptions[$i] . '</option>';
+	}
+
+	else
+	{
+		$networkOutput .= '<option name="network">' . $networkOptions[$i] . '</option>';
+	}
+}
+
+/*
+ * QUICK SUMMARIES
+*/
+
+// Total Asset Count
+$sql = 'SELECT count(*) as c FROM P_ASSETS WHERE IsSurplus = 0';
+$query = $con->prepare($sql);
+$query->execute();
+$count = $query->fetch(PDO::FETCH_OBJ);
+$totalCount = $count->c;
+
+// Count by category
+
+// Output string
+$categoryCountOutput = "";
+
+// Get the list of categories
+$categories = getCategories($con);
+
+// Get the list of manufacturers
+$manufacturers = getManufacturers($con);
+
+// Loop through each category
+foreach($categories as $cat)
+{
+	// Check if there are any models with the given category
+	if(countCategory($con, $cat) != 0)
+	{
+		// Add the category title to output string
+		$categoryCountOutput .= '<h4><span class="quickClick quickCat">' . $cat . '</span>' . "s: " . countCategory($con, $cat) . '</h4>';
+
+		// Loop through each manufacturer
+		foreach($manufacturers as $man)
+		{
+			// Check if there are any current assets for this manufacturer-category combo
+			if(countCatMan($con, $cat, $man) != 0)
+			{
+				// Add the manufacturer name along with the count of manufacturer-category assets
+				// to output string
+				$categoryCountOutput .= "<p>" . '<span class="quickClick quickMan">' . $man . '</span>' . " : " . countCatMan($con, $cat, $man) . '<br>';
+
+				// Get the models for this manufacturer-category combo
+				$models = getModels($con, $cat, $man);
+
+				// Loop through each model and add the count to the output string
+				foreach($models as $mod)
+				{
+					$categoryCountOutput .= '<span class="quickClick quickMod">' . $mod . '</span>' . ' : ' . countModels($con, $mod) . ', ';
+				}
+
+				// Add closing p
+				$categoryCountOutput .= '</p>';
+
+				// Line break
+				$categoryCountOutput .= '<br>';
+			}
+
+		}
+
+		// Add total out of warranty assets for the category
+		$categoryCountOutput .= '<p>Total ' . $cat . 's' . ' out of warranty: ' . countCategoriesOW($con, $category) . '</p>';
+	}
+}
+
 ?>
 <body>
 	<div class="border">
@@ -389,77 +502,101 @@ for ($i = 0; $i < count($userOptions); $i++)
 
 			<div class="body" id="body">
 				<div>
-					<h2>
-						Reports
-					</h2>
-					<br />
-					<div class="centered">
-						<p id="filterList"><span><?php echo $filterTitle; ?></span></p>
+					<div id="pdf">
+						<h2>
+							Reports
+						</h2>
+						<br />
+						<div class="centered">
+							<p id="filterList"><span><?php echo $filterTitle; ?></span></p>
+						</div>
+						<br />
+						<div id="reportTable">
+							<table class="dataTable display" style="width: 100%">
+								<thead>
+									<tr>
+										<th>Serial #</th>
+										<th>Network Name</th>
+										<th>Category</th>
+										<th>Manufacturer</th>
+										<th>Model #</th>
+										<th>Location</th>
+										<th>Days Since Checked</th>
+										<th>User</th>
+										<th>Surplus</th>
+										<th>Expired Warranty</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php echo $tableData; ?>
+								</tbody>
+							</table>
+						</div>
 					</div>
-					<br />
-					<div id="reportTable">
-						<table class="dataTable display" style="width: 100%">
-							<thead>
-								<tr>
-									<th>Serial #</th>
-									<th>Category</th>
-									<th>Manufacturer</th>
-									<th>Model #</th>
-									<th>Location</th>
-									<th>Days Since Checked</th>
-									<th>User</th>
-									<th>Surplus</th>
-									<th>Expired Warranty</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php echo $tableData; ?>
-							</tbody>
-						</table>
 
-						<!-- DataTable controll -->
-						<script type="text/javascript">
-							$(document).ready(function(){
-						    	$('.dataTable').DataTable({responsive:true});} );
-						</script>
+					<!-- DataTable controll -->
+					<script type="text/javascript">
+						$(document).ready(function(){
+						   $('.dataTable').DataTable({responsive:true});
+						 });
+					</script>
+
+					<!-- Modal For Filtering multiple Items -->
+					<div class="modal">
+						<div class="modal-content">
+							<span class="close">&times;</span>
+							<h2><span>Filter Multiple</span></h2>
+							<form name="multi" action="reports.php" method="get">
+								<label for="multiString" id="modalLabel"></label>
+								<input type="text" name="multiString"></input>
+								<button type="submit" name="modalSubmit" value="modalSubmit">Filter</button>
+							</form>
+						</div>
+					</div>
 
 
 						<br />
 						<br />
-					</div>
 					<form id="filterForm" name="filterForm" action="reports.php" method="get">
 						<div class="reportFilters">
 							<h3><span>Select Filters</span></h3>
 
 							<!-- Select by category -->
-							<label for="category">Category -</label>
+							<button for="category" type="button" class="filterLabel">Category -</button>
 							<select id="category" name="category">
 								<?php echo $categoryOutput; ?>
 							</select>
 
 							<!-- Select by Manufacturer -->
-							<label for="manufacturer">Manufacturer -</label>
+							<button for="manufacturer" type="button" class="filterLabel">Manufacturer -</button>
 							<select id="manufacturer" name="manufacturer">
 								<?php echo $manufacturerOutput; ?>
 							</select>
 
 							<!-- Select by Model -->
-							<label for="model">Model -</label>
+							<button for="model" type="button" class="filterLabel">Model -</button>
 							<select id="model" name="model">
 								<?php echo $modelOutput; ?>
 							</select>
 							<br>
 							<br>
 							<!-- Select by location -->
-							<label for="location">Location -</label>
+							<button for="location" type="button" class="filterLabel">Location -</button>
 							<select id="location" name="location">
 								<?php echo $locationOutput; ?>
 							</select>
 
 							<!-- Select by user -->
-							<label for="user">User -</label>
+							<button for="user" type="button" class="filterLabel">User -</button>
 							<select name="user">
 								<?php echo $userOutput; ?>
+							</select>
+							<br /> <br />
+
+							<!-- Select by network -->
+							<button for="network" type="button" class="filterLabel">Network -</button>
+							<select name="network">
+								<?php echo $networkOutput; ?>
 							</select>
 							<br /> <br />
 
@@ -473,19 +610,28 @@ for ($i = 0; $i < count($userOptions); $i++)
 							<br /> <br />
 
 							<!-- Button to submit form -->
-							<button id="filter" type="submit" name="submitBtn">Filter</button>
+							<button class="buttonReal" id="filter" type="submit" name="submitBtn">Filter</button>
 
 							<!-- Reset filters button -->
-							<button type="button" name="resetBtn">Reset Filters</button>
+							<button class="buttonReal" type="button" name="resetBtn">Reset Filters</button>
 
 							<!-- Button to export to CSV file -->
-							<button type="button" name="exportCSV">Export CSV</button>
-
-							<!-- Button to export to PDF file -->
-							<button type="button" name="exportPDF">Export PDF </button>
+							<button class="buttonReal" type="button" name="exportCSV">Export CSV</button>
 
 						</div>
 					</form>
+
+					<div class="centered">
+						<!-- Quick Summaries -->
+						<h3><span>Quick Summaries</span></h3>
+
+						<!-- Total Assets -->
+						<p>Total Assets: <?php echo $totalCount; ?></p>
+						<br>
+
+						<!-- Numerical Breakdown -->
+						<?php echo $categoryCountOutput; ?>
+					</div>
 				</div>
 			</div>
 		</div>

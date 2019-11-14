@@ -14,10 +14,11 @@ class ReportsForm
   private $mod;
   private $loc;
   private $u;
+  private $net;
   private $sur;
   private $exp;
 
-  public function __construct($con, $man = '- -', $cat = '- -', $mod = '- -', $loc = '- -', $u = '- -', $sur = False, $exp = False)
+  public function __construct($con, $man = '- -', $cat = '- -', $mod = '- -', $loc = '- -', $u = '- -', $net = '- -', $sur = False, $exp = False)
   {
     $this->con = $con;
     $this->man = $man;
@@ -25,6 +26,7 @@ class ReportsForm
     $this->mod = $mod;
     $this->loc = $loc;
     $this->u = $u;
+    $this->net = $net;
     $this->sur = $sur;
     $this->exp = $exp;
   }
@@ -75,6 +77,12 @@ class ReportsForm
       array_push($sqlArray, $this->u);
     }
 
+    if ($this->net != '- -')
+    {
+      $sql .= "NetworkName = ? AND ";
+      array_push($sqlArray, $this->net);
+    }
+
     if ($this->exp)
     {
       $sql .= "DATEDIFF(WarrantyEnd, now()) <= 0 AND ";
@@ -85,7 +93,7 @@ class ReportsForm
 
     $query = $this->con->prepare($sql);
     $query->execute($sqlArray);
-    $this->queryData = $query->fetchAll();
+    $this->queryData = $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
   // Gets raw data based on query
@@ -104,32 +112,56 @@ class ReportsForm
     {
       $tableData .= "<tr>";
 
-      // Loop through the data in the record that can be formatted easily
-      for ($i = 0; $i < 5; $i++)
+      // Serial Number
+      $tableData .= '<td>';
+      $tableData .= $record['SerialNumber'];
+      $tableData .= '</td>';
+
+      // Network Name
+      $tableData .= '<td>';
+      $tableData .= $record['NetworkName'];
+      $tableData .= '</td>';
+
+      // Category
+      $tableData .= '<td>';
+      $tableData .= $record['CategoryName'];
+      $tableData .= '</td>';
+
+      // Manufacturer
+      $tableData .= '<td>';
+      $tableData .= $record['ManufacturerName'];
+      $tableData .= '</td>';
+
+      // Model
+      $tableData .= '<td>';
+      $tableData .= $record['ModelName'];
+      $tableData .= '</td>';
+
+      // Location
+      $tableData .= '<td>';
+      $tableData .= $record['LocationName'];
+      $tableData .= '</td>';
+
+      // Format the days last checked (5)
+      if($record['DateLastChecked'] != NULL)
       {
         $tableData .= "<td>";
-        $tableData .= $record[$i];
+        $checkedDate = date_create($record['DateLastChecked']);
+        $currentDate = date_create();
+        $diff = date_diff($currentDate, $checkedDate);
+        $tableData .= $diff->format("%a");
         $tableData .= "</td>";
       }
 
-      // Format the days last checked (5)
-      $tableData .= "<td>";
-      $checkedDate = date_create($record[5]);
-      $currentDate = date_create();
-      $diff = date_diff($currentDate, $checkedDate);
-      $tableData .= $diff->format("%a");
-
-      $tableData .= "</td>";
-
       // Add the user to the data table (6)
       $tableData .= "<td>";
-      $tableData .= $record[6];
+      $tableData .= $record['UserName'];
       $tableData .= "</td>";
 
       // Format the surplus boolean (7)
       $tableData .= "<td>";
 
-      if ($record[7])
+      if ($record['IsSurplus'])
       {
         $tableData .= "Y";
       }
@@ -144,9 +176,9 @@ class ReportsForm
       // Decide whether the warranty has expired or not (8)
       $tableData .= "<td>";
 
-      if (!$record[8])
+      if ($record['WarrantyEnd'] != NULL)
       {
-        $warrantyDate = date_create($record[8]);
+        $warrantyDate = date_create($record['WarrantyEnd']);
         $diff = date_diff($warrantyDate, $currentDate);
         $diff = $diff->format("%a");
 
@@ -173,9 +205,7 @@ class ReportsForm
     }
 
     return $tableData;
-
   }
-
 }
 
 // Function for writing a CSV based on a data query string
@@ -192,7 +222,7 @@ function printCSV($data, $location)
   $file = fopen($location, "w");
 
   // Print a line with the list of column names
-  $formatString = "SerialNumber, Category, Manufacturer, Model, Location, DateLastChecked, User, IsSurplus, WarrantyEnd";
+  $formatString = "SerialNumber, NetworkName, Category, Manufacturer, Model, Location, DateLastChecked, User, IsSurplus, WarrantyEnd";
   $formatString .= PHP_EOL;
 
   // Loop through the data query and format each record to be added to the format string
@@ -200,13 +230,18 @@ function printCSV($data, $location)
   {
 
     // Loop until the user name comes up
-    for($i = 0; $i < 6; $i++)
+    foreach($record as $column)
     {
-      $formatString .= $record[$i] . ',';
+      if ($column == $record['UserName'])
+      {
+        break;
+      }
+
+      $formatString .= $column . ',';
     }
 
-    $formatString .= '"' . $record[6] . '"' . ',';
-    $formatString .= $record[7] . ',' . $record[8] . PHP_EOL;
+    $formatString .= '"' . $record['UserName'] . '"' . ',';
+    $formatString .= $record['IsSurplus'] . ',' . $record['WarrantyEnd'] . PHP_EOL;
   }
 
   // Write the data to the file
@@ -216,18 +251,163 @@ function printCSV($data, $location)
   fclose($file);
 }
 
-// Function for writing a PDF based on a data query string.
-function printPDF($data, $location)
+//Function to get the list of categories from the DB
+function getCategories($con)
 {
-  // Delete a file at that location if there already is one
-  if (file_exist($location))
+  $sql = "SELECT Name FROM P_CATEGORIES";
+  $query = $con->prepare($sql);
+  $query->execute();
+  $categories = $query->fetchAll(PDO::FETCH_NUM);
+
+  // Convert the 2d array to 1d
+  $catArr = array();
+  foreach($categories as $cat)
   {
-    unlink($location);
+    array_push($catArr, $cat[0]);
   }
 
-  // Open a new file at the location in write mode
-  $file = fopen($location, "w");
+  return $catArr;
 }
 
+// Function to get the list of manufacturers from the DB
+function getManufacturers($con)
+{
+  $sql = "SELECT Name FROM P_MANUFACTURERS";
+  $query = $con->prepare($sql);
+  $query->execute();
+  $manufacturers = $query->fetchAll(PDO::FETCH_NUM);
+
+  $manArr = array();
+
+  // Convert the 2d array to 1d
+  foreach($manufacturers as $man)
+  {
+      array_push($manArr, $man[0]);
+  }
+
+  return $manArr;
+}
+
+// Function to get the list of model names that belong to a category and manufacturer
+function getModels($con, $category, $manufacturer)
+{
+  $sql = "
+  SELECT Name FROM P_MODELS
+  WHERE CategoryID IN
+  (
+    SELECT CategoryID FROM P_CATEGORIES WHERE Name = ?
+  )
+  AND ManufacturerID IN
+  (
+    SELECT ManufacturerID FROM P_MANUFACTURERS WHERE Name = ?
+  )
+  ";
+
+  $query = $con->prepare($sql);
+  $query->execute(array($category, $manufacturer));
+  $models = $query->fetchAll(PDO::FETCH_NUM);
+
+  // Convert the 2d array to 1d
+  $modArr = array();
+
+  foreach($models as $mod)
+  {
+    array_push($modArr, $mod[0]);
+  }
+
+  return $modArr;
+}
+
+// Function to get a count from a category name
+function countCategory($con, $category)
+{
+  $sql = "
+  SELECT count(*) as c FROM P_ASSETS
+  WHERE IsSurplus = 0 AND ModelID IN
+  (
+    SELECT ModelID FROM P_MODELS
+    WHERE CategoryID IN
+    (
+      SELECT CategoryID FROM P_CATEGORIES
+      WHERE Name = ?
+    )
+  )
+
+  ";
+
+  $query = $con->prepare($sql);
+  $query->execute(array($category));
+  $count = $query->fetch(PDO::FETCH_OBJ);
+  return $count->c;
+}
+
+// Function to get a count based on category name and manufacturer name
+function countCatMan($con, $category, $manufacturer)
+{
+  $sql = "
+  SELECT count(*) as c FROM P_ASSETS
+  WHERE IsSurplus = 0 AND ModelID IN
+  (
+    SELECT ModelID FROM P_MODELS
+    WHERE CategoryID IN
+    (
+      SELECT CategoryID FROM P_CATEGORIES
+      WHERE Name = ?
+      )
+    AND ManufacturerID IN
+    (
+      SELECT ManufacturerID FROM P_MANUFACTURERS
+      WHERE Name = ?
+      )
+  )
+  ";
+
+  $query = $con->prepare($sql);
+  $query->execute(array($category, $manufacturer));
+  $count = $query->fetch(PDO::FETCH_OBJ);
+  return $count->c;
+}
+
+// Function that counts the number of assets of a given model
+function countModels($con, $model)
+{
+  $sql = "
+  SELECT count(*) as c FROM P_ASSETS
+  WHERE IsSurplus = 0 AND ModelID IN
+  (
+    SELECT ModelID FROM P_MODELS
+    WHERE Name = ?
+    )
+
+  ";
+
+  $query = $con->prepare($sql);
+  $query->execute(array($model));
+  $count = $query->fetch(PDO::FETCH_OBJ);
+  return $count->c;
+}
+
+// Function that counts the number of assets out of warranty for a given category
+function countCategoriesOW($con, $category)
+{
+  $sql = "
+  SELECT count(*) as c FROM P_ASSETS
+  WHERE IsSurplus = 0
+  AND DATEDIFF(WarrantyEnd, now()) <= 0
+  AND ModelID IN
+  (
+      SELECT ModelID FROM P_MODELS
+      WHERE CategoryID IN
+      (
+          SELECT CategoryID FROM P_CATEGORIES
+          WHERE Name = ?
+      )
+  )
+  ";
+  $query = $con->prepare($sql);
+  $query->execute(array($category));
+  $count = $query->fetch(PDO::FETCH_OBJ);
+  return $count->c;
+}
 
 ?>
