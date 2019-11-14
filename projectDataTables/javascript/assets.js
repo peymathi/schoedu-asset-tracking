@@ -192,7 +192,8 @@ $(document).ready(function(){
         ajax: 'phpinc/getAssetDataJson.php',
         rowCallback: function( row, data ) {
             var assetId = data[0];
-            $("td:eq(0)", row).html('<button class="editBtn"><i class="fa fa-edit"></i></button><button onclick="rentFunction(this)" class="checkout"><i class="fa fa-shopping-cart"></i></button>');
+            $("td:eq(0)", row).html('<button class="editBtn"><i class="fa fa-edit"></i></button>\
+              <button onclick="rentFunction(this)" class="checkout"><i class="fa fa-shopping-cart"></i></button>');
             $("td:eq(0) .editBtn", row).on("click", function(evt) {
               populateEditModal(assetId);
             });
