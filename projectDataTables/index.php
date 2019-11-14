@@ -163,7 +163,9 @@ $vccount = $row->c;
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    		$('.dataTable').DataTable({responsive:true});
+						    		$('.dataTable').DataTable({responsive:true,
+						    			columnDefs: [{orderable: false, targets: [0]}],
+        								order: [[ 6, 'asc']]});
 						    });
 						</script>
 
