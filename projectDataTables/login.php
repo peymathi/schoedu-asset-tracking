@@ -8,29 +8,34 @@
 	$username = "";
 	$password = "";
 	$userid = "";
+	$hash = "";
 
 	$haveuser = FALSE;
 	$havepass = FALSE;
-	$match = FALSE;
 
 if(isset($_GET['username'])){
 	$username = $_GET['username'];
-	$haveuser = TRUE;
+	if ($username != ""){
+		$haveuser = TRUE;
+	}
 }
 
 if(isset($_GET['password'])){
 	$password = $_GET['password'];
-	$havepass = TRUE;
+	if ($password != ""){
+		$havepass = TRUE;
+	}
+
 }
 
 if($haveuser == TRUE and $havepass == TRUE){
-	$stmt = $con->prepare("select count(*) as c from P_ADMINS where username = ? and salthashpass = ?");
-	$stmt->execute(array($username, $password));
+	$stmt = $con->prepare("select salthashpass from P_ADMINS where username = ?");
+	$stmt->execute(array($username));
 	$row = $stmt->fetch(PDO::FETCH_OBJ);
-	$count = $row->c;
-	if ($count == 1){
+	$hash = $row->salthashpass;
+	if(password_verify($password, $hash)){
 		$stmt = $con->prepare("Select adminid from P_ADMINS where username = ? and salthashpass = ?");
-		$stmt->execute(array($username, $password));
+		$stmt->execute(array($username, $hash));
 		$row = $stmt->fetch(PDO::FETCH_OBJ);
 		$userid = $row->adminid;
 		$_SESSION[userid] = $userid;
@@ -54,7 +59,6 @@ if($haveuser == FALSE or $havepass == FALSE){
   <meta charset="UTF-8">
   <title>Asset Management Log In</title>
   <link rel="stylesheet" href="css/logInStyle.css">
-  
 </head>
 <body>
 
