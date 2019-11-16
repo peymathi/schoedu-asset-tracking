@@ -8,8 +8,6 @@
 	$sql->execute();
 	$result = $sql->fetchAll();
 
-	$res = $res.'<option hidden value = "Category">Category</option>';
-
 	foreach ($result as $row)
 	{ 
 		$res = $res.'<option value = "'.$row['Name'].'">'.$row['Name'].'</option>';

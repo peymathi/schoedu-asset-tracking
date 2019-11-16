@@ -179,7 +179,7 @@ form {
 	padding: 0 0 10px;
 }
 
-form button[type=submit], #rental_submit, #rental_scan{
+form button[type=submit]{
   padding: 6px 10px;
   background: #ddd;
   font-size: 17px;
@@ -193,11 +193,6 @@ input[type=date] {
 
 input[type=number] {
   width: 3em;
-}
-
-input[type=file]{
-	width: 0;
-	height: 0;
 }
 
 .summary{
@@ -255,6 +250,11 @@ input[type=file]{
 
 span.quickClick {
   cursor: pointer;
+}
+
+.multiFilter {
+  text-align: center;
+  margin: 0 0 auto;
 }
 
 .menu_toggle_container{

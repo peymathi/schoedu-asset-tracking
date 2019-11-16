@@ -19,6 +19,9 @@ if ($man == '- -')
   $query->execute(array($man));
   $models = $query->fetchAll(PDO::FETCH_NUM);
 
+  // Add base option
+  $response .= '<option>- -</option>';
+
   // Loop through each model given and format it accordingly
   foreach($models as $model)
   {
@@ -42,6 +45,9 @@ else
   $query = $con->prepare($sql);
   $query->execute(array($man));
   $models = $query->fetchAll(PDO::FETCH_NUM);
+
+  // Add base option
+  $response .= '<option>- -</option>';
 
   // Loop through each model given and format it accordingly
   foreach($models as $model)

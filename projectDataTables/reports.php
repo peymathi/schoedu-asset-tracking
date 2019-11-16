@@ -274,6 +274,36 @@ if (isset($_GET['manufacturer']))
 
 }
 
+// Check if the multi filter form was submitted
+else if (isset($_GET['modalSubmit']))
+{
+	// Get user's input
+	$multiFilter = $_GET['multiString'];
+	$filter = $_GET['filterType'];
+
+	// Check if a filter type was given
+	if ($filter != "none")
+	{
+		// Split the string into an array separated by each space
+		$filterArr = explode(" ", $multiFilter);
+
+		// Query the DB with filter array and type
+		$queryData = filterMulti($con, $filterArr, $filter);
+
+		// Format the data to be in table form
+		$reportsForm = new ReportsForm($con);
+
+		// Check if query data is empty
+		if (sizeof($queryData) != 0)
+		{
+			$tableData = $reportsForm->getTableData($queryData);
+		}
+
+		// Print the CSV
+		printCSV($queryData, "report.csv");
+	}
+}
+
 // This runs if this is the page's first time running
 else
 {
@@ -451,7 +481,7 @@ foreach($categories as $cat)
 		}
 
 		// Add total out of warranty assets for the category
-		$categoryCountOutput .= '<p>Total ' . $cat . 's' . ' out of warranty: ' . countCategoriesOW($con, $category) . '</p>';
+		$categoryCountOutput .= '<p>Total ' . '<span class="quickClick quickMod">' . $cat . '</span>' . 's' . ' out of warranty: ' . countCategoriesOW($con, $category) . '</p>';
 	}
 }
 
@@ -499,6 +529,23 @@ foreach($categories as $cat)
 				</script>
 			</div>
 
+			<!-- Modal For Filtering multiple Items -->
+			<div class="modal reports">
+				<div class="modal-content multiFilter">
+					<span class="close">&times;</span>
+					<h2><span id="modalHeader"></span></h2>
+					<form name="multi" action="reports.php" method="get">
+						<label for="multiString">Enter multiple filters by typing each filter with a space in between:</label>
+						<input type="text" name="multiString"></input>
+						<button type="submit" name="modalSubmit" value="modalSubmit">Filter</button>
+
+						<!-- Hidden Input for JS to tell the server which filter type
+							the user used when submitting multiple filters -->
+						<input type="text" name="filterType" id="filterType" value="none" hidden></input>
+					</form>
+				</div>
+			</div>
+
 
 			<div class="body" id="body">
 				<div>
@@ -537,111 +584,100 @@ foreach($categories as $cat)
 					<!-- DataTable controll -->
 					<script type="text/javascript">
 						$(document).ready(function(){
-						   $('.dataTable').DataTable({responsive:true});
+						   $('.dataTable').DataTable({
+								 responsive:true,
+								 columnDefs: [
+									 {
+										 targets: "_all",
+										 className: 'dt-body-center'
+									 }
+								 ]
+							 });
 						 });
 					</script>
 
-					<!-- Modal For Filtering multiple Items -->
-					<div class="modal">
-						<div class="modal-content">
-							<span class="close">&times;</span>
-							<h2><span>Filter Multiple</span></h2>
-							<form name="multi" action="reports.php" method="get">
-								<label for="multiString" id="modalLabel"></label>
-								<input type="text" name="multiString"></input>
-								<button type="submit" name="modalSubmit" value="modalSubmit">Filter</button>
-							</form>
-						</div>
-					</div>
+							<br />
+							<br />
+						<form id="filterForm" name="filterForm" action="reports.php" method="get">
+							<div class="reportFilters">
+								<h3><span>Select Filters</span></h3>
 
+								<!-- Select by category -->
+								<button for="category" id="category" type="button" class="filterLabel">Category -</button>
+								<select id="categorySelect" name="category">
+									<?php echo $categoryOutput; ?>
+								</select>
 
-						<br />
-						<br />
-					<form id="filterForm" name="filterForm" action="reports.php" method="get">
-						<div class="reportFilters">
-							<h3><span>Select Filters</span></h3>
+								<!-- Select by Manufacturer -->
+								<button for="manufacturer" id="manufacturer" type="button" class="filterLabel">Manufacturer -</button>
+								<select id="manufacturerSelect" name="manufacturer">
+									<?php echo $manufacturerOutput; ?>
+								</select>
 
-							<!-- Select by category -->
-							<button for="category" type="button" class="filterLabel">Category -</button>
-							<select id="category" name="category">
-								<?php echo $categoryOutput; ?>
-							</select>
+								<!-- Select by Model -->
+								<button for="model" id="model" type="button" class="filterLabel">Model -</button>
+								<select id="modelSelect" name="model">
+									<?php echo $modelOutput; ?>
+								</select>
+								<br>
+								<br>
+								<!-- Select by location -->
+								<button for="location" id="location" type="button" class="filterLabel">Location -</button>
+								<select name="location">
+									<?php echo $locationOutput; ?>
+								</select>
 
-							<!-- Select by Manufacturer -->
-							<button for="manufacturer" type="button" class="filterLabel">Manufacturer -</button>
-							<select id="manufacturer" name="manufacturer">
-								<?php echo $manufacturerOutput; ?>
-							</select>
+								<!-- Select by user -->
+								<button for="user" id="user" type="button" class="filterLabel">User -</button>
+								<select name="user">
+									<?php echo $userOutput; ?>
+								</select>
+								<br /> <br />
 
-							<!-- Select by Model -->
-							<button for="model" type="button" class="filterLabel">Model -</button>
-							<select id="model" name="model">
-								<?php echo $modelOutput; ?>
-							</select>
+								<!-- Select by network -->
+								<button for="network" id="network" type="button" class="filterLabel">Network -</button>
+								<select name="network">
+									<?php echo $networkOutput; ?>
+								</select>
+								<br /> <br />
+
+								<!-- Check box to include surplus items in query -->
+								<label for="surplus">Include Surplus - </label>
+								<input type="checkbox" name="surplus" value="checked" <?php echo $surplus; ?>>
+
+								<!-- Check box to filter by expired warranty -->
+								<label for="expiredWarranty">Expired Warranty - </label>
+								<input type="checkbox" name="expiredWarranty" value="checked" <?php echo $expired; ?>>
+								<br /> <br />
+
+								<!-- Button to submit form -->
+								<button class="buttonReal" id="filter" type="submit" name="submitBtn">Filter</button>
+
+								<!-- Reset filters button -->
+								<button class="buttonReal" type="button" name="resetBtn">Reset Filters</button>
+
+								<!-- Button to export to CSV file -->
+								<button class="buttonReal" type="button" name="exportCSV">Export CSV</button>
+
+							</div>
+						</form>
+
+						<div class="centered">
+							<!-- Quick Summaries -->
+							<h3><span>Quick Summaries</span></h3>
+
+							<!-- Total Assets -->
+							<p>Total Assets: <?php echo $totalCount; ?></p>
 							<br>
-							<br>
-							<!-- Select by location -->
-							<button for="location" type="button" class="filterLabel">Location -</button>
-							<select id="location" name="location">
-								<?php echo $locationOutput; ?>
-							</select>
 
-							<!-- Select by user -->
-							<button for="user" type="button" class="filterLabel">User -</button>
-							<select name="user">
-								<?php echo $userOutput; ?>
-							</select>
-							<br /> <br />
-
-							<!-- Select by network -->
-							<button for="network" type="button" class="filterLabel">Network -</button>
-							<select name="network">
-								<?php echo $networkOutput; ?>
-							</select>
-							<br /> <br />
-
-							<!-- Check box to include surplus items in query -->
-							<label for="surplus">Include Surplus - </label>
-							<input type="checkbox" name="surplus" value="checked" <?php echo $surplus; ?>>
-
-							<!-- Check box to filter by expired warranty -->
-							<label for="expiredWarranty">Expired Warranty - </label>
-							<input type="checkbox" name="expiredWarranty" value="checked" <?php echo $expired; ?>>
-							<br /> <br />
-
-							<!-- Button to submit form -->
-							<button class="buttonReal" id="filter" type="submit" name="submitBtn">Filter</button>
-
-							<!-- Reset filters button -->
-							<button class="buttonReal" type="button" name="resetBtn">Reset Filters</button>
-
-							<!-- Button to export to CSV file -->
-							<button class="buttonReal" type="button" name="exportCSV">Export CSV</button>
-
+							<!-- Numerical Breakdown -->
+							<?php echo $categoryCountOutput; ?>
 						</div>
-					</form>
-
-					<div class="centered">
-						<!-- Quick Summaries -->
-						<h3><span>Quick Summaries</span></h3>
-
-						<!-- Total Assets -->
-						<p>Total Assets: <?php echo $totalCount; ?></p>
-						<br>
-
-						<!-- Numerical Breakdown -->
-						<?php echo $categoryCountOutput; ?>
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- Local JS -->
-	<script src="javascript/reports.js">
-
-		// Passes the current query data from php to JS
-		var queryData = <?php echo $queryData; ?>;
-
-	</script>
+	<script src="javascript/reports.js"></script>
 </body>
 </html>

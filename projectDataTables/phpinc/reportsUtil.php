@@ -102,9 +102,16 @@ class ReportsForm
     return $this->queryData;
   }
 
-  // Gets data based on query and formats it to be put into the data table
-  public function getTableData()
+  // Gets data based on query and formats it to be put into the data table.
+  // Optional parameter to take in a data query
+  public function getTableData($dataQuery = NULL)
   {
+    // Check if $dataQuery is not null
+    if ($dataQuery != NULL)
+    {
+      $this->queryData = $dataQuery;
+    }
+
     $tableData = "";
 
     // Loop through all of the records
@@ -251,10 +258,17 @@ function printCSV($data, $location)
   fclose($file);
 }
 
-//Function to get the list of categories from the DB
+//Function to get the list of categories from the DB that are not hidden
 function getCategories($con)
 {
-  $sql = "SELECT Name FROM P_CATEGORIES";
+  $sql =
+  "
+  SELECT Name FROM P_CATEGORIES
+  WHERE CategoryID NOT IN
+  (
+      SELECT CategoryID FROM P_CATEGORIES
+  )
+  ";
   $query = $con->prepare($sql);
   $query->execute();
   $categories = $query->fetchAll(PDO::FETCH_NUM);
@@ -269,10 +283,17 @@ function getCategories($con)
   return $catArr;
 }
 
-// Function to get the list of manufacturers from the DB
+// Function to get the list of manufacturers from the DB where manufacturer is not hidden
 function getManufacturers($con)
 {
-  $sql = "SELECT Name FROM P_MANUFACTURERS";
+  $sql =
+  "
+  SELECT Name FROM P_MANUFACTURERS
+  WHERE ManufacturerID NOT IN
+  (
+    SELECT ManufacturerID FROM P_HIDE_MANUFACTURER_RULES
+    )
+  ";
   $query = $con->prepare($sql);
   $query->execute();
   $manufacturers = $query->fetchAll(PDO::FETCH_NUM);
@@ -289,6 +310,7 @@ function getManufacturers($con)
 }
 
 // Function to get the list of model names that belong to a category and manufacturer
+// and are not hidden
 function getModels($con, $category, $manufacturer)
 {
   $sql = "
@@ -301,6 +323,10 @@ function getModels($con, $category, $manufacturer)
   (
     SELECT ManufacturerID FROM P_MANUFACTURERS WHERE Name = ?
   )
+  AND ModelID NOT IN
+  (
+    SELECT ModelID FROM P_HIDE_MODEL_RULES
+    )
   ";
 
   $query = $con->prepare($sql);
@@ -321,7 +347,8 @@ function getModels($con, $category, $manufacturer)
 // Function to get a count from a category name
 function countCategory($con, $category)
 {
-  $sql = "
+  $sql =
+  "
   SELECT count(*) as c FROM P_ASSETS
   WHERE IsSurplus = 0 AND ModelID IN
   (
@@ -332,6 +359,10 @@ function countCategory($con, $category)
       WHERE Name = ?
     )
   )
+  AND ModelID NOT IN
+  (
+    SELECT ModelID FROM P_HIDE_MODEL_RULES
+    )
 
   ";
 
@@ -408,6 +439,38 @@ function countCategoriesOW($con, $category)
   $query->execute(array($category));
   $count = $query->fetch(PDO::FETCH_OBJ);
   return $count->c;
+}
+
+// Function to query with multiple of one filter. $filterArr is an array containing
+// the value of each filterType to query for. $filterType contains the actual filterType.
+// Returns a
+function filterMulti($con, $filterArr, $filterType)
+{
+  // Add name to filter type
+  $filterType = $filterType . 'Name';
+  $sql =
+  "
+  SELECT * FROM PV_ASSET_REPORTS
+  WHERE
+  ";
+
+  // Prepare sql based on how many elements are in the filter array
+  foreach($filterArr as $item)
+  {
+    $sql .= $filterType . ' = ? OR ';
+  }
+
+  // Remove the last OR from sql
+  $sql = substr_replace($sql, "", -3);
+  $sql = trim($sql);
+
+  // Prepare sql statement
+  $query = $con->prepare($sql);
+  $query->execute($filterArr);
+
+  // Return result
+  return $query->fetchAll(PDO::FETCH_ASSOC);
+
 }
 
 ?>
