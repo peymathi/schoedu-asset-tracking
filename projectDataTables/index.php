@@ -6,13 +6,6 @@ require_once "phpinc/dbconnect.php";
 
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
-$deskcount = "";
-$lapcount = "";
-$tabletcount = "";
-$cameracount = "";
-$printercount = "";
-$vccount = "";
-
 $row = "";
 
 $stmt = $con->prepare("select checkdays from P_ADMINS where adminid = ?");
@@ -25,36 +18,6 @@ $datemax = date("Y-m-d h:m:s", $time);
 
 $acurdate = date("Y-m-d h:m:s");
 $time1 = strtotime($acurdate);
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ?");
-$stmt->execute(array(1));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$lapcount = $row->c;
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
-$stmt->execute(array(2));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$deskcount = $row->c;
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
-$stmt->execute(array(7));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$tabletcount = $row->c;
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
-$stmt->execute(array(3));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$cameracount = $row->c;
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
-$stmt->execute(array(6));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$printercount = $row->c;
-
-$stmt = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid  where categoryid = ?");
-$stmt->execute(array(8));
-$row = $stmt->fetch(PDO::FETCH_OBJ);
-$vccount = $row->c;
 
 ?>
 
@@ -143,7 +106,7 @@ $vccount = $row->c;
 							</thead>
 							<tbody>
 								<?php
-								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked <= ? group by SerialNumber");
+								$stmt = $con->prepare("select * from PV_ASSET_REPORTS where datelastchecked <= ? and issurplus = 0 group by SerialNumber");
 								$stmt->execute(array($datemax));
 								while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$datelast = $row["DateLastChecked"];
@@ -163,7 +126,9 @@ $vccount = $row->c;
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    		$('.dataTable').DataTable({responsive:true});
+						    		$('.dataTable').DataTable({responsive:true,
+						    			columnDefs: [{orderable: false, targets: [0]}],
+        								order: [[ 6, 'asc']]});
 						    });
 						</script>
 
@@ -172,18 +137,23 @@ $vccount = $row->c;
 					<br>
 					<br>
 					<div>
-						<h3><span>Quick Summary</span></h3>
+						<h3><span>Quick Summary of Active Assets</span></h3>
 						<div class="summary">
-							Desktops: <?php print $deskcount; ?> &nbsp&nbsp
-							Laptops: <?php print $lapcount; ?> &nbsp&nbsp
-							Tablets: <?php print $tabletcount; ?>
-						</div>
-						<div class="summary">
-							Cameras: <?php print $cameracount; ?> &nbsp&nbsp
-							Printers: <?php print $printercount ?> &nbsp&nbsp
-							Video Conferencing: <?php print $vccount ?>
-						</div>
-						
+						<?php
+							$stmt = $con->prepare("select * from P_CATEGORIES");
+							$stmt->execute();
+							while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+								$label = $row["Name"];
+								$catid = $row["CategoryID"];
+								$stmt2 = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ? and issurplus = 0");
+								$stmt2->execute(array($catid));
+								$row2 = $stmt2->fetch(PDO::FETCH_OBJ);
+								$count = $row2->c;
+								print $label .": " .$count;
+								print "</br>";
+							}
+						?>
+						</div>						
 					</div>
 
 				</div>

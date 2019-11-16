@@ -124,7 +124,6 @@ a img {
 	-moz-box-shadow: 0 0 5px 3px #d3d3d3;
 	-webkit-box-shadow: 0 0 5px 3px#d3d3d3;
 	box-shadow: 0 0 5px 3px #d3d3d3;
-	overflow:hidden;
 }
 .body div h2 {
 	color: #919191;
@@ -138,6 +137,11 @@ a img {
 	padding:36px 0 5px 22px;
 	margin:0;
 	letter-spacing: .04em;
+	position: sticky;
+	top: 0;
+	background-color: rgba(255, 255, 255, 0.95);
+	z-index: 12;
+	box-shadow: 0 8px 6px -6px darkgrey;
 }
 .body div p {
 	font-family: 'Conv_Muli-Italic';
@@ -394,7 +398,7 @@ input[type=search] {
 	.menu_toggle_container{
 		display: inline-block;
 		cursor: pointer;
-		z-index: 4;
+		z-index: 13;
 		position: absolute;
 		top: 35px;
 		right: 50px;
@@ -490,3 +494,4 @@ input[type=search] {
 		overflow: default;
 }
 }
+
