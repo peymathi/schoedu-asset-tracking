@@ -1,4 +1,28 @@
-var i = 1;//device counter
+
+$(document).ready(function(){
+	var i = 1;//device counter
+	// Get the modal
+	var modal = document.getElementsByClassName("modal")[0];
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks the button, open the modal 
+	$('#view_rentalsBtn').click(function(){modal.style.display = "block";})
+
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+	    modal.style.display = "none";
+	  }
+	}
+
+});
 
 //add device button
 function addDeviceBtn(){
@@ -20,110 +44,103 @@ function addDeviceBtn(){
 	$('#serial1').after('<datalist id="serial'+i+'"></datalist>');
 }
 
-//control disabled fields
-function checkState(x){
-	if($('select[name="category'+x+'"]').val() != "Category")
-	{
-		$('select[name="brand'+x+'"]').prop('disabled', false);
-		$('select[name="model'+x+'"]').prop('disabled', false);
-		$('input[name="serial'+x+'"]').prop('disabled', false);	
-	
-	}
 
-}
-
-
-
+//show options for Brand, Model, Serial fields
 function showOptions(mode, cur)
 {
 	var str = document.getElementsByName('category'+cur)[0].value;
 	var brand = document.getElementsByName('brand'+cur)[0].value;
 	var model = document.getElementsByName('model'+cur)[0].value;
-	if (str=="")
-    {
-      obj.innerHTML="";
-      return;
-    } 
-	if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-      xmlhttp=new XMLHttpRequest();
-    }
-	else
-    {// code for IE6, IE5
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
 	
-	xmlhttp.onreadystatechange=function()
-    {
-      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-        	if(mode == "brand")
+	$.ajax({
+	    url: 'phpinc/rentalUtilsPDO.php',
+	    type: 'GET',
+	    data:{
+	    	c: str,
+	    	m: mode,
+	    	b: brand,
+	    	mod: model
+	    },
+	    success: function(response) {
+	    	if(mode == "brand")
         	{
-        		document.getElementsByName('brand'+cur)[0].innerHTML=xmlhttp.responseText;
+        		document.getElementsByName('brand'+cur)[0].innerHTML=response;
         	}
         	else if(mode == "model")
         	{
-        		document.getElementsByName('model'+cur)[0].innerHTML=xmlhttp.responseText;
+        		document.getElementsByName('model'+cur)[0].innerHTML=response;
         	}
         	else
         	{
-        		document.getElementById('serial'+cur).innerHTML=xmlhttp.responseText;
+        		document.getElementById('serial'+cur).innerHTML=response;
         	}
-          
-        }
-    }
-	xmlhttp.open("GET","phpinc/rentalUtilsPDO.php?c="+str+"&m="+mode+"&b="+brand+"&mod="+model,true);
-	xmlhttp.send();
+	    }
+	});
+
 }
 
-
+//show options for Category select
 function getCategory(val,x)
 {
 	if(val == 'Category')
 	{
-		if (window.XMLHttpRequest)
-	    {// code for IE7+, Firefox, Chrome, Opera, Safari
-	      xmlhttp=new XMLHttpRequest();
-	    }
-		else
-	    {// code for IE6, IE5
-	      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	    }
-
-	    xmlhttp.onreadystatechange=function()
-	    {
-	      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-	       {
-	        	document.getElementsByName(x)[0].innerHTML=xmlhttp.responseText;
-	       }
-	    }
-		
-		xmlhttp.open("GET","phpinc/rentalUtil.php?",true);
-		xmlhttp.send();
+		$.ajax({
+		    url: 'phpinc/rentalUtil.php',
+		    type: 'GET',
+		    success: function(response) {
+		    	document.getElementsByName(x)[0].innerHTML = response;
+		    }
+		});
 	}
-
 }
 
+//show auto fill for Name
 function showNames(str)
 {
-	var xmlhttp;
-
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-	    document.getElementById("names").innerHTML=xmlhttp.responseText;
+	$.ajax({
+	    url: 'phpinc/rentalGetNames.php',
+	    type: 'GET',
+	    data:{q: str},
+	    success: function(response) {
+	    	$("#names").html(response);
 	    }
-	  }
-	xmlhttp.open("GET","phpinc/rentalGetNames.php?q="+str,true);
-	xmlhttp.send();
+	});
 }
 
+//show auto fill for Phone
+function showPhones(str)
+{
+	var name = $('#name').val();
+
+	$.ajax({
+	    url: 'phpinc/rentalGetPhones.php',
+	    type: 'GET',
+	    data:{q: str, n: name},
+	    success: function(response) {
+	    	$("#phoneNums").html(response);
+	    }
+	});
+}
+
+//show auto fill for Email
+function showEmail(str)
+{
+	var name = $('#name').val();
+
+	$.ajax({
+	    url: 'phpinc/rentalGetEmail.php',
+	    type: 'GET',
+	    data:{q: str, n: name},
+	    success: function(response) {
+	    	$("#emails").html(response);
+	    }
+	});
+}
+
+//form upload
+function upload(x){
+	var s = prompt("Enter serial: ");
+	$('#rentalForm').attr('action', 'phpinc/formUpload.php?s='+s);
+	$('#rentalForm').submit();
+
+}
