@@ -58,13 +58,10 @@
 
 
       				//add to database
-      				$serial = $_GET['s'];//serial num
-      				$sql = $con->prepare("select AssetID from P_ASSETS where SerialNumber = ?");
-					$sql->execute(array($serial));
-					$id = $sql->fetchAll()[0];
+      				$formID = $_GET['f'];//serial num
 
-					$sql = $con->prepare("insert into P_RENTAL_FORMS (AssetID, fileName) values (?, ?)");
-					$sql->execute(array($id['AssetID'], $newName));
+					$sql = $con->prepare("update P_RENTAL_FORMS set fileName = ? where FormID = ?");
+					$sql->execute(array($newName, $formID));
 
 
       			}
