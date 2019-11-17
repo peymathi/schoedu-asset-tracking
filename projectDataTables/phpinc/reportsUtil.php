@@ -266,8 +266,8 @@ function getCategories($con)
   SELECT Name FROM P_CATEGORIES
   WHERE CategoryID NOT IN
   (
-      SELECT CategoryID FROM P_CATEGORIES
-  )
+    SELECT CategoryID FROM P_HIDE_CATEGORY_RULES
+    )
   ";
   $query = $con->prepare($sql);
   $query->execute();
@@ -294,6 +294,7 @@ function getManufacturers($con)
     SELECT ManufacturerID FROM P_HIDE_MANUFACTURER_RULES
     )
   ";
+
   $query = $con->prepare($sql);
   $query->execute();
   $manufacturers = $query->fetchAll(PDO::FETCH_NUM);
@@ -317,12 +318,14 @@ function getModels($con, $category, $manufacturer)
   SELECT Name FROM P_MODELS
   WHERE CategoryID IN
   (
-    SELECT CategoryID FROM P_CATEGORIES WHERE Name = ?
-  )
+    SELECT CategoryID FROM P_CATEGORIES
+    WHERE Name = ?
+    )
   AND ManufacturerID IN
   (
-    SELECT ManufacturerID FROM P_MANUFACTURERS WHERE Name = ?
-  )
+    SELECT ManufacturerID FROM P_MANUFACTURERS
+    WHERE Name = ?
+    )
   AND ModelID NOT IN
   (
     SELECT ModelID FROM P_HIDE_MODEL_RULES
@@ -349,21 +352,9 @@ function countCategory($con, $category)
 {
   $sql =
   "
-  SELECT count(*) as c FROM P_ASSETS
-  WHERE IsSurplus = 0 AND ModelID IN
-  (
-    SELECT ModelID FROM P_MODELS
-    WHERE CategoryID IN
-    (
-      SELECT CategoryID FROM P_CATEGORIES
-      WHERE Name = ?
-    )
-  )
-  AND ModelID NOT IN
-  (
-    SELECT ModelID FROM P_HIDE_MODEL_RULES
-    )
-
+  SELECT count(*) as c FROM PV_ASSET_REPORTS
+  WHERE IsSurplus = 0
+  AND CategoryName = ?
   ";
 
   $query = $con->prepare($sql);
@@ -376,21 +367,10 @@ function countCategory($con, $category)
 function countCatMan($con, $category, $manufacturer)
 {
   $sql = "
-  SELECT count(*) as c FROM P_ASSETS
-  WHERE IsSurplus = 0 AND ModelID IN
-  (
-    SELECT ModelID FROM P_MODELS
-    WHERE CategoryID IN
-    (
-      SELECT CategoryID FROM P_CATEGORIES
-      WHERE Name = ?
-      )
-    AND ManufacturerID IN
-    (
-      SELECT ManufacturerID FROM P_MANUFACTURERS
-      WHERE Name = ?
-      )
-  )
+  SELECT count(*) as c FROM PV_ASSET_REPORTS
+  WHERE IsSurplus = 0
+  AND CategoryName = ?
+  AND ManufacturerName = ?
   ";
 
   $query = $con->prepare($sql);
@@ -403,13 +383,8 @@ function countCatMan($con, $category, $manufacturer)
 function countModels($con, $model)
 {
   $sql = "
-  SELECT count(*) as c FROM P_ASSETS
-  WHERE IsSurplus = 0 AND ModelID IN
-  (
-    SELECT ModelID FROM P_MODELS
-    WHERE Name = ?
-    )
-
+  SELECT count(*) as c FROM PV_ASSET_REPORTS
+  WHERE IsSurplus = 0 AND ModelName = ?
   ";
 
   $query = $con->prepare($sql);
@@ -422,18 +397,10 @@ function countModels($con, $model)
 function countCategoriesOW($con, $category)
 {
   $sql = "
-  SELECT count(*) as c FROM P_ASSETS
+  SELECT count(*) as c FROM PV_ASSET_REPORTS
   WHERE IsSurplus = 0
   AND DATEDIFF(WarrantyEnd, now()) <= 0
-  AND ModelID IN
-  (
-      SELECT ModelID FROM P_MODELS
-      WHERE CategoryID IN
-      (
-          SELECT CategoryID FROM P_CATEGORIES
-          WHERE Name = ?
-      )
-  )
+  AND CategoryName = ?
   ";
   $query = $con->prepare($sql);
   $query->execute(array($category));
@@ -470,7 +437,6 @@ function filterMulti($con, $filterArr, $filterType)
 
   // Return result
   return $query->fetchAll(PDO::FETCH_ASSOC);
-
 }
 
 ?>
