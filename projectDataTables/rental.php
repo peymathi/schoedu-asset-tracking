@@ -2,8 +2,6 @@
 session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ; 
 	require_once "phpinc/dbconnect.php";
-
-
 ?>
 
 
@@ -17,6 +15,12 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="javascript/rental.js"></script>
+
+	<!-- Datatables -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
 	<div class="border">
@@ -70,23 +74,31 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				<table class="dataTable display" style="width: 100%">
 					<thead>
 						<tr>
-							<th style="width: 5em">Verify</th>
-							<th>Serial #</th>
-							<th>Category</th>
-							<th>Manufacturer</th>
-							<th>Model #</th>
-							<th>Location</th>
-							<th>Days Since<br>Checked</th>
+							<th>RentalID</th>
+							<th>AssetID</th>
+							<th>FormID</th>
+							<th>Filename</th>
+
 						</tr>
 					</thead>
 					<tbody>
 						<?php
-						$stmt = $con->prepare("select * from P_RENTAL_FORMS");
+
+						$stmt = $con->prepare("select distinct FormID from P_RENTAL_FORMS order by FormID desc");
+						$stmt->execute();
+						$formID = $stmt->fetch(PDO::FETCH_ASSOC);
+						$formID = $formID['FormID'] + 1;
+
+
+						$stmt = $con->prepare("select * from P_RENTAL_FORMS where fileName != ''");
 						$stmt->execute();
 						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 							print "<tr>";
 							
-							print "<td>".$row["RentalID"]."</td><td>".$row["AssetID"]."</td><td>".$row["fileName"]."</td>";
+							print "<td>".$row["RentalID"]."</td><td>".$row["AssetID"]."</td><td>".$row["FormID"]."</td>";
+
+							print "<td><a href='Uploads/".$row["fileName"]."'>Form</a></td>";
+
 							print "</tr>"; 
 						}
 						?>
@@ -96,8 +108,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				<!-- DataTable controll -->
 				<script type="text/javascript">
 					$(document).ready(function(){
-				    		$('.dataTable').DataTable({responsive:true,
-				    			});
+				    		$('.dataTable').DataTable({responsive:true});
 				    });
 				</script>
 			  </div>
@@ -107,15 +118,15 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 			
 			<div class="body" id="body">
 				<div>
-					<h2>
-						Rental Form
+					<h2 style="padding-right: 22px">
+						Rental Form <span style="float: right" id="currentForm"><?php print $formID ?></span>
 					</h2>
 
 					<div id="rental_div">
 						<br>
 						<br>
 
-						<form id="rentalForm" action="" class="rental_form" method="post" enctype="multipart/form-data">
+						<form id="rentalForm" onsubmit="return false" class="rental_form" method="post" enctype="multipart/form-data">
 							<label for="name">Name:</label>
 							<input list="names" type="text" id="name" onkeyup="showNames(this.value)">
 							<datalist id="names"></datalist>
@@ -174,17 +185,17 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<br>
 							<br>
 
-							<button onclick="addDeviceBtn()" id='addDevice'>Add Device</button>
+							<button onclick="addDeviceBtn(this)" id='addDevice'>Add Device</button>
 
 							<br>
 							<br>
 							<br>
 
 							<label>Rental Date:</label>
-							<input type="date" name="loanDate">
+							<input id="outDate" type="date" name="loanDate">
 							<br>
 							<label style="padding-top: 6px">Return Date:</label>
-							<input type="date" name="returnDate">
+							<input id="inDate" type="date" name="returnDate">
 
 							<div id='termsDiv'>
 								<p id='rentalTerms'>
@@ -219,7 +230,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<br>
 							<br>
 
-							<button id="rental_submit" onclick="printFunction()" type="button">Print</button>
+							<button id="rental_submit" onclick="printFunction()" type="button">Rent</button>
 
 							<input id="rental_scan" style="margin-left: 6px" type="button" value="Upload" onclick="$('#file').trigger('click');">
 
@@ -227,12 +238,6 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 							<button id="view_rentalsBtn" onclick="" type="button">View Rentals</button>
 
-
-							<script>
-							function printFunction() {
-							  setTimeout(function(){window.print();}, 500);
-							}
-							</script>
 						</form>
 
 
@@ -246,5 +251,3 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 	</div>
 </body>
 </html>
-
-
