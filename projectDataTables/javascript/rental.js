@@ -1,6 +1,6 @@
+var i = 1;//device counter
 
 $(document).ready(function(){
-	var i = 1;//device counter
 	// Get the modal
 	var modal = document.getElementsByClassName("modal")[0];
 
@@ -25,20 +25,20 @@ $(document).ready(function(){
 });
 
 //add device button
-function addDeviceBtn(){
+function addDeviceBtn(x){
 	i++;
 	$("#addDevice").prev().prev().before('<br><br>'+
-		'<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="checkState('+i+');showOptions(\'brand\', this.name.substr(-1))" name="category'+i+'">\
+		'<select style="width:10.6em" onmouseenter="getCategory(this.value,this.name);" onchange="showOptions(\'brand\', this.name.substr(-1))" name="category'+i+'">\
 			<option hidden>Category</option>\
 		</select>'+
-		'<select onclick="showOptions(\'model\', this.name.substr(-1))" disabled name="brand'+i+'">\
+		'<select onclick="showOptions(\'model\', this.name.substr(-1))" name="brand'+i+'">\
 			<option hidden>Brand</option>\
 		</select>'+
-		'<select onclick="showOptions(\'\', this.name.substr(-1))" disabled name="model'+i+'">\
+		'<select onclick="showOptions(\'\', this.name.substr(-1))" name="model'+i+'">\
 			<option hidden>Model</option>\
 		</select>\
 		<label>&nbsp&nbspSerial:</label>'+
-		'<input list="serial'+i+'" onkeyup="showOptions(this.value, this.name.substr(-1))" disabled type="text" name="serial'+i+'">\
+		'<input list="serial'+i+'" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial'+i+'">\
 		')
 
 	$('#serial1').after('<datalist id="serial'+i+'"></datalist>');
@@ -139,8 +139,53 @@ function showEmail(str)
 
 //form upload
 function upload(x){
-	var s = prompt("Enter serial: ");
-	$('#rentalForm').attr('action', 'phpinc/formUpload.php?s='+s);
+	var f = prompt("Enter Form Number: ");
+	$('#rentalForm').attr('action', 'phpinc/formUpload.php?f='+f);
+	$('#rentalForm').attr('onsubmit', '');
 	$('#rentalForm').submit();
+	$('#rentalForm').attr('onsubmit', 'return false');
 
+}
+
+function printFunction() {
+	if(confirm("Are you sure you want to complete this rental?"))
+	{
+		var name = $('#name').val();
+		var items = i;
+		var formID = $('#currentForm').html();
+		var serials = "";
+		var outDate = $('#outDate').val();
+		var inDate = $('#inDate').val();
+
+		for(var c = 0; c<i; c++)
+		{
+			if(c > 0){serials+="+";}
+			serials += $("input[name='serial"+(c+1)+"'").val();
+		}
+
+		$.ajax({
+		    url: 'phpinc/rentalRent.php?',
+		    type: 'GET',
+		    data:{
+		    	n: name,
+		    	i: items,
+		    	f: formID,
+		    	s: serials,
+		    	o: outDate,
+		    	in: inDate
+		    },
+		    success: function(response) {
+		    	//$('#currentForm').html(response);
+		    }
+		});
+
+
+
+
+		window.print();
+	}
+	else
+	{
+
+	}
 }
