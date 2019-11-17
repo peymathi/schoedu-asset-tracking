@@ -31,7 +31,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 		</div>
 		<div class="page">
 			<div class="sidebar" id="sidebar">
-				<a href="index.html" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
+				<a href="index.php" id="logo"><img src="images/educationlogo.png" alt="logo"></a>
 				<ul>
 					<li>
 						<a href="index.php">Home</a>
