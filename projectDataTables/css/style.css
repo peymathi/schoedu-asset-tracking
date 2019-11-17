@@ -486,7 +486,7 @@ input[type=search] {
 		z-index: 7;
 	}
 
-	#rental_submit, #rental_scan, #addDevice{
+	#rental_submit, #rental_scan, #addDevice, #view_rentalsBtn{
 		display: none;
 	}
 
