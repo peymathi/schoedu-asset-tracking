@@ -61,6 +61,49 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				</script>
 			</div>
 
+			<!-- The Modal -->
+			<div class="modal">
+
+			  <!-- Modal content -->
+			  <div class="modal-content">
+			    <span class="close">&times;</span>
+				<table class="dataTable display" style="width: 100%">
+					<thead>
+						<tr>
+							<th style="width: 5em">Verify</th>
+							<th>Serial #</th>
+							<th>Category</th>
+							<th>Manufacturer</th>
+							<th>Model #</th>
+							<th>Location</th>
+							<th>Days Since<br>Checked</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$stmt = $con->prepare("select * from P_RENTAL_FORMS");
+						$stmt->execute();
+						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							print "<tr>";
+							
+							print "<td>".$row["RentalID"]."</td><td>".$row["AssetID"]."</td><td>".$row["fileName"]."</td>";
+							print "</tr>"; 
+						}
+						?>
+					</tbody>
+				</table>
+
+				<!-- DataTable controll -->
+				<script type="text/javascript">
+					$(document).ready(function(){
+				    		$('.dataTable').DataTable({responsive:true,
+				    			});
+				    });
+				</script>
+			  </div>
+
+			</div>
+
 			
 			<div class="body" id="body">
 				<div>
@@ -181,6 +224,8 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<input id="rental_scan" style="margin-left: 6px" type="button" value="Upload" onclick="$('#file').trigger('click');">
 
 							<input type="file" name="file" id="file" onchange="upload()">
+
+							<button id="view_rentalsBtn" onclick="" type="button">View Rentals</button>
 
 
 							<script>
