@@ -19,17 +19,19 @@
       $network = $detail->network;
       $serial = $detail->serial;
       $notes = $detail->notes;
+
+      $stmt->execute(array(
+        'admin' => $admin,
+        'model' => $model,
+        'user' => $user,
+        'serial' => $serial,
+        'network' => $network,
+        'location' => $location,
+        'purchase' => $purchase,
+        'warranty' => $warranty,
+        'notes' => $notes
+      ));
     }
-    // $stmt->execute(array(
-    //   'admin' => $admin,
-    //   'model' => $_POST['model'],
-    //   'user' => $_POST['user'],
-    //   'serial' => $_POST['serial'],
-    //   'network' => $_POST['network'],
-    //   'location' => $_POST['location'],
-    //   'purchase' => $_POST['purchase'],
-    //   'warranty' => $_POST['warranty'],
-    //   'notes' => $_POST['notes']
-    // ));
+
   }
 ?>
