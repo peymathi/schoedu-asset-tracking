@@ -148,6 +148,12 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 											<button type="button" id="editModelSubmit" name="editModelSubmit">Edit Model Information</button>
 										</div>
 
+										<div id="editManufacturer" style="margin: 0px" hidden>
+											<label for="editWarranty">Warranty:</label>
+											<input type="number" class="warranty" id="editWarranty" name="editWarranty" value="" min="0">
+
+											<button type="button" id="editManufacturerSubmit" name="editManufacturerSubmit">Edit Manufacturer Information</button>
+										</div>
 
 									</form>
 								</div>
@@ -187,6 +193,14 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 										<form name="newManufacturerForm">
 											<label for="newManufacturer">New Manufacturer:</label>
 											<input type="text" id="newManufacturer" name="newManufacturer">
+
+											<br><br>
+
+											<label for="warranty">Warranty:</label>
+											<input type="number" class="warranty" id="warranty" name="warranty" min="0" value="0">
+
+											<br><br>
+
 											<button type="button" id="newManufacturerSubmit" name="newManufacturerSubmit">Add Manufacturer</button>
 										</form>
 									</div>

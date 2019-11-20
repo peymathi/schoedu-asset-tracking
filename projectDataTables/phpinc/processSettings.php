@@ -11,8 +11,8 @@
       $categoryStmt = $con->prepare('INSERT INTO P_CATEGORIES (Name, UpdatedAt) VALUES (:name, NOW())');
       $categoryStmt->execute(array('name' => $_POST['name']));
     } else if($type == 'manufacturer') {
-      $manufacturerStmt = $con->prepare('INSERT INTO P_MANUFACTURERS (Name, UpdatedAt) VALUES (:name, NOW())');
-      $manufacturerStmt->execute(array('name' => $_POST['name']));
+      $manufacturerStmt = $con->prepare('INSERT INTO P_MANUFACTURERS (Name, Warranty, UpdatedAt) VALUES (:name, :warranty, NOW())');
+      $manufacturerStmt->execute(array('name' => $_POST['name'], 'warranty' => $_POST['warranty']));
     } else if($type == 'model') {
       $modelStmt = $con->prepare('INSERT INTO P_MODELS (Name, ManufacturerID, CategoryID, UpdatedAt) VALUES (:name, :manufacturer, :category, NOW())');
       $modelStmt->execute(array('name' => $_POST['name'], 'manufacturer' => $_POST['manufacturer'], 'category' => $_POST['category']));

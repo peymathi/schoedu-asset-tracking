@@ -20,6 +20,8 @@ function fillRecordToggle(element, endpoint, select) {
       }
       if(element == "toggleModels") {
         updateCategoryManufacturer();
+      } else if(element == "toggleManufacturers") {
+        updateWarranty();
       }
     }
   }
@@ -70,6 +72,22 @@ function updateCategoryManufacturer() {
   });
 }
 
+function updateWarranty() {
+  var manufacturerId = $('#toggleManufacturers').val();
+
+  $.ajax({
+    url: 'phpinc/getWarrantyFromManufacturer.php',
+    type: 'GET',
+    data: {
+      manufacturer: manufacturerId
+    },
+    success: function(data) {
+      var response = JSON.parse(data);
+      $('#editWarranty').val(response.warranty);
+    }
+  });
+}
+
 function toggleRecordSelection(event, select) {
   // Get the value of the selected option and show/hide the respective select elements
   var selection = $("#toggleRecordSelection").val();
@@ -82,6 +100,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").hide();
 
     $("#editModel").hide();
+    $("#editManufacturer").hide();
 
     fillRecordToggle("toggleCategories", "phpinc/getCategoryHideList.php", select);
   } else if(selection === "Manufacturer") {
@@ -92,6 +111,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").hide();
 
     $("#editModel").hide();
+    $("#editManufacturer").show();
 
     fillRecordToggle("toggleManufacturers", "phpinc/getManufacturerHideList.php", select);
   } else if(selection === "Model") {
@@ -102,6 +122,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").hide();
 
     $("#editModel").show();
+    $("#editManufacturer").hide();
 
     fillRecordToggle("toggleModels", "phpinc/getModelHideList.php", select);
     fillRecordToggle("modelCategorySelect", "phpinc/getCategoryList.php");
@@ -114,6 +135,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").hide();
 
     $("#editModel").hide();
+    $("#editManufacturer").hide();
 
     fillRecordToggle("toggleLocations", "phpinc/getLocationHideList.php", select);
   } else if(selection === "User") {
@@ -124,6 +146,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").show();
 
     $("#editModel").hide();
+    $("#editManufacturer").hide();
 
     fillRecordToggle("toggleUsers", "phpinc/getUserHideList.php", select);
   } else {
@@ -134,6 +157,7 @@ function toggleRecordSelection(event, select) {
     $("#toggleUsers").hide();
 
     $("#editModel").hide();
+    $("#editManufacturer").hide();
   }
 
 }
@@ -259,6 +283,23 @@ function editModelInfo() {
   })
 }
 
+function editManufacturerInfo() {
+  var manufacturer = $('#toggleManufacturers').val();
+  var warranty = $('#editWarranty').val();
+  $.ajax({
+    url: "phpinc/editManufacturerInfo.php",
+    type: "GET",
+    data: {
+      manufacturer: manufacturer,
+      warranty: warranty
+    },
+    success: function(d) {
+      toggleRecordSelection(null, manufacturer);
+      alert("edited manufacturer");
+    }
+  })
+}
+
 function getDaysChecked() {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
@@ -285,6 +326,9 @@ $(document).ready(function() {
   $('#toggleModels').change(updateCategoryManufacturer);
   $('#editModelSubmit').on("click", editModelInfo);
 
+  $('#toggleManufacturers').change(updateWarranty);
+  $('#editManufacturerSubmit').on("click", editManufacturerInfo);
+
   // Add Record Form
   $("#addRadio").on("click", addRecord);
   $("#manufacturerRadio").on("click", addManufacturer);
@@ -292,6 +336,12 @@ $(document).ready(function() {
   $("#locationRadio").on("click", addLocation);
   $("#categoryRadio").on("click", addCategory);
   $("#userRadio").on("click", addUser);
+
+  $(".warranty").change(function(e) {
+    if($(this).val() < 0) {
+      $(this).val(0);
+    }
+  });
 
   // Days Checked Form
   $("#daysCheckedRadio").on("click", changeDaysChecked);
@@ -318,7 +368,8 @@ $(document).ready(function() {
       url: "phpinc/processSettings.php",
       data: {
         "type":"manufacturer",
-        "name":$("#newManufacturer").val()
+        "name":$("#newManufacturer").val(),
+        "warranty":$("#warranty").val()
       },
       type: "POST",
       success: function(r) {
