@@ -142,6 +142,20 @@ function updateCategoryManufacturer(modelId, categoryDrop, manufacturerDrop, cal
   });
 }
 
+function updateWarranty(manufacturerId, warrantyDrop) {
+  $.ajax({
+    url: 'phpinc/getWarrantyFromManufacturer.php',
+    type: 'GET',
+    data: {
+      manufacturer: manufacturerId
+    },
+    success: function(data) {
+      var response = JSON.parse(data);
+      warrantyDrop.val(response.warranty);
+    }
+  });
+}
+
 function populateEditModal(asset) {
   var categoryId = $('.categorySelect.editAsset');
   var manufacturerId = $('.manufacturerSelect.editAsset');
@@ -229,8 +243,9 @@ $(document).ready(function(){
 
     $('.modelSelect').change(function() {
       modelId = $(this).val();
-      manufacturerDrop = $(this).prev();
-      categoryDrop = manufacturerDrop.prev();
+      manufacturerDrop = $(this).siblings(".manufacturerSelect");
+      categoryDrop = $(this).siblings(".categorySelect");
+      warrantyDrop = $(this).siblings(".warranty");
       $.ajax({
         url: 'phpinc/getCategoryManufacturerFromModel.php',
         type: 'GET',
@@ -241,21 +256,24 @@ $(document).ready(function(){
           var response = JSON.parse(data);
           categoryDrop.val(response.category);
           manufacturerDrop.val(response.manufacturer);
+          updateWarranty(response.manufacturer, warrantyDrop);
         }
       });
     });
 
     $('.categorySelect').change(function() {
       categoryId = $(this).val();
-      manufacturerId = $(this).next().val();
-      modelDrop = $(this).next().next();
+      manufacturerId = $(this).siblings(".manufacturerSelect").val();
+      modelDrop = $(this).siblings(".modelSelect");
       updateModels(categoryId, manufacturerId, modelDrop);
     });
 
     $('.manufacturerSelect').change(function() {
-      categoryId = $(this).prev().val();
+      categoryId = $(this).siblings(".categorySelect").val();
       manufacturerId = $(this).val();
-      modelDrop = $(this).next();
+      modelDrop = $(this).siblings(".modelSelect");
+      warrantyDrop = $(this).siblings(".warranty");
+      updateWarranty(manufacturerId, warrantyDrop);
       updateModels(categoryId, manufacturerId, modelDrop);
     });
 
