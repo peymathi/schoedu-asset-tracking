@@ -78,7 +78,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							<label for="addRadio">Add a Record to Database - </label>
 							<input type="radio" name="formGroup" value="add" id="addRadio">
 
-							<label for="daysCheckedRadio">Change Days Since Checked - </label>
+							<label for="daysCheckedRadio">Other Settings - </label>
 							<input type="radio" name="formGroup" value="daysChecked" id="daysCheckedRadio">
 
 							<br />
@@ -150,7 +150,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 										<div id="editManufacturer" style="margin: 0px" hidden>
 											<label for="editWarranty">Warranty:</label>
-											<input type="number" class="warranty" id="editWarranty" name="editWarranty" value="" min="0">
+											<input type="number" class="minZero" id="editWarranty" name="editWarranty" value="" min="0">
 
 											<button type="button" id="editManufacturerSubmit" name="editManufacturerSubmit">Edit Manufacturer Information</button>
 										</div>
@@ -197,7 +197,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 											<br><br>
 
 											<label for="warranty">Warranty:</label>
-											<input type="number" class="warranty" id="warranty" name="warranty" min="0" value="0">
+											<input type="number" class="minZero" id="warranty" name="warranty" min="0" value="0">
 
 											<br><br>
 
@@ -257,9 +257,15 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 										<!-- Display current days checked filter -->
 										<h4>Current Days Checked Filter: <span id="currentDaysChecked">??</span> Days</h4>
 										<label for="newDaysChecked">New Days Checked Filter:</label>
-										<input type="number" id="newDaysChecked" name="newDaysChecked">
+										<input type="number" class="minZero" id="newDaysChecked" name="newDaysChecked" min="0">
 
 										<button type="button" id="newDaysCheckedSubmit" name="newDaysCheckedSubmit">Change Days Checked</button>
+									</form>
+									<br>
+									<form name="hideSurplusForm">
+										<h4>Surplus Visibility: <span id="currentSurplus">??</span></h4>
+										<label for="newSurplus">Hide Surplus:</label>
+										<input type="checkbox" id="newSurplus" name="newSurplus">
 									</form>
 								</div>
 							</div>

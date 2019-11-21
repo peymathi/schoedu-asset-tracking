@@ -25,6 +25,9 @@
     } else if($type == 'daysChecked') {
       $daysStmt = $con->prepare('UPDATE P_ADMINS SET CheckDays = :days WHERE AdminID = :admin');
       $daysStmt->execute(array('days' => $_POST['days'], 'admin' => $admin));
+    } else if($type == 'surplus') {
+      $surplusStmt = $con->prepare('UPDATE P_ADMINS SET HideSurplus = :surplus WHERE AdminID = :admin');
+      $surplusStmt->execute(array('surplus' => $_POST['surplus'], 'admin' => $admin));
     }
   }
 ?>

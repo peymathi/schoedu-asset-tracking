@@ -5,6 +5,11 @@
   if (isset($_SESSION['userid'])) {
     $admin = $_SESSION['userid'];
 
+    $hideSurplusStmt = $con->prepare('SELECT HideSurplus FROM P_ADMINS WHERE AdminID = :admin');
+    $hideSurplusStmt->execute(array('admin' => $admin));
+
+    $hideSurplus = $hideSurplusStmt->fetch()['HideSurplus'];
+
     $draw = $_GET['draw'];
     $start = (int)$_GET['start'];
     $length = (int)$_GET['length'];
@@ -73,6 +78,11 @@
       AND P_HIDE_USER_RULES.AdminID = :admin
     WHERE
       (
+        P_ASSETS.IsSurplus = 0
+        OR P_ASSETS.IsSurplus != :surplus
+      )
+      AND
+      (
         P_HIDE_CATEGORY_RULES.RuleID IS NULL
         AND P_HIDE_LOCATION_RULES.RuleID IS NULL
         AND P_HIDE_MANUFACTURER_RULES.RuleID IS NULL
@@ -96,6 +106,7 @@
     $assetStmt->bindValue(':startindex', (int)$start, PDO::PARAM_INT);
     $assetStmt->bindValue(':admin', $admin);
     $assetStmt->bindValue(':search', $search);
+    $assetStmt->bindValue(':surplus', $hideSurplus);
     $assetStmt->execute();
     $result = $assetStmt->fetchAll();
 
@@ -128,6 +139,11 @@
         AND P_HIDE_USER_RULES.AdminID = :admin
       WHERE
         (
+          P_ASSETS.IsSurplus = 0
+          OR P_ASSETS.IsSurplus != :surplus
+        )
+        AND
+        (
           P_HIDE_CATEGORY_RULES.RuleID IS NULL
           AND P_HIDE_LOCATION_RULES.RuleID IS NULL
           AND P_HIDE_MANUFACTURER_RULES.RuleID IS NULL
@@ -135,7 +151,7 @@
           AND P_HIDE_USER_RULES.RuleID IS NULL
         )");
 
-    $totalStmt->execute(array('admin' => $admin));
+    $totalStmt->execute(array('admin' => $admin, 'surplus' => $hideSurplus));
     $total = $totalStmt->fetch()['c'];
 
     $countStmt = $con->prepare("SELECT COUNT(*) AS c
@@ -167,6 +183,11 @@
         AND P_HIDE_USER_RULES.AdminID = :admin
       WHERE
         (
+          P_ASSETS.IsSurplus = 0
+          OR P_ASSETS.IsSurplus != :surplus
+        )
+        AND
+        (
           P_HIDE_CATEGORY_RULES.RuleID IS NULL
           AND P_HIDE_LOCATION_RULES.RuleID IS NULL
           AND P_HIDE_MANUFACTURER_RULES.RuleID IS NULL
@@ -183,7 +204,7 @@
           OR P_USERS.Name LIKE CONCAT( :search , '%' )
         )");
 
-    $countStmt->execute(array('admin' => $admin, 'search' => $search));
+    $countStmt->execute(array('admin' => $admin, 'search' => $search, 'surplus' => $hideSurplus));
     $count = $countStmt->fetch()['c'];
 
     $formattedResult = array();

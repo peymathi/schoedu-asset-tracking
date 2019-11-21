@@ -239,6 +239,7 @@ function changeDaysChecked() {
   $("#addRecordForm").hide();
   $("#toggleRecordForm").hide();
   getDaysChecked();
+  getSurplusVisibility();
 }
 
 function editRecordName() {
@@ -312,6 +313,19 @@ function getDaysChecked() {
   xmlhttp.send();
 }
 
+function getSurplusVisibility() {
+  $.ajax({
+    url: "phpinc/getSurplusVisibility.php",
+    type: "GET",
+    success: function(d) {
+      var response = JSON.parse(d);
+      var hide = response.hide == "0" ? false : true;
+      $("#currentSurplus").text(hide ? "Hidden" : "Shown");
+      $("#newSurplus").prop('checked', hide);
+    }
+  })
+}
+
 // document.ready wrapper
 $(document).ready(function() {
 
@@ -337,7 +351,7 @@ $(document).ready(function() {
   $("#categoryRadio").on("click", addCategory);
   $("#userRadio").on("click", addUser);
 
-  $(".warranty").change(function(e) {
+  $(".minZero").change(function(e) {
     if($(this).val() < 0) {
       $(this).val(0);
     }
@@ -441,6 +455,20 @@ $(document).ready(function() {
       success: function(r) {
         getDaysChecked();
         alert("updated days checked");
+      }
+    });
+  });
+
+  $('#newSurplus').change(function(e) {
+    $.ajax({
+      url: "phpinc/processSettings.php",
+      type: "POST",
+      data: {
+        type: "surplus",
+        surplus: ($("#newSurplus").is(":checked") ? 1 : 0)
+      },
+      success: function(d) {
+        getSurplusVisibility();
       }
     });
   });
