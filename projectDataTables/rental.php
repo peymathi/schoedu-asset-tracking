@@ -128,7 +128,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 			<div class="body" id="body">
 				<div>
 					<h2 style="padding-right: 22px">
-						Asset Rental <span style="float: right" id="currentForm"><?php print 'Form: '.$formID ?></span>
+						Asset Rental <span style="float: right" id="currentForm"><?php print $formID ?></span><span style='float: right'>Form: &nbsp</span>
 					</h2>
 
 					<div id="rental_div">
