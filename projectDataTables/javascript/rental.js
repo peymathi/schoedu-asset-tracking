@@ -150,6 +150,8 @@ function upload(x){
 function printFunction() {
 	if(confirm("Are you sure you want to complete this rental?"))
 	{
+		window.print();
+
 		var name = $('#name').val();
 		var items = i;
 		var formID = $('#currentForm').html();
@@ -175,14 +177,11 @@ function printFunction() {
 		    	in: inDate
 		    },
 		    success: function(response) {
-		    	location.reload();
+		    	setTimeout(function(){location.reload();}, 100);
 		    }
 		});
 
 
-
-
-		window.print();
 	}
 	else
 	{
