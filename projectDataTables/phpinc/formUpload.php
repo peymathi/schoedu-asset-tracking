@@ -21,7 +21,7 @@
 		|| ($_FILES["file"]["type"] == "image/x-png")
 		|| ($_FILES["file"]["type"] == "image/png")
 		|| ($_FILES["file"]["type"] == "application/pdf"))
-		&& ($_FILES["file"]["size"] < 220000)
+		&& ($_FILES["file"]["size"] < 320000)
 		&& in_array($extension, $allowedExts))
   	{
   		if ($_FILES["file"]["error"] > 0)
@@ -46,15 +46,32 @@
 
 				$newName = date('Y-m-d H:i:s') . '.' . $extension;
 
+				 $code = "";
+		         for($i = 0; $i<15; $i++){
+		             //generate a random number between 1 and 35
+		             $r = mt_rand(1,35);
+		             //if the number is greater than 26, minus 26 will generate a digit between 0 and 9
+		             if ($r > 26) {
+		                $r = $r - 26;
+		                $code = $code.$r ;
+		            }
+		             else {    //it's between 1 and 26, generate a character
 
-    			if (file_exists("../Uploads/" . date('Y-m-d H:i:s') . "." . $extension))
+		                 $code = $code.toChar($r);
+		             }
+
+		         }
+		         $newName = $code. '.' . $extension;
+
+
+    			if (file_exists("../Uploads/" . $newName))
       			{
       					echo $newName . " already exists. ";
       			}
     			else
       			{
       				move_uploaded_file($_FILES["file"]["tmp_name"],
-      				"../Uploads/" . date('Y-m-d H:i:s') . '.' . $extension);
+      				"../Uploads/" . $newName);
 
 
       				//add to database
@@ -73,5 +90,44 @@
   	}
 
 header("Location: ../rental.php");
+
+
+
+
+function toChar($digit){
+         $char = "";
+         switch ($digit){
+                case 1: $char = "A"; break;
+                case 2: $char = "B"; break;
+                case 3: $char = "C"; break;
+                case 4: $char = "D"; break;
+                case 5: $char = "E"; break;
+                case 6: $char = "F"; break;
+                case 7: $char = "G"; break;
+                case 8: $char = "H"; break;
+                case 9: $char = "I"; break;
+                case 10: $char = "J"; break;
+                case 11: $char = "K"; break;
+                case 12: $char = "L"; break;
+                case 13: $char = "M"; break;
+                case 14: $char = "N"; break;
+                case 15: $char = "O"; break;
+                case 16: $char = "P"; break;
+                case 17: $char = "Q"; break;
+                case 18: $char = "R"; break;
+                case 19: $char = "S"; break;
+                case 20: $char = "T"; break;
+                case 21: $char = "U"; break;
+                case 22: $char = "V"; break;
+                case 23: $char = "W"; break;
+                case 24: $char = "X"; break;
+                case 25: $char = "Y"; break;
+                case 26: $char = "Z"; break;
+                default: "A";
+
+         }
+         return $char;
+}
+
 
 ?>
