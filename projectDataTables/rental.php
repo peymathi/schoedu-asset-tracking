@@ -74,10 +74,11 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				<table class="dataTable display" style="width: 100%">
 					<thead>
 						<tr>
-							<th>RentalID</th>
-							<th>AssetID</th>
-							<th>FormID</th>
-							<th>Filename</th>
+							<th>Form No.</th>
+							<th>Device Serial</th>
+							<th>Rental Date</th>
+							<th>Return Date</th>
+							<th>Form</th>
 
 						</tr>
 					</thead>
@@ -93,11 +94,19 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						$stmt = $con->prepare("select * from P_RENTAL_FORMS where fileName != ''");
 						$stmt->execute();
 						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							
+							$sql = $con->prepare("select SerialNumber from P_ASSETS where AssetID = ?");
+							$sql->execute(array($row["AssetID"]));
+							$serial = $sql->fetch(PDO::FETCH_ASSOC);
+
 							print "<tr>";
 							
-							print "<td>".$row["RentalID"]."</td><td>".$row["AssetID"]."</td><td>".$row["FormID"]."</td>";
+							print "<td>".$row["FormID"]."</td>";
+							print "<td>".$serial["SerialNumber"]."</td>";
+							print "<td>".$row["outDate"]."</td>";
+							print "<td>".$row["inDate"]."</td>";
 
-							print "<td><a href='Uploads/".$row["fileName"]."'>Form</a></td>";
+							print "<td><a href='Uploads/".$row["fileName"]."'>View Form</a></td>";
 
 							print "</tr>"; 
 						}
@@ -119,7 +128,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 			<div class="body" id="body">
 				<div>
 					<h2 style="padding-right: 22px">
-						Rental Form <span style="float: right" id="currentForm"><?php print $formID ?></span>
+						Asset Rental <span style="float: right" id="currentForm"><?php print 'Form: '.$formID ?></span>
 					</h2>
 
 					<div id="rental_div">

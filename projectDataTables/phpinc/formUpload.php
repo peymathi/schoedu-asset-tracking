@@ -58,7 +58,7 @@
 
 
       				//add to database
-      				$formID = $_GET['f'];//serial num
+      				$formID = $_GET['f'];//form num
 
 					$sql = $con->prepare("update P_RENTAL_FORMS set fileName = ? where FormID = ?");
 					$sql->execute(array($newName, $formID));
@@ -72,6 +72,6 @@
   		echo "Invalid file";
   	}
 
-header("Location: ../rental.php");
+//header("Location: ../rental.php");
 
 ?>
