@@ -175,7 +175,7 @@ function printFunction() {
 		    	in: inDate
 		    },
 		    success: function(response) {
-		    	//$('#currentForm').html(response);
+		    	location.reload();
 		    }
 		});
 
