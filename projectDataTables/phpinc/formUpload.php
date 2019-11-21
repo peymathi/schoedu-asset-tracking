@@ -72,6 +72,6 @@
   		echo "Invalid file";
   	}
 
-//header("Location: ../rental.php");
+header("Location: ../rental.php");
 
 ?>
