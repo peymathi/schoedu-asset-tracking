@@ -84,6 +84,12 @@ Purchased:<input type="date" class="purchaseDate <?php echo $extraClass ?>" name
     Serial#:<input type="text" class="serial <?php echo $extraClass ?>" name="serial">
 
     Notes:<input type="text" class="notes <?php echo $extraClass ?>" name="notes">
+    <?php
+      if($doSurplus) {
+        echo 'Surplus:<input type="checkbox" class="surplus '.$extraClass.'" name="surplus" value="">';
+      }
+    ?>
+
   </div>
 </div>
 

@@ -70,6 +70,7 @@ function editAsset() {
   var serial = $('.serial.editAsset').val();
   var notes = $('.notes.editAsset').val();
   var asset = $('#editButton').val();
+  var surplus = $('.surplus.editAsset').is(":checked");
 
   // do some validation (needs more)
   if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
@@ -86,6 +87,7 @@ function editAsset() {
     network: networkId,
     serial: serial,
     notes: notes,
+    surplus: surplus,
     asset: asset
   };
 
@@ -167,6 +169,7 @@ function populateEditModal(asset) {
   var networkId = $('.networkID.editAsset');
   var serial = $('.serial.editAsset');
   var notes = $('.notes.editAsset');
+  var surplus = $('.surplus.editAsset');
 
   $('#editButton').val(asset);
 
@@ -184,11 +187,13 @@ function populateEditModal(asset) {
       networkId.val(response.asset.NetworkName);
       serial.val(response.asset.SerialNumber);
       notes.val(response.asset.Notes);
+      surplus.prop('checked', response.asset.IsSurplus == '0' ? false : true);
       updateCategoryManufacturer(response.asset.ModelID, categoryId, manufacturerId, function() {
         $('.modal:eq(0)').css('display', 'block')
       });
     }
   });
+
 }
 
 function getAssetDetailFragment() {

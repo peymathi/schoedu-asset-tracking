@@ -78,6 +78,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 					<?php
 						$doQty = false;
+						$doSurplus = true;
 						$extraClass = "editAsset";
 						include("phpinc/equipmentFragment.php");
 					?>
@@ -98,7 +99,8 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						<h3><span>Add Equipment</span></h3>
 
 						<?php
-							$doQty = true; //just for now
+							$doQty = true;
+							$doSurplus = false;
 							$extraClass = "newAsset";
 							include("phpinc/equipmentFragment.php");
 						?>
