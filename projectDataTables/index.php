@@ -128,7 +128,7 @@ $time1 = strtotime($acurdate);
 							$(document).ready(function(){
 						    		$('.dataTable').DataTable({responsive:true,
 						    			columnDefs: [{orderable: false, targets: [0]}],
-        								order: [[ 6, 'asc']]});
+        								order: [[ 6, 'desc']]});
 						    });
 						</script>
 
