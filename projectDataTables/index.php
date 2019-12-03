@@ -38,7 +38,7 @@ $time1 = strtotime($acurdate);
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-	
+
 </head>
 <body>
 	<div class="border">
@@ -114,10 +114,10 @@ $time1 = strtotime($acurdate);
 									$timedif = $time1 - $lasttime;
 									$dayssince = round($timedif / 86400);
 									print "<tr>";
-									
+
 									print "<td><button onclick='verifyFunction(this)'><i class='fa fa-check'></i></button></td>";
 									print "<td>".$row["SerialNumber"]."</td><td>".$row["CategoryName"]."</td><td>".$row["ManufacturerName"]."</td><td>".$row["ModelName"]."</td><td>".$row["LocationName"]."</td><td>".$dayssince."</td>";
-									print "</tr>"; 
+									print "</tr>";
 								}
 								?>
 							</tbody>
@@ -126,9 +126,19 @@ $time1 = strtotime($acurdate);
 						<!-- DataTable controll -->
 						<script type="text/javascript">
 							$(document).ready(function(){
-						    		$('.dataTable').DataTable({responsive:true,
-						    			columnDefs: [{orderable: false, targets: [0]}],
-        								order: [[ 6, 'desc']]});
+						    		$('.dataTable').DataTable({
+											responsive:true,
+						    			columnDefs: [
+							          { orderable: false, targets: [0] },
+							          { responsivePriority: 1, targets: 0 },
+							          { responsivePriority: 2, targets: 1 },
+							          { responsivePriority: 3, targets: 6 },
+							          { responsivePriority: 4, targets: 5 },
+							          { responsivePriority: 5, targets: 4 },
+							          { responsivePriority: 6, targets: 3 },
+							          { responsivePriority: 7, targets: 2 }
+							        ],
+        							order: [[ 6, 'desc']]});
 						    });
 						</script>
 
@@ -153,7 +163,7 @@ $time1 = strtotime($acurdate);
 								print "</br>";
 							}
 						?>
-						</div>						
+						</div>
 					</div>
 
 				</div>
