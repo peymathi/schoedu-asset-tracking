@@ -16,7 +16,6 @@ $password = 'tmhorne';
 
 try {
     $con = new PDO("mysql:host=$hostname;dbname=tmhorne_db", $username, $password);
-    // $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     /*** echo a message saying we have connected ***/
     //echo 'Connected to database';
     }

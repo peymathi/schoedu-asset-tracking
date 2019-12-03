@@ -21,6 +21,6 @@
     ));
 
     $surplusStmt = $con->prepare("UPDATE P_ASSETS SET IsSurplus = :surplus WHERE AssetID = :asset");
-    $surplusStmt->execute(array('surplus' => $_POST['surplus'], 'asset' => $_POST['asset']));
+    $surplusStmt->execute(array('surplus' => ($_POST['surplus'] ? "1" : "0"), 'asset' => $_POST['asset']));
   }
 ?>
