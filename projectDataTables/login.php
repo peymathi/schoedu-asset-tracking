@@ -57,6 +57,7 @@ if($haveuser == FALSE or $havepass == FALSE){
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Asset Management Log In</title>
   <link rel="stylesheet" href="css/logInStyle.css">
 </head>
