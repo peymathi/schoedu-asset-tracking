@@ -2,6 +2,17 @@
 session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ; 
 	require_once "phpinc/dbconnect.php";
+
+if(!isset($_SESSION['timeout']))  Header ("Location:logout.php") ;
+else 
+	if ($_SESSION['timeout'] + 1 * 3600 < time()){
+		Header ("Location:logout.php") ;
+	}
+
+	else {
+		$_SESSION['timeout'] = time();
+	}
+
 ?>
 
 

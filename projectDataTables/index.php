@@ -6,6 +6,17 @@ require_once "phpinc/dbconnect.php";
 
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
+if(!isset($_SESSION['timeout']))  Header ("Location:logout.php") ;
+else 
+	if ($_SESSION['timeout'] + 1 * 3600 < time()){
+		Header ("Location:logout.php") ;
+	}
+
+	else {
+		$_SESSION['timeout'] = time();
+	}
+
+
 $row = "";
 
 $stmt = $con->prepare("select checkdays from P_ADMINS where adminid = ?");
@@ -147,26 +158,6 @@ $time1 = strtotime($acurdate);
 					</div>
 					<br>
 					<br>
-					<div>
-						<h3><span>Quick Summary of Active Assets</span></h3>
-						<div class="summary">
-						<?php
-							$stmt = $con->prepare("select * from P_CATEGORIES");
-							$stmt->execute();
-							while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-								$label = $row["Name"];
-								$catid = $row["CategoryID"];
-								$stmt2 = $con->prepare("select count(*) as c from P_ASSETS inner join P_MODELS on P_ASSETS.modelid = P_MODELS.modelid where categoryid = ? and issurplus = 0");
-								$stmt2->execute(array($catid));
-								$row2 = $stmt2->fetch(PDO::FETCH_OBJ);
-								$count = $row2->c;
-								print $label .": " .$count;
-								print "</br>";
-							}
-						?>
-						</div>
-					</div>
-
 				</div>
 			</div>
 		</div>
