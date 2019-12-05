@@ -31,7 +31,7 @@ function newAssets() {
   console.log(details);
 
   // do some validation (needs more)
-  if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
+  if(modelId == -1 || userId == -1 || locationId == -1 || serial.some(function(v) { return v == ""; })) {
     alert('invalid');
     return;
   }
@@ -52,9 +52,13 @@ function newAssets() {
     type: "POST",
     data: JSON.stringify(request),
     dataType: "json",
-    success: function(d) {
-      table.ajax.reload();
-      alert('created asset');
+    success: function(data) {
+      if(data.status == "success") {
+        table.ajax.reload();
+        alert('Created asset');
+      } else {
+        alert('Failed to create asset');
+      }
     }
   });
 }
