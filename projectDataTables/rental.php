@@ -118,7 +118,7 @@ else
 							print "<td>".$row["outDate"]."</td>";
 							print "<td>".$row["inDate"]."</td>";
 
-							print "<td><a href='Uploads/".$row["fileName"]."'>View Form</a></td>";
+							print "<td><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form</a></td>";
 
 							print "</tr>"; 
 						}
