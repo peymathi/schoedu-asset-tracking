@@ -167,7 +167,15 @@ function upload(x){
 }
 
 function printFunction() {
-	if($('#outDate').val() == "" || $('#inDate').val() == "")
+	if($('#serial1').val() == "")
+	{
+		alert("Please enter atleast 1 device");
+	}
+	if($('#name').val() == "")
+	{
+		alert("Please enter a name");
+	}
+	else if($('#outDate').val() == "" || $('#inDate').val() == "")
 	{
 		alert("Please enter valid dates");
 	}
