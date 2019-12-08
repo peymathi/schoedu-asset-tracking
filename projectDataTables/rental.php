@@ -74,6 +74,7 @@ else
 
 				<script>
 					function menuToggle(x) {x.classList.toggle("change");document.getElementById("sidebar").classList.toggle("show_menu");document.getElementById("body").classList.toggle("show_menu");}
+
 				</script>
 			</div>
 
@@ -86,10 +87,12 @@ else
 				<table class="dataTable display" style="width: 100%">
 					<thead>
 						<tr>
+							<th>Check In</th>
 							<th>Form No.</th>
 							<th>Device Serial</th>
 							<th>Rental Date</th>
 							<th>Return Date</th>
+							<th>Status</th>
 							<th>Form</th>
 
 						</tr>
@@ -102,23 +105,47 @@ else
 						$formID = $stmt->fetch(PDO::FETCH_ASSOC);
 						$formID = $formID['FormID'] + 1;
 
+						$date = strtotime(date("Y-m-d"));
 
 						$stmt = $con->prepare("select * from P_RENTAL_FORMS where fileName != ''");
 						$stmt->execute();
 						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							if($row['Status'] == 'Out' && ($date > strtotime($row['inDate'])))
+							{
+								$sql = $con->prepare("update P_RENTAL_FORMS set Status = ? where FormID = ?");
+	              				$sql->execute(array('Late', $row["FormID"]));
+              				}
 							
 							$sql = $con->prepare("select SerialNumber from P_ASSETS where AssetID = ?");
 							$sql->execute(array($row["AssetID"]));
 							$serial = $sql->fetch(PDO::FETCH_ASSOC);
 
+							$color = "";
+							$disable = "";
+
+							if($row['Status'] == 'Late')
+							{
+								$color = " style='background-color: #fddada'";
+							}
+							else if($row['Status'] == 'Out')
+							{
+								$color = " style='background-color: #dafddb'";
+							}
+							else
+							{
+								$disable = " disabled";
+							}
+
 							print "<tr>";
 							
-							print "<td>".$row["FormID"]."</td>";
-							print "<td>".$serial["SerialNumber"]."</td>";
-							print "<td>".$row["outDate"]."</td>";
-							print "<td>".$row["inDate"]."</td>";
+							print "<td".$color."><button onclick='checkIn(this)'".$disable."><i class='fa fa-check'></i></button></td>";
+							print "<td".$color.">".$row["FormID"]."</td>";
+							print "<td".$color.">".$serial["SerialNumber"]."</td>";
+							print "<td".$color.">".$row["outDate"]."</td>";
+							print "<td".$color.">".$row["inDate"]."</td>";
+							print "<td".$color.">".$row["Status"]."</td>";
 
-							print "<td><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form</a></td>";
+							print "<td".$color."><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form</a></td>";
 
 							print "</tr>"; 
 						}
