@@ -68,6 +68,17 @@ else
 
 				<script>
 					function menuToggle(x) {x.classList.toggle("change");document.getElementById("sidebar").classList.toggle("show_menu");document.getElementById("body").classList.toggle("show_menu");}
+
+					$( document ).ready(function() {
+						var t = $('h2').offset().top + 20;
+						$('.menu_toggle_container').offset({top:t});
+
+						$('.page').on('scroll', function(){
+							t = $('.body div h2').offset().top + 20;
+							$('.menu_toggle_container').offset({top:t});
+						})
+					});
+
 				</script>
 			</div>
 

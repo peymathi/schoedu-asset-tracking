@@ -83,6 +83,16 @@ else
 				<script>
 					function menuToggle(x) {x.classList.toggle("change");document.getElementById("sidebar").classList.toggle("show_menu");document.getElementById("body").classList.toggle("show_menu");}
 
+					$( document ).ready(function() {
+						var t = $('h2').offset().top + 20;
+						$('.menu_toggle_container').offset({top:t});
+
+						$('.page').on('scroll', function(){
+							t = $('.body div h2').offset().top + 20;
+							$('.menu_toggle_container').offset({top:t, right: '40px'});
+						})
+					});
+
 				</script>
 			</div>
 
@@ -188,7 +198,7 @@ else
 			<div class="body" id="body">
 				<div>
 					<h2 style="padding-right: 22px">
-						Asset Rental <span style="float: right" id="currentForm"><?php print $formID ?></span><span style='float: right'>Form: &nbsp</span>
+						Asset Rental <span id="currentForm"><?php print $formID ?></span><span id='formLabel'>Form: &nbsp</span>
 					</h2>
 
 					<div id="rental_div">
