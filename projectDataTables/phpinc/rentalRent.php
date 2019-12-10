@@ -18,8 +18,8 @@
 		$id = $sql->fetchAll()[0];
 
 
-		$sql = $con->prepare("insert into P_RENTAL_FORMS (AssetID, FormID, Name, outDate, inDate) values (?, ?, ?, ?, ?)");
-		$sql->execute(array($id['AssetID'], $formID, $name, $outDate, $inDate));
+		$sql = $con->prepare("insert into P_RENTAL_FORMS (AssetID, FormID, Name, outDate, inDate, Status) values (?, ?, ?, ?, ?, ?)");
+		$sql->execute(array($id['AssetID'], $formID, $name, $outDate, $inDate, 'Pending'));
 
 
 	}

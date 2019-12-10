@@ -354,7 +354,7 @@ input[type=search] {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 12; /* Sit on top */
+  z-index: 14; /* Sit on top */
   padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
@@ -390,9 +390,16 @@ input[type=search] {
   cursor: pointer;
 }
 
+#currentForm, #formLabel{
+	float: right;
+}
+
 /*------------------------- Media ------------------------*/
 @media screen and (max-width: 800px)
 {
+	html, body, .border{
+		height: 100vh;
+	}
 	.sidebar, #bg{
 		display: none;
 	}
@@ -401,19 +408,27 @@ input[type=search] {
 		width: calc(100vw - 25px);
 	}
 
+	.border{
+		margin: 0 0;
+	}
+
+	.page{
+		height: 100%;
+	}
+
 	.menu_toggle_container{
 		display: inline-block;
 		cursor: pointer;
 		z-index: 13;
 		position: absolute;
 		top: 35px;
-		right: 50px;
+		right: 40px;
 	}
 
 	.bar1, .bar2, .bar3 {
 	  width: 35px;
 	  height: 5px;
-	  background-color: #333 !important;
+	  background-color: #333;
 	  margin: 6px 0 !important;
 	  transition: 0.4s;
 	}
@@ -421,6 +436,7 @@ input[type=search] {
 	.change .bar1 {
 	  -webkit-transform: rotate(-45deg) translate(-9px, 6px);
 	  transform: rotate(-45deg) translate(-9px, 6px);
+	  background-color: #e2e1e1;
 	}
 
 	.change .bar2 {opacity: 0;}
@@ -428,6 +444,7 @@ input[type=search] {
 	.change .bar3 {
 	  -webkit-transform: rotate(45deg) translate(-8px, -8px);
 	  transform: rotate(45deg) translate(-8px, -8px);
+	  background-color: #e2e1e1;
 	}
 
 	.sidebar ul li a {
@@ -456,6 +473,19 @@ input[type=search] {
 	.show_menu.sidebar li{
 		text-align: center;
 	}
+
+	a img{
+		margin: 0 auto;
+	}
+
+	#currentForm{
+		padding-right: 65px;
+	}
+
+	.menu_toggle_container{
+		position: absolute;
+	}
+
 
 
 }
@@ -498,6 +528,30 @@ input[type=search] {
 	#termsDiv{
 		max-height: 100vh;
 		overflow: default;
+	}
 }
+
+@media only screen and (orientation: landscape) and (max-width: 1000px){
+	.border{
+		margin: 0 0;
+	}
+
+	html, body, .page{
+		height: 100vh;
+	}
+
+	#sidebar{
+		max-height: 100vh;
+	}
+
+	a img{
+		width: 200px;
+		height: auto;
+		content: url('../images/smalllogo.png');
+	}
+
+	.menu_toggle_container{
+		position: absolute;
+	}
 }
 

@@ -1,6 +1,7 @@
 <?php
 
 	session_start();
+	$_SESSION['timeout'] = time();
 
 	require_once "phpinc/dbconnect.php";
 

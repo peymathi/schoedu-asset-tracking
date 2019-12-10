@@ -77,8 +77,11 @@
       				//add to database
       				$formID = $_GET['f'];//form num
 
-					$sql = $con->prepare("update P_RENTAL_FORMS set fileName = ? where FormID = ?");
-					$sql->execute(array($newName, $formID));
+    					$sql = $con->prepare("update P_RENTAL_FORMS set fileName = ? where FormID = ?");
+    					$sql->execute(array($newName, $formID));
+
+              $sql = $con->prepare("update P_RENTAL_FORMS set Status = ? where FormID = ?");
+              $sql->execute(array('Out', $formID));
 
 
       			}

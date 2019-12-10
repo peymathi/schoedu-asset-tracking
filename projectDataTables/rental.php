@@ -2,6 +2,17 @@
 session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ; 
 	require_once "phpinc/dbconnect.php";
+
+if(!isset($_SESSION['timeout']))  Header ("Location:logout.php") ;
+else 
+	if ($_SESSION['timeout'] + 1 * 3600 < time()){
+		Header ("Location:logout.php") ;
+	}
+
+	else {
+		$_SESSION['timeout'] = time();
+	}
+
 ?>
 
 
@@ -22,6 +33,14 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+
+	<!-- Export Buttons -->
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 </head>
 <body>
 	<div class="border">
@@ -63,6 +82,17 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 				<script>
 					function menuToggle(x) {x.classList.toggle("change");document.getElementById("sidebar").classList.toggle("show_menu");document.getElementById("body").classList.toggle("show_menu");}
+
+					$( document ).ready(function() {
+						var t = $('h2').offset().top + 20;
+						$('.menu_toggle_container').offset({top:t});
+
+						$('.page').on('scroll', function(){
+							t = $('.body div h2').offset().top + 20;
+							$('.menu_toggle_container').offset({top:t, right: '40px'});
+						})
+					});
+
 				</script>
 			</div>
 
@@ -75,10 +105,12 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				<table class="dataTable display" style="width: 100%">
 					<thead>
 						<tr>
+							<th>Check In</th>
 							<th>Form No.</th>
 							<th>Device Serial</th>
 							<th>Rental Date</th>
 							<th>Return Date</th>
+							<th>Status</th>
 							<th>Form</th>
 
 						</tr>
@@ -91,23 +123,47 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 						$formID = $stmt->fetch(PDO::FETCH_ASSOC);
 						$formID = $formID['FormID'] + 1;
 
+						$date = strtotime(date("Y-m-d"));
 
 						$stmt = $con->prepare("select * from P_RENTAL_FORMS where fileName != ''");
 						$stmt->execute();
 						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							if($row['Status'] == 'Out' && ($date > strtotime($row['inDate'])))
+							{
+								$sql = $con->prepare("update P_RENTAL_FORMS set Status = ? where FormID = ?");
+	              				$sql->execute(array('Late', $row["FormID"]));
+              				}
 							
 							$sql = $con->prepare("select SerialNumber from P_ASSETS where AssetID = ?");
 							$sql->execute(array($row["AssetID"]));
 							$serial = $sql->fetch(PDO::FETCH_ASSOC);
 
+							$color = "";
+							$disable = "";
+
+							if($row['Status'] == 'Late')
+							{
+								$color = " style='background-color: #fddada'";
+							}
+							else if($row['Status'] == 'Out')
+							{
+								$color = " style='background-color: #dafddb'";
+							}
+							else
+							{
+								$disable = " disabled";
+							}
+
 							print "<tr>";
 							
-							print "<td>".$row["FormID"]."</td>";
-							print "<td>".$serial["SerialNumber"]."</td>";
-							print "<td>".$row["outDate"]."</td>";
-							print "<td>".$row["inDate"]."</td>";
+							print "<td".$color."><button onclick='checkIn(this)'".$disable."><i class='fa fa-check'></i></button></td>";
+							print "<td".$color.">".$row["FormID"]."</td>";
+							print "<td".$color.">".$serial["SerialNumber"]."</td>";
+							print "<td".$color.">".$row["outDate"]."</td>";
+							print "<td".$color.">".$row["inDate"]."</td>";
+							print "<td".$color.">".$row["Status"]."</td>";
 
-							print "<td><a href='Uploads/".$row["fileName"]."'>View Form</a></td>";
+							print "<td".$color."><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form</a></td>";
 
 							print "</tr>"; 
 						}
@@ -118,8 +174,21 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 				<!-- DataTable controll -->
 				<script type="text/javascript">
 					$(document).ready(function(){
-				    		$('.dataTable').DataTable({responsive:true});
-				    });
+						    		$('.dataTable').DataTable({
+										responsive:true,
+						    			columnDefs: [
+								          { orderable: false, targets: [0] }
+								        ],
+        								order: [[ 1, 'desc']],
+        								dom: 'Bfrtip',
+									    buttons: [
+								            'copyHtml5',
+								            'excelHtml5',
+								            'csvHtml5',
+								            'pdfHtml5'
+								        ]
+        							});
+						    });
 				</script>
 			  </div>
 
@@ -129,7 +198,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 			<div class="body" id="body">
 				<div>
 					<h2 style="padding-right: 22px">
-						Asset Rental <span style="float: right" id="currentForm"><?php print $formID ?></span><span style='float: right'>Form: &nbsp</span>
+						Asset Rental <span id="currentForm"><?php print $formID ?></span><span id='formLabel'>Form: &nbsp</span>
 					</h2>
 
 					<div id="rental_div">
@@ -188,7 +257,7 @@ if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 							</select>
 
 							<label>&nbsp&nbspSerial:</label>
-							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial1" value=<?php if(isset($_GET['s'])){print $_GET['s'];} ?>>
+							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial1" id="serial1" value=<?php if(isset($_GET['s'])){print $_GET['s'];} ?>>
 
 							<datalist id="serial1"></datalist>
 

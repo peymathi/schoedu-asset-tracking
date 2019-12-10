@@ -139,52 +139,106 @@ function showEmail(str)
 
 //form upload
 function upload(x){
-	var f = prompt("Enter Form Number: ");
-	$('#rentalForm').attr('action', 'phpinc/formUpload.php?f='+f);
-	$('#rentalForm').attr('onsubmit', '');
-	$('#rentalForm').submit();
-	$('#rentalForm').attr('onsubmit', 'return false');
+	var form = prompt("Enter Form Number: ");
+
+	while(form == "")
+	{
+		form = prompt("Please enter a valid Form Number: ");
+	}
+
+	$.ajax({
+		    url: 'phpinc/rentalVerifyUpload.php?',
+		    type: 'GET',
+		    data:{
+		    	f: form,
+		    },
+		    success: function(response) {
+		    	if(response == '0'){alert('Form: '+ form +' does not exist');}
+		    	else
+		    	{
+		    		$('#rentalForm').attr('action', 'phpinc/formUpload.php?f='+form);
+					$('#rentalForm').attr('onsubmit', '');
+					$('#rentalForm').submit();
+					$('#rentalForm').attr('onsubmit', 'return false');
+		    	}
+		    }
+		});
 
 }
 
 function printFunction() {
-	if(confirm("Are you sure you want to complete this rental?"))
+	if($('#serial1').val() == "")
 	{
-		window.print();
-
-		var name = $('#name').val();
-		var items = i;
-		var formID = $('#currentForm').html();
-		var serials = "";
-		var outDate = $('#outDate').val();
-		var inDate = $('#inDate').val();
-
-		for(var c = 0; c<i; c++)
-		{
-			if(c > 0){serials+="+";}
-			serials += $("input[name='serial"+(c+1)+"'").val();
-		}
-
-		$.ajax({
-		    url: 'phpinc/rentalRent.php?',
-		    type: 'GET',
-		    data:{
-		    	n: name,
-		    	i: items,
-		    	f: formID,
-		    	s: serials,
-		    	o: outDate,
-		    	in: inDate
-		    },
-		    success: function(response) {
-		    	setTimeout(function(){location.reload();}, 100);
-		    }
-		});
-
-
+		alert("Please enter atleast 1 device");
+	}
+	if($('#name').val() == "")
+	{
+		alert("Please enter a name");
+	}
+	else if($('#outDate').val() == "" || $('#inDate').val() == "")
+	{
+		alert("Please enter valid dates");
 	}
 	else
 	{
+		var dOut = new Date($('#outDate').val());
+		var dIn = new Date($('#inDate').val());
 
+		if(dOut > dIn)
+		{
+			alert('Out Date must be before In Date');
+		}
+		else
+		{
+			if(confirm("Are you sure you want to complete this rental?"))
+			{
+				window.print();
+
+				var name = $('#name').val();
+				var items = i;
+				var formID = $('#currentForm').html();
+				var serials = "";
+				var outDate = $('#outDate').val();
+				var inDate = $('#inDate').val();
+
+				for(var c = 0; c<i; c++)
+				{
+					if(c > 0){serials+="+";}
+					serials += $("input[name='serial"+(c+1)+"'").val();
+				}
+
+				$.ajax({
+				    url: 'phpinc/rentalRent.php?',
+				    type: 'GET',
+				    data:{
+				    	n: name,
+				    	i: items,
+				    	f: formID,
+				    	s: serials,
+				    	o: outDate,
+				    	in: inDate
+				    },
+				    success: function(response) {
+				    	setTimeout(function(){location.reload();}, 100);
+				    }
+				});
+
+
+			}
+		}
 	}
+}
+
+function checkIn(x)
+{
+	var formID = $(x).parent().next().text();
+
+	$.ajax({
+	    url: 'phpinc/rentalCheckIn.php',
+	    type: 'GET',
+	    data:{f: formID},
+	    success: function(response) {
+	    	setTimeout(function() { location.reload(); }, 100);
+	    }
+	});
 }
