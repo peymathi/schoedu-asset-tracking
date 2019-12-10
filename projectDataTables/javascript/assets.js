@@ -77,7 +77,7 @@ function editAsset() {
   var surplus = $('.surplus.editAsset').is(":checked");
 
   // do some validation (needs more)
-  if(modelId == -1 || userId == -1 || locationId == -1 || networkId == "" || serial == "") {
+  if(modelId == -1 || userId == -1 || locationId == -1 || serial == "") {
     alert('invalid');
     return;
   }
