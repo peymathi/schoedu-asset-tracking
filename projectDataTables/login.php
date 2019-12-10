@@ -1,10 +1,10 @@
-<?php 
- 
+<?php
+
 	session_start();
- 
+
 	require_once "phpinc/dbconnect.php";
 
-	$response = "";	
+	$response = "";
 	$username = "";
 	$password = "";
 	$userid = "";
@@ -13,15 +13,15 @@
 	$haveuser = FALSE;
 	$havepass = FALSE;
 
-if(isset($_GET['username'])){
-	$username = $_GET['username'];
+if(isset($_POST['username'])){
+	$username = $_POST['username'];
 	if ($username != ""){
 		$haveuser = TRUE;
 	}
 }
 
-if(isset($_GET['password'])){
-	$password = $_GET['password'];
+if(isset($_POST['password'])){
+	$password = $_POST['password'];
 	if ($password != ""){
 		$havepass = TRUE;
 	}
@@ -50,7 +50,7 @@ if($haveuser == TRUE and $havepass == TRUE){
 if($haveuser == FALSE or $havepass == FALSE){
 	$response = "Please enter your login credentials";
 }
-	
+
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +66,7 @@ if($haveuser == FALSE or $havepass == FALSE){
 <div class="login-page">
   <div class="form">
     <?php print $response; ?>
-    <form method="get" action="login.php" class="login-form">
+    <form method="post" action="login.php" class="login-form">
       <input type="text" name = "username"/>
       <input type="password" name = "password"/>
       <input name="enter" class="btn" type="submit" value="Log In" />
