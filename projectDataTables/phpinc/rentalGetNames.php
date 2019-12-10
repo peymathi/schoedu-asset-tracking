@@ -4,7 +4,7 @@
 
 // Fill up array with names
 
-$sql = $con->prepare("select distinct Name from P_USERS");
+$sql = $con->prepare("select distinct P_USERS.Name from P_USERS left join P_HIDE_USER_RULES on P_HIDE_USER_RULES.UserID = P_USERS.UserID where P_HIDE_USER_RULES.RuleID is NULL");
 $sql->execute(array());
 $a =$sql->fetchAll();
 

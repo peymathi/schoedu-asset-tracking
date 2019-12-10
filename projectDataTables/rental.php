@@ -128,7 +128,7 @@ else
 						$stmt = $con->prepare("select * from P_RENTAL_FORMS where fileName != ''");
 						$stmt->execute();
 						while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-							if($row['Status'] == 'Out' && ($date > strtotime($row['inDate'])))
+							if($row['inDate'] != '0000-00-00' && ($row['Status'] == 'Out' && ($date > strtotime($row['inDate']))))
 							{
 								$sql = $con->prepare("update P_RENTAL_FORMS set Status = ? where FormID = ?");
 	              				$sql->execute(array('Late', $row["FormID"]));
