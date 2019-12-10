@@ -242,6 +242,46 @@ function changeDaysChecked() {
   getSurplusVisibility();
 }
 
+function validateName(type, name, callback) {
+  if(name !== "") {
+    $.ajax({
+      url: "phpinc/getNameInUse.php",
+      type: "GET",
+      data: {
+        type: type,
+        name: name
+      },
+      success: function(d) {
+        j = JSON.parse(d);
+        if(j.status == "success" && !j.exists) {
+          callback(true)
+        } else {
+          callback(false, "used")
+        }
+      }
+    });
+  } else {
+    if(callback !== undefined) {
+      callback(false, "invalid");
+    }
+  }
+
+}
+
+function makeRecordCallback(record, selectedVal, name, recordId) {
+  return (s, e) => {
+    if(s) {
+      callRecordEditName(record, selectedVal, name, recordId);
+    } else {
+      if(e === "invalid") {
+        alert("Invalid name");
+      } else {
+        alert("Name in use");
+      }
+    }
+  }
+}
+
 function editRecordName() {
   var selection = $("#toggleRecordSelection").val();
 
@@ -249,19 +289,19 @@ function editRecordName() {
 
   if(selection === "Category") {
     selectedVal = $("#toggleCategories").val();
-    callRecordEditName("category", selectedVal, name, "#toggleCategories");
+    validateName("category", name, makeRecordCallback("category", selectedVal, name, "#toggleCategories"));
   } else if(selection === "Manufacturer") {
     selectedVal = $("#toggleManufacturers").val();
-    callRecordEditName("manufacturer", selectedVal, name, "#toggleManufacturers");
+    validateName("manufacturer", name, makeRecordCallback("manufacturer", selectedVal, name, "#toggleManufacturers"));
   } else if(selection === "Model") {
     selectedVal = $("#toggleModels").val();
-    callRecordEditName("model", selectedVal, name, "#toggleModels");
+    validateName("model", name, makeRecordCallback("model", selectedVal, name, "#toggleModels"));
   } else if(selection === "Location") {
     selectedVal = $("#toggleLocations").val();
-    callRecordEditName("location", selectedVal, name, "#toggleLocations");
+    validateName("selection", name, makeRecordCallback("location", selectedVal, name, "#toggleLocations"));
   } else if(selection === "User") {
     selectedVal = $("#toggleUsers").val();
-    callRecordEditName("user", selectedVal, name, "#toggleUsers");
+    validateName("user", name, makeRecordCallback("user", selectedVal, name, "#toggleUsers"));
   }
 }
 
@@ -326,6 +366,29 @@ function getSurplusVisibility() {
   })
 }
 
+function makeCreateRecordCallback(type, name, recordId, message) {
+  return (s, e) => {
+    if(s) {
+      $.ajax({
+        url: "phpinc/processSettings.php",
+        data: {
+          "type": type,
+          "name": name
+        },
+        type: "POST",
+        success: function(r) {
+          $(recordId).val('');
+          alert(message);
+        }
+      });
+    } else if(e === "used") {
+      alert("Name in use");
+    } else {
+      alert("Invalid name");
+    }
+  }
+}
+
 // document.ready wrapper
 $(document).ready(function() {
 
@@ -361,86 +424,28 @@ $(document).ready(function() {
   $("#daysCheckedRadio").on("click", changeDaysChecked);
 
   $('#newCategorySubmit').on("click", function(e) {
-    //validation here
-    $.ajax({
-      url: "phpinc/processSettings.php",
-      data: {
-        "type":"category",
-        "name":$("#newCategory").val()
-      },
-      type: "POST",
-      success: function(r) {
-        $('#newCategory').val('');
-        alert("created category");
-      }
-    });
+    var name = $('#newCategory').val();
+    validateName("category", name, makeCreateRecordCallback("category", name, "#newCategory", "Created category"));
   });
 
   $('#newManufacturerSubmit').on("click", function(e) {
-    //validation here
-    $.ajax({
-      url: "phpinc/processSettings.php",
-      data: {
-        "type":"manufacturer",
-        "name":$("#newManufacturer").val(),
-        "warranty":$("#warranty").val()
-      },
-      type: "POST",
-      success: function(r) {
-        $('#newManufacturer').val('');
-        alert("created manufacturer");
-      }
-    });
+    var name = $("#newManufacturer").val();
+    validateName("manufacturer", name, makeCreateRecordCallback("manufacturer", name, "#newManufacturer", "Created manufacturer"));
   });
 
   $('#newModelSubmit').on("click", function(e) {
-    //validation here
-    $.ajax({
-      url: "phpinc/processSettings.php",
-      data: {
-        "type":"model",
-        "name":$("#newModel").val(),
-        "category":$('#categorySelect').val(),
-        "manufacturer":$('#manufacturerSelect').val()
-      },
-      type: "POST",
-      success: function(r) {
-        $('#newModel').val('');
-        alert("created model");
-      }
-    });
+    var name = $("#newModel").val();
+    validateName("model", name, makeCreateRecordCallback("model", name, "#newModel", "Created model"));
   });
 
   $('#newLocationSubmit').on("click", function(e) {
-    //validation here
-    $.ajax({
-      url: "phpinc/processSettings.php",
-      data: {
-        "type":"location",
-        "name":$("#newLocation").val(),
-      },
-      type: "POST",
-      success: function(r) {
-        $('#newLocation').val('');
-        alert("created location");
-      }
-    });
+    var name = $("#newLocation").val();
+    validateName("location", name, makeCreateRecordCallback("location", name, "#newLocation", "Created location"));
   });
 
   $('#newUserSubmit').on("click", function(e) {
-    //validation here
-    $.ajax({
-      url: "phpinc/processSettings.php",
-      data: {
-        "type":"user",
-        "name":$("#newUser").val(),
-      },
-      type: "POST",
-      success: function(r) {
-        $('#newUser').val('');
-        alert("created user");
-      }
-    });
+    var name = $("#newUser").val();
+    validateName("user", name, makeCreateRecordCallback("user", name, "#newUser", "Created user"));
   });
 
   $('#newDaysCheckedSubmit').on("click", function(e) {
