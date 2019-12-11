@@ -175,14 +175,22 @@ function printFunction() {
 	{
 		alert("Please enter a name");
 	}
-	else if($('#outDate').val() == "" || $('#inDate').val() == "")
+	else if($('#outDate').val() == "")
 	{
-		alert("Please enter valid dates");
+		alert("Please enter a Rental Date");
 	}
 	else
 	{
-		var dOut = new Date($('#outDate').val());
-		var dIn = new Date($('#inDate').val());
+		var dOut = new Date($('#outDate').val());;
+		var dIn;
+		if($('#inDate').val() == "")
+		{
+			dIn = new Date('9999-12-31');
+		}
+		else
+		{
+			dIn = new Date($('#inDate').val());
+		}
 
 		if(dOut > dIn)
 		{
