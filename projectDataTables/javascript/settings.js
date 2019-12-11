@@ -366,15 +366,15 @@ function getSurplusVisibility() {
   })
 }
 
-function makeCreateRecordCallback(type, name, recordId, message) {
+function makeCreateRecordCallback(type, name, recordId, message, extra) {
   return (s, e) => {
     if(s) {
       $.ajax({
         url: "phpinc/processSettings.php",
-        data: {
+        data: { ...{
           "type": type,
           "name": name
-        },
+        }, ...extra },
         type: "POST",
         success: function(r) {
           $(recordId).val('');
@@ -425,22 +425,27 @@ $(document).ready(function() {
 
   $('#newCategorySubmit').on("click", function(e) {
     var name = $('#newCategory').val();
-    validateName("category", name, makeCreateRecordCallback("category", name, "#newCategory", "Created category"));
+    validateName("category", name, makeCreateRecordCallback("category", name, "#newCategory", "Created category", {}));
   });
 
   $('#newManufacturerSubmit').on("click", function(e) {
     var name = $("#newManufacturer").val();
-    validateName("manufacturer", name, makeCreateRecordCallback("manufacturer", name, "#newManufacturer", "Created manufacturer"));
+    validateName("manufacturer", name, makeCreateRecordCallback("manufacturer", name, "#newManufacturer", "Created manufacturer",
+      {"warranty":$("#warranty").val()}
+    ));
   });
 
   $('#newModelSubmit').on("click", function(e) {
     var name = $("#newModel").val();
-    validateName("model", name, makeCreateRecordCallback("model", name, "#newModel", "Created model"));
+    validateName("model", name, makeCreateRecordCallback("model", name, "#newModel", "Created model", {
+      "category":$('#categorySelect').val(),
+      "manufacturer":$('#manufacturerSelect').val()
+    }));
   });
 
   $('#newLocationSubmit').on("click", function(e) {
     var name = $("#newLocation").val();
-    validateName("location", name, makeCreateRecordCallback("location", name, "#newLocation", "Created location"));
+    validateName("location", name, makeCreateRecordCallback("location", name, "#newLocation", "Created location", {}));
   });
 
   $('#newUserSubmit').on("click", function(e) {
