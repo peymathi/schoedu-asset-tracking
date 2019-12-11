@@ -20,7 +20,12 @@
       'asset' => $_POST['asset']
     ));
 
+    $surplus = $_POST['surplus'] == "true";
+    //echo $surplus;
     $surplusStmt = $con->prepare("UPDATE P_ASSETS SET IsSurplus = :surplus WHERE AssetID = :asset");
-    $surplusStmt->execute(array('surplus' => ($_POST['surplus'] ? "1" : "0"), 'asset' => $_POST['asset']));
+    $surplusStmt->bindValue(':surplus', $surplus, PDO::PARAM_BOOL);
+    $surplusStmt->bindValue(':asset', $_POST['asset']);
+    $surplusStmt->execute();
+    //$surplusStmt->execute(array('surplus' => ($_POST['surplus'] ? "b'1'" : "b'0'"), 'asset' => $_POST['asset']));
   }
 ?>
