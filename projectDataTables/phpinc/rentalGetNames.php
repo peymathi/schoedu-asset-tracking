@@ -25,16 +25,16 @@ if ($q !== "")
     	foreach($a as $name)
     	{ 
 
-		if (stristr($q, substr($name['Name'],0,$len)))
+			if (stristr($q, substr($name['Name'],0,$len)))
       		{ 
-			if ($hint==="")
-       		{ 
-				$hint = "<option>". $name['Name']."</option>";
- 			}
-        		else
-        		{ 	
-			$hint .= "<option>". $name['Name']."</option>";
-			}
+				if ($hint==="")
+	       		{ 
+					$hint = "<option>". $name['Name']."</option>";
+	 			}
+	        	else
+	        	{ 	
+					$hint .= "<option>". $name['Name']."</option>";
+				}
       		}
     	}
 }

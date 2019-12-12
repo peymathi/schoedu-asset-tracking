@@ -88,12 +88,12 @@
 	    { 
 	    	if($len == 0)
 	    	{
-	    		print "<option>". $row['SerialNumber']."</option>";
+	    		$hint .= "<option>". $row['SerialNumber']."</option>";
 	    	}
 
 			else if (stristr($m, substr($row['SerialNumber'],0,$len))) //test if $a matches with the first few characters of the same length in the SerialNumber
 	      	{ 
-				if ($hint==="")
+				if ($hint=="")
 	       		{ 
 					$hint = "<option>". $row['SerialNumber']."</option>";
 	 			}

@@ -38,10 +38,10 @@ function addDeviceBtn(x){
 			<option hidden>Model</option>\
 		</select>\
 		<label>&nbsp&nbspSerial:</label>'+
-		'<input list="serial'+i+'" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial'+i+'">\
+		'<input list="list_serial'+i+'" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial'+i+'">\
 		')
 
-	$('#serial1').after('<datalist id="serial'+i+'"></datalist>');
+	$('#serial1').after('<datalist id="list_serial'+i+'"></datalist>');
 }
 
 
@@ -72,7 +72,7 @@ function showOptions(mode, cur)
         	}
         	else
         	{
-        		document.getElementById('serial'+cur).innerHTML=response;
+        		document.getElementById('list_serial'+cur).innerHTML=response;
         	}
 	    }
 	});
@@ -169,15 +169,15 @@ function upload(x){
 function printFunction() {
 	if($('#serial1').val() == "")
 	{
-		alert("Please enter atleast 1 device");
+		$('#message').html('Please enter at least 1 device');
 	}
-	if($('#name').val() == "")
+	else if($('#name').val() == "")
 	{
-		alert("Please enter a name");
+		$('#message').html('<br>Please enter a Name');
 	}
 	else if($('#outDate').val() == "")
 	{
-		alert("Please enter a Rental Date");
+		$('#message').html('<br>Please enter a Rental Date');
 	}
 	else
 	{
@@ -194,14 +194,12 @@ function printFunction() {
 
 		if(dOut > dIn)
 		{
-			alert('Out Date must be before In Date');
+			$('#message').html('Out Date must be before In Date');
 		}
 		else
 		{
 			if(confirm("Are you sure you want to complete this rental?"))
 			{
-				window.print();
-
 				var name = $('#name').val();
 				var items = i;
 				var formID = $('#currentForm').html();
@@ -227,7 +225,15 @@ function printFunction() {
 				    	in: inDate
 				    },
 				    success: function(response) {
-				    	setTimeout(function(){location.reload();}, 100);
+				    	if(response == "FAIL")
+				    	{
+				    		$('#message').html("Device is not valid");
+				    	}
+				    	else
+				    	{
+				    		window.print();
+				    		setTimeout(function(){location.reload();}, 100);
+				    	}
 				    }
 				});
 

@@ -106,7 +106,7 @@ else
 					<thead>
 						<tr>
 							<th>Check In</th>
-							<th>Form No.</th>
+							<th>Name</th>
 							<th>Device Serial</th>
 							<th>Rental Date</th>
 							<th>Return Date</th>
@@ -157,13 +157,13 @@ else
 							print "<tr>";
 							
 							print "<td".$color."><button onclick='checkIn(this)'".$disable."><i class='fa fa-check'></i></button></td>";
-							print "<td".$color.">".$row["FormID"]."</td>";
+							print "<td".$color.">".$row["Name"]."</td>";
 							print "<td".$color.">".$serial["SerialNumber"]."</td>";
 							print "<td".$color.">".$row["outDate"]."</td>";
 							print "<td".$color.">".$row["inDate"]."</td>";
 							print "<td".$color.">".$row["Status"]."</td>";
 
-							print "<td".$color."><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form</a></td>";
+							print "<td".$color."><a target='_blank' href='Uploads/".$row["fileName"]."'>View Form: ".$row['FormID']."</a></td>";
 
 							print "</tr>"; 
 						}
@@ -179,7 +179,6 @@ else
 						    			columnDefs: [
 								          { orderable: false, targets: [0] }
 								        ],
-        								order: [[ 1, 'desc']],
         								dom: 'Bfrtip',
 									    buttons: [
 								            'copyHtml5',
@@ -205,6 +204,7 @@ else
 						<br>
 						<br>
 
+						<h4 id="message" style="margin-top: 0;"></h4>
 						<form id="rentalForm" onsubmit="return false" class="rental_form" method="post" enctype="multipart/form-data">
 							<label for="name">Name:</label>
 							<input list="names" type="text" id="name" onkeyup="showNames(this.value)">
@@ -257,9 +257,9 @@ else
 							</select>
 
 							<label>&nbsp&nbspSerial:</label>
-							<input list="serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial1" id="serial1" value=<?php if(isset($_GET['s'])){print $_GET['s'];} ?>>
+							<input list="list_serial1" onkeyup="showOptions(this.value, this.name.substr(-1))" type="text" name="serial1" id="serial1" value=<?php if(isset($_GET['s'])){print $_GET['s'];} ?>>
 
-							<datalist id="serial1"></datalist>
+							<datalist id="list_serial1"></datalist>
 
 							<br>
 							<br>
