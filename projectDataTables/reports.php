@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['userid'])) Header ("Location:login.php") ;
 
 if(!isset($_SESSION['timeout']))  Header ("Location:logout.php") ;
-else 
+else
 	if ($_SESSION['timeout'] + 1 * 3600 < time()){
 		Header ("Location:logout.php") ;
 	}
@@ -167,7 +167,7 @@ foreach ($tempArr as $i)
 $sql = "
 
 	SELECT NetworkName
-	FROM P_ASSETS
+	FROM P_ASSETS WHERE IsSurplus = 0
 
 ";
 
@@ -419,17 +419,20 @@ for ($i = 0; $i < count($userOptions); $i++)
 }
 
 // Network Name
-for($i = 0; $i < count($networkOptions); $i++)
+for ($i = 0; $i < count($networkOptions); $i++)
 {
-	// Check if the current value is the selected value
-	if($networkOptions[$i] == $network)
+	if (trim($networkOptions[$i]) != '')
 	{
-		$networkOutput .= '<option name="network" selected>' . $networkOptions[$i] . '</option>';
-	}
+		// Check if the current value is the selected value
+		if($networkOptions[$i] == $network)
+		{
+			$networkOutput .= '<option name="network" selected>' . $networkOptions[$i] . '</option>';
+		}
 
-	else
-	{
-		$networkOutput .= '<option name="network">' . $networkOptions[$i] . '</option>';
+		else
+		{
+			$networkOutput .= '<option name="network">' . $networkOptions[$i] . '</option>';
+		}
 	}
 }
 
@@ -591,7 +594,7 @@ foreach($categories as $cat)
 										<th>Manufacturer</th>
 										<th>Model #</th>
 										<th>Location</th>
-										<th>Days Since Checked</th>
+										<th>Entry Date</th>
 										<th>User</th>
 										<th>Surplus</th>
 										<th>Expired Warranty</th>

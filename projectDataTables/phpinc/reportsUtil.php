@@ -126,7 +126,8 @@ class ReportsForm
 
       // Network Name
       $tableData .= '<td>';
-      $tableData .= $record['NetworkName'];
+      if(trim($record['NetworkName']) != '') $record['NetworkName'];
+      else $tableData .= 'None';
       $tableData .= '</td>';
 
       // Category
@@ -149,16 +150,10 @@ class ReportsForm
       $tableData .= $record['LocationName'];
       $tableData .= '</td>';
 
-      // Format the days last checked (5)
-      if($record['DateLastChecked'] != NULL)
-      {
-        $tableData .= "<td>";
-        $checkedDate = date_create($record['DateLastChecked']);
-        $currentDate = date_create();
-        $diff = date_diff($currentDate, $checkedDate);
-        $tableData .= $diff->format("%a");
-        $tableData .= "</td>";
-      }
+      //Purchase Date
+      $tableData .= '<td>';
+      $tableData .= $record['PurchaseDate'];
+      $tableData .= '</td>';
 
       // Add the user to the data table (6)
       $tableData .= "<td>";
@@ -186,6 +181,7 @@ class ReportsForm
       if ($record['WarrantyEnd'] != NULL)
       {
         $warrantyDate = date_create($record['WarrantyEnd']);
+        $currentDate = date_create();
         $diff = date_diff($warrantyDate, $currentDate);
         $diff = $diff->format("%a");
 
@@ -229,24 +225,21 @@ function printCSV($data, $location)
   $file = fopen($location, "w");
 
   // Print a line with the list of column names
-  $formatString = "SerialNumber, NetworkName, Category, Manufacturer, Model, Location, DateLastChecked, User, IsSurplus, WarrantyEnd";
+  $formatString = "SerialNumber, NetworkName, Category, Manufacturer, Model, Location, PurchaseDate, User, IsSurplus, WarrantyEnd";
   $formatString .= PHP_EOL;
 
   // Loop through the data query and format each record to be added to the format string
   foreach($data as $record)
   {
-
     // Loop until the user name comes up
     foreach($record as $column)
     {
-      if ($column == $record['UserName'])
-      {
-        break;
-      }
-
-      $formatString .= $column . ',';
+      if ($column === $record['UserName']) break;
+      if(trim($column) === '') $formatString .= 'N/A' . ',';
+      else $formatString .= $column . ',';
     }
-
+    $formatString .= $record['LocationName'] . ',';
+    $formatString .= $record['PurchaseDate'] . ',';
     $formatString .= '"' . $record['UserName'] . '"' . ',';
     $formatString .= $record['IsSurplus'] . ',' . $record['WarrantyEnd'] . PHP_EOL;
   }
