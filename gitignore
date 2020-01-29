@@ -1,2 +1,3 @@
-report.csv
-report.pdf
+public/report.csv
+public/report.pdf
+/logs
